@@ -1,0 +1,411 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## プロジェクト概要
+
+「飯田の市民活動ひろば」- 飯田市内のNPO・市民活動を可視化するWebサイト。
+Next.js 15（App Router）+ Payload CMS + Supabase + Vercel の構成。
+
+## 開発コマンド
+
+```bash
+# 開発サーバー起動（Turbopack使用）
+npm run dev
+
+# 本番ビルド
+npm run build
+
+# 本番サーバー起動
+npm start
+
+# ESLint実行
+npm run lint
+```
+
+## 技術スタック
+
+- **フレームワーク**: Next.js 15 (App Router, Turbopack)
+- **言語**: TypeScript (strict mode)
+- **スタイリング**: Tailwind CSS 3.4
+- **CMS**: Payload CMS 3.x（管理画面・エディタ）
+- **データベース**: Supabase (PostgreSQL) - フロント表示用
+- **ストレージ**: Supabase Storage - 画像・メディア
+- **UIライブラリ**: shadcn/ui, Lucide Icons（予定）
+- **アニメーション**: Framer Motion（予定）
+- **ホスティング**: Vercel (ISR)
+
+## アーキテクチャ
+
+### データフロー
+
+```
+Payload CMS (編集) → afterChangeフック → Supabase (表示用DB)
+                                            ↓
+                                    Next.js 公開サイト (ISR)
+```
+
+- **Payload CMS**: 管理画面、下書き保存、リッチテキストエディタ（Lexical）
+- **Supabase**: 公開済みデータのみ同期。フロントエンドからの高速クエリ用
+- 公開時のみSupabaseに同期、下書きはPayload DBのみに保存
+
+### ルーティング構成（予定）
+
+```
+app/
+├─ (public)/           # 公開サイト
+│   ├─ page.tsx        # トップ /
+│   ├─ activities/     # 市民活動紹介 /activities, /activities/[slug]
+│   ├─ interviews/     # インタビュー /interviews, /interviews/[slug]
+│   ├─ grants/         # 助成金情報 /grants, /grants/[slug]
+│   ├─ news/           # お知らせ /news, /news/[slug]
+│   ├─ faq/            # FAQ /faq
+│   └─ about/          # サイトについて /about
+├─ (payload)/admin/    # Payload CMS管理画面
+└─ api/[...payload]/   # Payload API
+```
+
+## パスエイリアス
+
+```typescript
+// tsconfig.json
+"@/*" → "./src/*"
+```
+
+## コレクション設計（Payload CMS）
+
+主要コレクション:
+- `organizations` - 市民活動団体（Supabase同期あり）
+- `interviews` - ロングインタビュー（Supabase同期あり）
+- `grants` - 助成金情報（Supabase同期あり）
+- `news` - お知らせ（Supabase同期あり）
+- `activity-categories` - 活動分野マスター
+- `activity-areas` - 活動エリアマスター
+- `tags` - タグマスター
+- `faqs` - よくある質問
+- `users` - 管理ユーザー（同期なし）
+- `media` - メディアファイル（Supabase Storage同期）
+
+## 環境変数
+
+必要な環境変数（`.env.local`に設定）:
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `PAYLOAD_SECRET`
+- `DATABASE_URI` (Payload用)
+- `NEXT_PUBLIC_SITE_URL`
+
+## デザイン方針
+
+- 親しみやすい・信頼感・わくわく感
+- コンテンポラリーで現代的 + アート寄り（行政3:アート7）
+- 暖色系カラーパレット、曲線多め
+- スマホ:PC = 5:5 を想定したレスポンシブ
+
+## Next.js App Router ベストプラクティス
+
+### ディレクティブ
+
+```typescript
+'use client'  // クライアントコンポーネント（イベント、hooks、ブラウザAPI使用時）
+'use server'  // Server Actions（データ変更、DB操作）
+'use cache'   // キャッシュ有効化（パフォーマンス向上）
+```
+
+### Server Components（デフォルト）
+
+Server Componentsはデフォルトで、データフェッチとセキュリティに最適：
+
+```typescript
+// app/activities/page.tsx
+export default async function Page() {
+  // サーバーで直接データ取得（クレデンシャル安全）
+  const data = await fetch('https://api.example.com/data')
+  const posts = await data.json()
+  return <ul>{posts.map(post => <li key={post.id}>{post.title}</li>)}</ul>
+}
+```
+
+### データフェッチとキャッシュ戦略
+
+```typescript
+// 静的データ（デフォルト: force-cache）
+const staticData = await fetch('https://...', { cache: 'force-cache' })
+
+// 動的データ（毎回取得）
+const dynamicData = await fetch('https://...', { cache: 'no-store' })
+
+// ISR（時間ベース再検証）
+const revalidatedData = await fetch('https://...', {
+  next: { revalidate: 60 }  // 60秒ごと
+})
+
+// タグベース再検証
+const taggedData = await fetch('https://...', {
+  next: { tags: ['posts'] }  // revalidateTag('posts')で無効化
+})
+```
+
+### データ取得の重複排除（React cache）
+
+```typescript
+import { cache } from 'react'
+import 'server-only'
+
+// 同一リクエスト内で複数回呼んでも1回のみ実行
+export const getPost = cache(async (slug: string) => {
+  const res = await db.query.posts.findFirst({ where: eq(posts.slug, slug) })
+  return res
+})
+```
+
+### Server Actions（データ変更）
+
+```typescript
+// app/actions.ts
+'use server'
+
+import { revalidatePath } from 'next/cache'
+import { redirect } from 'next/navigation'
+import { z } from 'zod'
+
+const schema = z.object({
+  title: z.string().min(1),
+  content: z.string().min(1),
+})
+
+export async function createPost(prevState: any, formData: FormData) {
+  const validatedFields = schema.safeParse({
+    title: formData.get('title'),
+    content: formData.get('content'),
+  })
+
+  if (!validatedFields.success) {
+    return { errors: validatedFields.error.flatten().fieldErrors }
+  }
+
+  // DB操作
+  await db.insert(posts).values(validatedFields.data)
+
+  revalidatePath('/posts')  // キャッシュ無効化
+  redirect('/posts')        // リダイレクト
+}
+```
+
+### フォーム実装（useActionState）
+
+```typescript
+// app/components/form.tsx
+'use client'
+
+import { useActionState } from 'react'
+import { createPost } from '@/app/actions'
+
+const initialState = { message: '', errors: {} }
+
+export function Form() {
+  const [state, formAction, pending] = useActionState(createPost, initialState)
+
+  return (
+    <form action={formAction}>
+      <input type="text" name="title" required />
+      {state?.errors?.title && <p>{state.errors.title}</p>}
+      <textarea name="content" required />
+      <p aria-live="polite">{state?.message}</p>
+      <button type="submit" disabled={pending}>
+        {pending ? '送信中...' : '投稿'}
+      </button>
+    </form>
+  )
+}
+```
+
+### 動的メタデータ（SEO）
+
+```typescript
+// app/activities/[slug]/page.tsx
+import type { Metadata, ResolvingMetadata } from 'next'
+
+type Props = {
+  params: Promise<{ slug: string }>
+}
+
+export async function generateMetadata(
+  { params }: Props,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const { slug } = await params
+  const post = await getPost(slug)
+  const previousImages = (await parent).openGraph?.images || []
+
+  return {
+    title: post.title,
+    description: post.summary,
+    openGraph: {
+      title: post.title,
+      description: post.summary,
+      images: [post.mainImage, ...previousImages],
+    },
+  }
+}
+
+export default async function Page({ params }: Props) {
+  const { slug } = await params
+  const post = await getPost(slug)
+  return <article>{/* ... */}</article>
+}
+```
+
+### エラーハンドリング
+
+```typescript
+// app/activities/error.tsx（エラー境界）
+'use client'
+
+export default function Error({
+  error,
+  reset,
+}: {
+  error: Error & { digest?: string }
+  reset: () => void
+}) {
+  return (
+    <div>
+      <h2>エラーが発生しました</h2>
+      <button onClick={() => reset()}>再試行</button>
+    </div>
+  )
+}
+
+// app/activities/not-found.tsx（404）
+export default function NotFound() {
+  return <div>ページが見つかりません</div>
+}
+
+// ページ内でnotFound()を呼び出し
+import { notFound } from 'next/navigation'
+
+export default async function Page({ params }) {
+  const post = await getPost(params.slug)
+  if (!post) notFound()
+  return <article>{/* ... */}</article>
+}
+```
+
+### ローディングUI（Suspense）
+
+```typescript
+// app/activities/loading.tsx（自動Suspense境界）
+export default function Loading() {
+  return <div>読み込み中...</div>
+}
+
+// 手動Suspense境界（部分的なローディング）
+import { Suspense } from 'react'
+
+export default function Page() {
+  return (
+    <section>
+      <Suspense fallback={<p>記事を読み込み中...</p>}>
+        <PostList />
+      </Suspense>
+      <Suspense fallback={<p>サイドバーを読み込み中...</p>}>
+        <Sidebar />
+      </Suspense>
+    </section>
+  )
+}
+```
+
+### Route Handlers（API）
+
+```typescript
+// app/api/posts/route.ts
+import { NextResponse } from 'next/server'
+
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url)
+  const category = searchParams.get('category')
+
+  const posts = await db.select().from(posts)
+  return NextResponse.json({ data: posts })
+}
+
+export async function POST(request: Request) {
+  const body = await request.json()
+  // 検証・保存処理
+  return NextResponse.json({ success: true }, { status: 201 })
+}
+
+// app/api/posts/[id]/route.ts（動的ルート）
+export async function GET(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
+  const post = await getPost(params.id)
+  return NextResponse.json(post)
+}
+```
+
+### ファイル規約一覧
+
+| ファイル | 用途 |
+|---------|------|
+| `page.tsx` | ルートのUI |
+| `layout.tsx` | 共有レイアウト |
+| `loading.tsx` | ローディングUI（Suspense境界） |
+| `error.tsx` | エラー境界 |
+| `not-found.tsx` | 404ページ |
+| `route.ts` | APIエンドポイント |
+| `default.tsx` | Parallel Routesのフォールバック |
+
+## チケット管理（/docs）
+
+チケットファイルは `/docs` 配下に連番で管理する。
+
+### ファイル命名規則
+```
+/docs/
+├── 001-環境構築-supabase.md
+├── 002-環境構築-payload-cms.md
+├── ...
+```
+
+### Todo記法
+各チケット内でTodoを管理する。完了したら `[x]` に変更：
+
+```markdown
+## Todo
+- [ ] 未完了のタスク
+- [x] 完了したタスク
+```
+
+### チケットテンプレート
+```markdown
+# [連番] タイトル
+
+## 概要
+このチケットで実現すること
+
+## 関連要件
+- REQUIREMENTS.md の該当セクション
+
+## 技術仕様
+- 使用技術・ライブラリ
+- 実装方針
+
+## Todo
+- [ ] タスク1
+- [ ] タスク2
+
+## 完了条件
+- 何ができれば完了か
+
+## 備考
+- 補足事項
+```
+
+## 要件定義書
+
+詳細な仕様は `REQUIREMENTS.md` を参照。
