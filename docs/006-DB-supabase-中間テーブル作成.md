@@ -11,12 +11,12 @@
 - 外部キー制約（CASCADE DELETE）
 
 ## Todo
-- [ ] organization_categories 中間テーブル作成
-- [ ] organization_areas 中間テーブル作成
-- [ ] organization_tags 中間テーブル作成
-- [ ] grant_categories 中間テーブル作成
-- [ ] 外部キー制約の設定
-- [ ] RLS ポリシー設定
+- [x] organization_categories 中間テーブル作成
+- [x] organization_areas 中間テーブル作成
+- [x] organization_tags 中間テーブル作成
+- [x] grant_categories 中間テーブル作成
+- [x] 外部キー制約の設定
+- [x] RLS ポリシー設定
 
 ## 完了条件
 - 全中間テーブルが作成されている
@@ -25,3 +25,4 @@
 
 ## 備考
 - REQUIREMENTS.md 11-3 のSQL定義を参照
+- 005チケットで全中間テーブル作成済み（マイグレーション: create_junction_tables）
