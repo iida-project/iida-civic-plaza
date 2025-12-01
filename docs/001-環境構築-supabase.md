@@ -14,12 +14,25 @@ Supabaseプロジェクトを作成し、フロントエンド表示用のデー
 - Row Level Security (RLS)
 
 ## Todo
-- [ ] Supabaseプロジェクト作成
-- [ ] 環境変数の取得と設定（NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY）
-- [ ] .env.local ファイル作成
-- [ ] Supabase クライアント設定ファイル作成
-- [ ] Storageバケット「public」作成
-- [ ] Storage のCORS設定
+- [x] Supabaseプロジェクト作成
+- [x] 環境変数の取得と設定（NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY）
+- [x] .env.local ファイル作成
+- [x] Supabase クライアント設定ファイル作成
+- [x] Storageバケット「media」作成（ダッシュボードから手動設定）
+- [x] Storage のCORS設定（不要 - デフォルトで問題なし）
+
+## 作成されたリソース
+- **プロジェクトID**: gxsvyzvaalwywnylakgu
+- **URL**: https://gxsvyzvaalwywnylakgu.supabase.co
+- **リージョン**: ap-northeast-1（東京）
+- **Storageバケット**: media（公開）
+
+## 作成されたファイル
+- `.env.local` - 環境変数
+- `src/lib/supabase/client.ts` - クライアントサイド用
+- `src/lib/supabase/server.ts` - サーバーサイド用
+- `src/lib/supabase/admin.ts` - 管理者用（同期処理）
+- `src/lib/supabase/index.ts` - エクスポート
 
 ## 完了条件
 - Supabaseプロジェクトが作成されている
