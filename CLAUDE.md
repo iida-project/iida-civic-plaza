@@ -30,9 +30,9 @@ npm run lint
 - **スタイリング**: Tailwind CSS 3.4
 - **CMS**: Payload CMS 3.x（管理画面・エディタ）
 - **データベース**: Supabase (PostgreSQL) - フロント表示用
-- **ストレージ**: Supabase Storage - 画像・メディア
-- **UIライブラリ**: shadcn/ui, Lucide Icons（予定）
-- **アニメーション**: Framer Motion（予定）
+- **ストレージ**: Supabase Storage - 画像・メディア（バケット名: media）
+- **UIライブラリ**: shadcn/ui, Lucide Icons
+- **アニメーション**: Framer Motion
 - **ホスティング**: Vercel (ISR)
 
 ## アーキテクチャ
@@ -49,11 +49,11 @@ Payload CMS (編集) → afterChangeフック → Supabase (表示用DB)
 - **Supabase**: 公開済みデータのみ同期。フロントエンドからの高速クエリ用
 - 公開時のみSupabaseに同期、下書きはPayload DBのみに保存
 
-### ルーティング構成（予定）
+### ルーティング構成
 
 ```
 app/
-├─ (public)/           # 公開サイト
+├─ (frontend)/         # 公開サイト（独自layout.tsx）
 │   ├─ page.tsx        # トップ /
 │   ├─ activities/     # 市民活動紹介 /activities, /activities/[slug]
 │   ├─ interviews/     # インタビュー /interviews, /interviews/[slug]
@@ -61,9 +61,14 @@ app/
 │   ├─ news/           # お知らせ /news, /news/[slug]
 │   ├─ faq/            # FAQ /faq
 │   └─ about/          # サイトについて /about
-├─ (payload)/admin/    # Payload CMS管理画面
-└─ api/[...payload]/   # Payload API
+├─ (payload)/          # Payload CMS（独自layout.tsx）
+│   ├─ admin/          # 管理画面 /admin
+│   └─ layout.tsx      # PayloadのRootLayoutを使用
+└─ api/                # API
+    └─ [...payload]/   # Payload REST/GraphQL API
 ```
+
+※ (frontend)と(payload)でルートグループを分離し、Hydrationエラーを回避
 
 ## パスエイリアス
 
@@ -447,3 +452,69 @@ export async function GET(
 ## 要件定義書
 
 詳細な仕様は `REQUIREMENTS.md` を参照。
+
+## Supabase 設定
+
+- **プロジェクトID**: gxsvyzvaalwywnylakgu
+- **リージョン**: ap-northeast-1 (東京)
+- **Storageバケット**: media（公開）
+
+### 作成済みテーブル
+
+**メインテーブル（RLS有効）:**
+- `activity_categories` - 活動分野マスター（10件投入済み）
+- `activity_areas` - 活動エリアマスター（18件投入済み）
+- `tags` - タグマスター
+- `organizations` - 市民活動団体
+- `interviews` - ロングインタビュー
+- `grants` - 助成金情報
+- `news_posts` - お知らせ
+- `faqs` - よくある質問
+
+**中間テーブル（RLS有効）:**
+- `organization_categories` - 団体 × 活動分野
+- `organization_areas` - 団体 × 活動エリア
+- `organization_tags` - 団体 × タグ
+- `grant_categories` - 助成金 × 対象分野
+
+### RLSポリシー
+- 公開データ（`is_published = true`）は誰でもSELECT可能
+- マスターテーブルは全データSELECT可能
+
+## Framer Motion アニメーション
+
+### 利用可能なバリアント（src/lib/animations/variants.ts）
+- `fadeIn` - フェードイン
+- `fadeInUp` - 下からフェードイン
+- `slideInLeft` - 左からスライドイン
+- `slideInRight` - 右からスライドイン
+- `scaleIn` - スケールイン
+- `staggerContainer` - 子要素を順番にアニメーション
+- `cardHover` - カードホバー効果
+- `buttonHover` - ボタンホバー効果
+- `pageTransition` - ページトランジション
+
+### 利用可能なコンポーネント（src/lib/animations/motion.tsx）
+- `FadeInOnScroll` - スクロールでフェードイン
+- `StaggerContainer` - スタガードコンテナ
+- `StaggerItem` - スタガードアイテム
+- `HoverCard` - ホバーで浮き上がるカード
+- `HoverScale` - ホバーでスケール
+
+```tsx
+import { FadeInOnScroll, HoverCard } from '@/lib/animations'
+
+<FadeInOnScroll>
+  <h1>スクロールでフェードイン</h1>
+</FadeInOnScroll>
+```
+
+## 完了済みチケット
+
+- [x] 001 - Supabase プロジェクト作成
+- [x] 002 - Payload CMS セットアップ
+- [x] 003 - shadcn/ui セットアップ
+- [x] 004 - Framer Motion セットアップ
+- [x] 005 - Supabase テーブル作成
+- [x] 006 - 中間テーブル作成（005で完了）
+- [x] 007 - マスターデータ投入
