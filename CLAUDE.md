@@ -5,7 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## プロジェクト概要
 
 「飯田の市民活動ひろば」- 飯田市内のNPO・市民活動を可視化するWebサイト。
-Next.js 15（App Router）+ Payload CMS + Supabase + Vercel の構成。
+Next.js 15（App Router）+ Supabase + Vercel の構成。
 
 ## 開発コマンド
 
@@ -28,32 +28,28 @@ npm run lint
 - **フレームワーク**: Next.js 15 (App Router, Turbopack)
 - **言語**: TypeScript (strict mode)
 - **スタイリング**: Tailwind CSS 3.4
-- **CMS**: Payload CMS 3.x（管理画面・エディタ）
-- **データベース**: Supabase (PostgreSQL) - フロント表示用
+- **データベース**: Supabase (PostgreSQL)
 - **ストレージ**: Supabase Storage - 画像・メディア（バケット名: media）
 - **UIライブラリ**: shadcn/ui, Lucide Icons
 - **アニメーション**: Framer Motion
 - **ホスティング**: Vercel (ISR)
+- **管理画面**: 自作（予定）
 
 ## アーキテクチャ
 
 ### データフロー
 
 ```
-Payload CMS (編集) → afterChangeフック → Supabase (表示用DB)
-                                            ↓
-                                    Next.js 公開サイト (ISR)
+Supabase (PostgreSQL) ←→ Next.js (公開サイト + 管理画面)
+                              ↓
+                    Vercel (ISR) でホスティング
 ```
-
-- **Payload CMS**: 管理画面、下書き保存、リッチテキストエディタ（Lexical）
-- **Supabase**: 公開済みデータのみ同期。フロントエンドからの高速クエリ用
-- 公開時のみSupabaseに同期、下書きはPayload DBのみに保存
 
 ### ルーティング構成
 
 ```
 app/
-├─ (frontend)/         # 公開サイト（独自layout.tsx）
+├─ (frontend)/         # 公開サイト
 │   ├─ page.tsx        # トップ /
 │   ├─ activities/     # 市民活動紹介 /activities, /activities/[slug]
 │   ├─ interviews/     # インタビュー /interviews, /interviews/[slug]
@@ -61,14 +57,10 @@ app/
 │   ├─ news/           # お知らせ /news, /news/[slug]
 │   ├─ faq/            # FAQ /faq
 │   └─ about/          # サイトについて /about
-├─ (payload)/          # Payload CMS（独自layout.tsx）
-│   ├─ admin/          # 管理画面 /admin
-│   └─ layout.tsx      # PayloadのRootLayoutを使用
-└─ api/                # API
-    └─ [...payload]/   # Payload REST/GraphQL API
+├─ (admin)/            # 管理画面（自作予定）
+│   └─ admin/          # /admin
+└─ api/                # API Routes
 ```
-
-※ (frontend)と(payload)でルートグループを分離し、Hydrationエラーを回避
 
 ## パスエイリアス
 
@@ -77,28 +69,12 @@ app/
 "@/*" → "./src/*"
 ```
 
-## コレクション設計（Payload CMS）
-
-主要コレクション:
-- `organizations` - 市民活動団体（Supabase同期あり）
-- `interviews` - ロングインタビュー（Supabase同期あり）
-- `grants` - 助成金情報（Supabase同期あり）
-- `news` - お知らせ（Supabase同期あり）
-- `activity-categories` - 活動分野マスター
-- `activity-areas` - 活動エリアマスター
-- `tags` - タグマスター
-- `faqs` - よくある質問
-- `users` - 管理ユーザー（同期なし）
-- `media` - メディアファイル（Supabase Storage同期）
-
 ## 環境変数
 
 必要な環境変数（`.env.local`に設定）:
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 - `SUPABASE_SERVICE_ROLE_KEY`
-- `PAYLOAD_SECRET`
-- `DATABASE_URI` (Payload用)
 - `NEXT_PUBLIC_SITE_URL`
 
 ## デザイン方針
@@ -411,7 +387,7 @@ export async function GET(
 ```
 /docs/
 ├── 001-環境構築-supabase.md
-├── 002-環境構築-payload-cms.md
+├── 003-環境構築-shadcn-ui.md
 ├── ...
 ```
 
@@ -512,9 +488,13 @@ import { FadeInOnScroll, HoverCard } from '@/lib/animations'
 ## 完了済みチケット
 
 - [x] 001 - Supabase プロジェクト作成
-- [x] 002 - Payload CMS セットアップ
 - [x] 003 - shadcn/ui セットアップ
 - [x] 004 - Framer Motion セットアップ
 - [x] 005 - Supabase テーブル作成
 - [x] 006 - 中間テーブル作成（005で完了）
 - [x] 007 - マスターデータ投入
+
+## 備考
+
+- Payload CMSは互換性問題のため削除済み
+- 管理画面は自作で実装予定
