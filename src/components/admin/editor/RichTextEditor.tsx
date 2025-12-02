@@ -56,6 +56,7 @@ export function RichTextEditor({
       }),
     ],
     content,
+    immediatelyRender: false, // SSR対応
     editorProps: {
       attributes: {
         class:

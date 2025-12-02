@@ -83,16 +83,16 @@ export async function togglePublish(id: string)
 ```
 
 ## Todo
-- [ ] 一覧ページ作成
-- [ ] 新規作成フォーム作成
-- [ ] 編集フォーム作成
-- [ ] Server Actions 実装
-- [ ] カテゴリ・エリア・タグの複数選択UI
-- [ ] 画像アップロード機能
-- [ ] スラッグ自動生成
-- [ ] 公開/下書き切り替え
-- [ ] 削除機能（確認ダイアログ付き）
-- [ ] バリデーション
+- [x] 一覧ページ作成
+- [x] 新規作成フォーム作成
+- [x] 編集フォーム作成
+- [x] Server Actions 実装
+- [x] カテゴリ・エリア・タグの複数選択UI
+- [x] 画像アップロード機能
+- [x] スラッグ自動生成
+- [x] 公開/下書き切り替え
+- [x] 削除機能（確認ダイアログ付き）
+- [x] バリデーション
 
 ## 完了条件
 - 団体の一覧表示ができる
@@ -100,6 +100,18 @@ export async function togglePublish(id: string)
 - カテゴリ等のリレーションが正しく保存される
 - 画像アップロードができる
 
+## 作成したファイル
+- `src/app/(admin)/admin/organizations/page.tsx` - 一覧ページ
+- `src/app/(admin)/admin/organizations/new/page.tsx` - 新規作成ページ
+- `src/app/(admin)/admin/organizations/[id]/page.tsx` - 編集ページ
+- `src/app/(admin)/admin/organizations/actions.ts` - Server Actions
+- `src/app/(admin)/admin/organizations/_components/OrganizationList.tsx` - 一覧コンポーネント
+- `src/app/(admin)/admin/organizations/_components/OrganizationForm.tsx` - フォームコンポーネント
+- `src/app/(admin)/admin/organizations/_components/MultiSelect.tsx` - 複数選択コンポーネント
+- `src/app/(admin)/admin/organizations/_components/ImageUpload.tsx` - 画像アップロードコンポーネント
+- `src/app/(admin)/admin/organizations/_components/index.ts` - エクスポート
+
 ## 備考
 - 中間テーブル（organization_categories等）の更新も必要
 - 削除時は関連データの扱いに注意
+- 検索・フィルター・ページネーションは必要に応じて追加実装可能

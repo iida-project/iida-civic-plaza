@@ -494,7 +494,109 @@ import { FadeInOnScroll, HoverCard } from '@/lib/animations'
 - [x] 006 - 中間テーブル作成（005で完了）
 - [x] 007 - マスターデータ投入
 
+## 管理画面実装の注意点
+
+### Supabaseクライアントの使い分け
+
+| クライアント | 用途 | RLS |
+|-------------|------|-----|
+| `createClient()` (server.ts) | 公開サイト | 適用される |
+| `createAdminClient()` (admin.ts) | 管理画面 | バイパス |
+| `createClient()` (client.ts) | クライアント側 | 適用される |
+
+**重要**: 管理画面では `createAdminClient()` を使用すること。RLSで `is_published = true` のみ取得可能に設定されているため、下書き記事が表示されない問題が発生する。
+
+```typescript
+// 管理画面のページ（正しい例）
+import { createAdminClient } from '@/lib/supabase/admin'
+
+export default async function AdminPage() {
+  const supabase = createAdminClient()  // awaitなし
+  // ...
+}
+```
+
+### 画像アップロード実装チェックリスト
+
+画像アップロード機能を実装する際は、以下を確認すること：
+
+#### 1. Supabase Storage ポリシー
+バケットに対してRLSポリシーが必要：
+```sql
+-- INSERT ポリシー（アップロード許可）
+CREATE POLICY "Allow public uploads"
+ON storage.objects FOR INSERT
+TO public
+WITH CHECK (bucket_id = 'media');
+
+-- SELECT ポリシー（読み取り許可）
+CREATE POLICY "Allow public read"
+ON storage.objects FOR SELECT
+TO public
+USING (bucket_id = 'media');
+```
+
+#### 2. Next.js 画像ドメイン設定
+`next.config.ts` に Supabase Storage のドメインを追加：
+```typescript
+images: {
+  remotePatterns: [
+    {
+      protocol: 'https',
+      hostname: 'gxsvyzvaalwywnylakgu.supabase.co',
+      pathname: '/storage/v1/object/public/**',
+    },
+  ],
+},
+```
+**注意**: `next.config.ts` 変更後は開発サーバーの再起動が必要
+
+#### 3. Tiptap リッチテキストエディタ
+SSRエラーを防ぐため `immediatelyRender: false` を設定：
+```typescript
+const editor = useEditor({
+  extensions: [...],
+  content,
+  immediatelyRender: false,  // SSR対応（必須）
+  // ...
+})
+```
+
+### テーブルカラムの注意
+
+- Payload CMS 削除後、一部テーブルに `payload_id` カラムが残っている
+- NOT NULL 制約がある場合はNULL許可に変更が必要
+- `display_order` など存在しないカラムを参照していないか確認
+
+### マスターデータ取得
+
+マスターテーブル（`activity_categories`, `activity_areas`, `tags`）のソート：
+- `display_order` カラムは存在しない場合がある
+- `name` でソートするのが安全
+
+```typescript
+// 正しい例
+supabase.from('activity_categories').select('id, name').order('name')
+
+// 間違い（カラムが存在しない場合エラー）
+supabase.from('activity_categories').select('id, name').order('display_order')
+```
+
+## 完了済みチケット
+
+- [x] 001 - Supabase プロジェクト作成
+- [x] 003 - shadcn/ui セットアップ
+- [x] 004 - Framer Motion セットアップ
+- [x] 005 - Supabase テーブル作成
+- [x] 006 - 中間テーブル作成（005で完了）
+- [x] 007 - マスターデータ投入
+- [x] 008 - 管理画面認証（簡易パスワード認証）
+- [x] 009 - 管理画面共通レイアウト
+- [x] 010 - リッチテキストエディタ（Tiptap）
+- [x] 011 - 団体CRUD
+
 ## 備考
 
 - Payload CMSは互換性問題のため削除済み
-- 管理画面は自作で実装予定
+- 管理画面は自作で実装
+- 認証は本番前にセキュリティ強化予定（チケット045）
