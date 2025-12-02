@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { LogoutButton } from './_components/LogoutButton'
+import { AdminLayout } from '@/components/admin'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Users, MessageSquare, Coins, Newspaper, HelpCircle } from 'lucide-react'
 
@@ -9,20 +9,9 @@ export const metadata = {
 
 export default function AdminDashboard() {
   return (
-    <div className="min-h-screen bg-gray-100">
-      {/* ヘッダー */}
-      <header className="bg-white shadow">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-          <h1 className="text-xl font-bold text-gray-900">
-            飯田の市民活動ひろば - 管理画面
-          </h1>
-          <LogoutButton />
-        </div>
-      </header>
-
-      {/* メインコンテンツ */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <h2 className="text-2xl font-bold mb-6">ダッシュボード</h2>
+    <AdminLayout>
+      <div className="space-y-6">
+        <h1 className="text-2xl font-bold">ダッシュボード</h1>
 
         {/* クイックアクセスカード */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -63,14 +52,14 @@ export default function AdminDashboard() {
           />
         </div>
 
-        {/* 仮メッセージ */}
-        <div className="mt-8 p-4 bg-amber-50 border border-amber-200 rounded-lg">
+        {/* お知らせ */}
+        <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg">
           <p className="text-amber-800">
             管理画面は現在構築中です。各機能は順次追加されます。
           </p>
         </div>
-      </main>
-    </div>
+      </div>
+    </AdminLayout>
   )
 }
 
@@ -89,7 +78,7 @@ function QuickAccessCard({
 }) {
   return (
     <Link href={href}>
-      <Card className="hover:shadow-md transition-shadow cursor-pointer">
+      <Card className="hover:shadow-md transition-shadow cursor-pointer h-full">
         <CardHeader className="flex flex-row items-center justify-between pb-2">
           <CardTitle className="text-lg font-medium">{title}</CardTitle>
           <div className="text-orange-500">{icon}</div>
