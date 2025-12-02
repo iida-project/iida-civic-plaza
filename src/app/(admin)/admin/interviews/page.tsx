@@ -2,55 +2,56 @@ import Link from 'next/link'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { Button } from '@/components/ui/button'
 import { Plus, ArrowLeft } from 'lucide-react'
-import { OrganizationList } from './_components'
+import { InterviewList } from './_components'
 
 export const dynamic = 'force-dynamic'
 
-type OrganizationWithCategories = {
+type InterviewWithOrganization = {
   id: string
-  name: string
+  title: string
   slug: string
   is_published: boolean
+  is_featured: boolean
   updated_at: string
-  organization_categories: { category: { name: string } | null }[]
+  organization: { name: string } | null
 }
 
-export default async function OrganizationsPage() {
+export default async function InterviewsPage() {
   const supabase = createAdminClient()
 
-  const { data: organizations, error } = await supabase
-    .from('organizations')
+  const { data: interviews, error } = await supabase
+    .from('interviews')
     .select(
       `
       id,
-      name,
+      title,
       slug,
       is_published,
+      is_featured,
       updated_at,
-      organization_categories (
-        category:activity_categories (
-          name
-        )
+      organization:organizations (
+        name
       )
     `
     )
     .order('updated_at', { ascending: false })
 
   if (error) {
-    console.error('Failed to fetch organizations:', error)
+    console.error('Failed to fetch interviews:', error)
   }
 
   // Transform data to match expected type
-  const typedOrganizations: OrganizationWithCategories[] = (organizations || []).map((org) => ({
-    id: org.id,
-    name: org.name,
-    slug: org.slug,
-    is_published: org.is_published,
-    updated_at: org.updated_at,
-    organization_categories: (org.organization_categories || []).map((oc) => ({
-      category: oc.category as unknown as { name: string } | null,
-    })),
-  }))
+  const typedInterviews: InterviewWithOrganization[] = (interviews || []).map(
+    (interview) => ({
+      id: interview.id,
+      title: interview.title,
+      slug: interview.slug,
+      is_published: interview.is_published ?? false,
+      is_featured: interview.is_featured ?? false,
+      updated_at: interview.updated_at,
+      organization: interview.organization as unknown as { name: string } | null,
+    })
+  )
 
   return (
     <div className="space-y-6">
@@ -64,16 +65,16 @@ export default async function OrganizationsPage() {
       </div>
 
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">団体管理</h1>
+        <h1 className="text-2xl font-bold">インタビュー管理</h1>
         <Button asChild>
-          <Link href="/admin/organizations/new">
+          <Link href="/admin/interviews/new">
             <Plus className="mr-2 h-4 w-4" />
             新規作成
           </Link>
         </Button>
       </div>
 
-      <OrganizationList organizations={typedOrganizations} />
+      <InterviewList interviews={typedInterviews} />
     </div>
   )
 }
