@@ -10,78 +10,97 @@ body {
 
 @layer base {
   :root {
-    /* 暖色系カラーパレット - 飯田の市民活動ひろば */
-    --background: 48 100% 96.1%; /* amber-50 クリーム */
-    --foreground: 20.9 91.7% 14.1%; /* orange-950 ダークブラウン */
+    /*
+     * 飯田の市民活動ひろば カラーパレット
+     * りんごマークの4色をベースに構成
+     * - Primary: 赤（りんご、メインカラー）
+     * - Secondary: 緑（市民活動、自然）
+     * - Accent: オレンジ（親しみ、ハイライト）
+     * - Info: 青（信頼、リンク）
+     */
+
+    --background: 0 0% 98%; /* ほぼ白、少し温かみ */
+    --foreground: 0 0% 15%; /* ダークグレー */
 
     --card: 0 0% 100%;
-    --card-foreground: 20.9 91.7% 14.1%;
+    --card-foreground: 0 0% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 20.9 91.7% 14.1%;
+    --popover-foreground: 0 0% 15%;
 
-    --primary: 24.6 95% 53.1%; /* orange-500 オレンジ */
-    --primary-foreground: 60 9.1% 97.8%;
+    --primary: 4 72% 56%; /* #E25555 赤（りんご） */
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 349.7 89.2% 72.9%; /* rose-400 コーラル */
+    --secondary: 140 45% 55%; /* #5DB075 緑 */
     --secondary-foreground: 0 0% 100%;
 
-    --muted: 48 96.5% 88.8%; /* amber-100 ライトクリーム */
-    --muted-foreground: 21 92.7% 14.1%; /* amber-900 ブラウン */
+    --muted: 40 30% 94%; /* 薄いベージュ */
+    --muted-foreground: 0 0% 40%;
 
-    --accent: 37.7 92.1% 50.2%; /* amber-500 アンバー */
-    --accent-foreground: 0 0% 100%;
+    --accent: 36 90% 60%; /* #F5A623 オレンジ */
+    --accent-foreground: 0 0% 15%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 24.6 94.5% 72.2%; /* orange-300 ライトオレンジ */
-    --input: 24.6 94.5% 72.2%;
-    --ring: 24.6 95% 53.1%; /* orange-500 */
+    --border: 0 0% 85%;
+    --input: 0 0% 85%;
+    --ring: 4 72% 56%; /* primary と同じ赤 */
 
-    --chart-1: 24.6 95% 53.1%; /* orange-500 */
-    --chart-2: 349.7 89.2% 72.9%; /* rose-400 */
-    --chart-3: 37.7 92.1% 50.2%; /* amber-500 */
-    --chart-4: 20.5 90.2% 48.2%; /* orange-600 */
-    --chart-5: 346.8 77.2% 49.8%; /* rose-600 */
+    /* 4色それぞれのCSS変数（コンポーネントで直接使用） */
+    --apple-red: 4 72% 56%;      /* #E25555 */
+    --apple-green: 140 45% 55%;  /* #5DB075 */
+    --apple-orange: 36 90% 60%;  /* #F5A623 */
+    --apple-blue: 207 70% 59%;   /* #4A9FD9 */
+
+    --chart-1: 4 72% 56%;    /* 赤 */
+    --chart-2: 140 45% 55%;  /* 緑 */
+    --chart-3: 36 90% 60%;   /* オレンジ */
+    --chart-4: 207 70% 59%;  /* 青 */
+    --chart-5: 4 72% 45%;    /* 暗めの赤 */
 
     --radius: 0.75rem; /* 曲線多めのデザイン */
   }
 
   .dark {
-    --background: 20.9 91.7% 14.1%; /* orange-950 */
-    --foreground: 48 100% 96.1%; /* amber-50 */
+    --background: 0 0% 10%;
+    --foreground: 0 0% 95%;
 
-    --card: 20 14.3% 14.1%;
-    --card-foreground: 48 100% 96.1%;
+    --card: 0 0% 12%;
+    --card-foreground: 0 0% 95%;
 
-    --popover: 20 14.3% 14.1%;
-    --popover-foreground: 48 100% 96.1%;
+    --popover: 0 0% 12%;
+    --popover-foreground: 0 0% 95%;
 
-    --primary: 24.6 95% 53.1%; /* orange-500 */
-    --primary-foreground: 20.9 91.7% 14.1%;
+    --primary: 4 72% 60%; /* 赤（少し明るめ） */
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 349.7 89.2% 72.9%; /* rose-400 */
-    --secondary-foreground: 20.9 91.7% 14.1%;
+    --secondary: 140 45% 50%; /* 緑 */
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 20 14.3% 20%;
-    --muted-foreground: 48 30% 70%;
+    --muted: 0 0% 18%;
+    --muted-foreground: 0 0% 65%;
 
-    --accent: 37.7 92.1% 50.2%; /* amber-500 */
-    --accent-foreground: 20.9 91.7% 14.1%;
+    --accent: 36 90% 55%; /* オレンジ */
+    --accent-foreground: 0 0% 10%;
 
     --destructive: 0 62.8% 50%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 20 14.3% 25%;
-    --input: 20 14.3% 25%;
-    --ring: 24.6 95% 53.1%;
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+    --ring: 4 72% 60%;
 
-    --chart-1: 24.6 95% 60%;
-    --chart-2: 349.7 89.2% 65%;
-    --chart-3: 37.7 92.1% 55%;
-    --chart-4: 20.5 90.2% 55%;
-    --chart-5: 346.8 77.2% 55%;
+    --apple-red: 4 72% 60%;
+    --apple-green: 140 45% 50%;
+    --apple-orange: 36 90% 55%;
+    --apple-blue: 207 70% 55%;
+
+    --chart-1: 4 72% 60%;
+    --chart-2: 140 45% 50%;
+    --chart-3: 36 90% 55%;
+    --chart-4: 207 70% 55%;
+    --chart-5: 4 72% 50%;
   }
 }
 

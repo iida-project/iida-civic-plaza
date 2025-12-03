@@ -1,103 +1,211 @@
-import Image from "next/image";
+import { createClient } from '@/lib/supabase/server'
+import {
+  HeroSection,
+  LatestArticlesSection,
+  SearchSection,
+  FeaturedInterviewsSection,
+  PickupOrganizationsSection,
+  CTASection,
+} from './_components'
 
-export default function Home() {
+export const revalidate = 60 // ISR: 60秒ごとに再検証
+
+type Article = {
+  id: string
+  slug: string
+  title: string
+  type: 'organization' | 'interview' | 'grant' | 'news'
+  published_at: string
+  summary?: string
+}
+
+async function getLatestArticles(): Promise<Article[]> {
+  const supabase = await createClient()
+  const articles: Article[] = []
+
+  // 団体（最新3件）
+  const { data: organizations } = await supabase
+    .from('organizations')
+    .select('id, slug, name, summary, published_at')
+    .eq('is_published', true)
+    .order('published_at', { ascending: false })
+    .limit(3)
+
+  organizations?.forEach((org) => {
+    articles.push({
+      id: org.id,
+      slug: org.slug,
+      title: org.name,
+      type: 'organization',
+      published_at: org.published_at,
+      summary: org.summary,
+    })
+  })
+
+  // インタビュー（最新2件）
+  const { data: interviews } = await supabase
+    .from('interviews')
+    .select('id, slug, title, lead_text, published_at')
+    .eq('is_published', true)
+    .order('published_at', { ascending: false })
+    .limit(2)
+
+  interviews?.forEach((interview) => {
+    articles.push({
+      id: interview.id,
+      slug: interview.slug,
+      title: interview.title,
+      type: 'interview',
+      published_at: interview.published_at,
+      summary: interview.lead_text,
+    })
+  })
+
+  // 助成金（最新2件）
+  const { data: grants } = await supabase
+    .from('grants')
+    .select('id, slug, title, provider_name, published_at')
+    .eq('is_published', true)
+    .order('published_at', { ascending: false })
+    .limit(2)
+
+  grants?.forEach((grant) => {
+    articles.push({
+      id: grant.id,
+      slug: grant.slug,
+      title: grant.title,
+      type: 'grant',
+      published_at: grant.published_at,
+      summary: `${grant.provider_name}`,
+    })
+  })
+
+  // お知らせ（最新2件）
+  const { data: news } = await supabase
+    .from('news_posts')
+    .select('id, slug, title, published_at')
+    .eq('is_published', true)
+    .order('published_at', { ascending: false })
+    .limit(2)
+
+  news?.forEach((post) => {
+    articles.push({
+      id: post.id,
+      slug: post.slug,
+      title: post.title,
+      type: 'news',
+      published_at: post.published_at,
+    })
+  })
+
+  // 日付順にソート
+  return articles.sort(
+    (a, b) =>
+      new Date(b.published_at).getTime() - new Date(a.published_at).getTime()
+  ).slice(0, 6)
+}
+
+async function getCategories() {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('activity_categories')
+    .select('id, name, slug')
+    .order('sort_order', { ascending: true })
+  return data || []
+}
+
+async function getAreas() {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('activity_areas')
+    .select('id, name, slug')
+    .order('sort_order', { ascending: true })
+  return data || []
+}
+
+async function getFeaturedInterviews() {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('interviews')
+    .select(`
+      id,
+      slug,
+      title,
+      lead_text,
+      main_image_url,
+      organization:organizations(name)
+    `)
+    .eq('is_published', true)
+    .eq('is_featured', true)
+    .order('published_at', { ascending: false })
+    .limit(4)
+
+  return (data || []).map((interview) => ({
+    ...interview,
+    organization: interview.organization as unknown as { name: string } | null,
+  }))
+}
+
+async function getPickupOrganizations() {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('organizations')
+    .select(`
+      id,
+      slug,
+      name,
+      short_name,
+      summary,
+      main_image_url
+    `)
+    .eq('is_published', true)
+    .order('published_at', { ascending: false })
+    .limit(3)
+
+  if (!data) return []
+
+  // カテゴリとエリアを別途取得
+  const orgIds = data.map((org) => org.id)
+
+  const { data: orgCategories } = await supabase
+    .from('organization_categories')
+    .select('organization_id, category:activity_categories(name)')
+    .in('organization_id', orgIds)
+
+  const { data: orgAreas } = await supabase
+    .from('organization_areas')
+    .select('organization_id, area:activity_areas(name)')
+    .in('organization_id', orgIds)
+
+  return data.map((org) => ({
+    ...org,
+    categories: (orgCategories || [])
+      .filter((oc) => oc.organization_id === org.id)
+      .map((oc) => oc.category as unknown as { name: string }),
+    areas: (orgAreas || [])
+      .filter((oa) => oa.organization_id === org.id)
+      .map((oa) => oa.area as unknown as { name: string }),
+  }))
+}
+
+export default async function Home() {
+  const [articles, categories, areas, featuredInterviews, pickupOrganizations] =
+    await Promise.all([
+      getLatestArticles(),
+      getCategories(),
+      getAreas(),
+      getFeaturedInterviews(),
+      getPickupOrganizations(),
+    ])
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+    <div>
+      <HeroSection />
+      <LatestArticlesSection articles={articles} />
+      <SearchSection categories={categories} areas={areas} />
+      <PickupOrganizationsSection organizations={pickupOrganizations} />
+      <FeaturedInterviewsSection interviews={featuredInterviews} />
+      <CTASection />
     </div>
-  );
+  )
 }
