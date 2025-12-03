@@ -2,12 +2,37 @@ import Link from 'next/link'
 import { AdminLayout } from '@/components/admin'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Users, MessageSquare, Coins, Newspaper, HelpCircle } from 'lucide-react'
+import { createAdminClient } from '@/lib/supabase/admin'
 
 export const metadata = {
   title: 'ダッシュボード',
 }
 
-export default function AdminDashboard() {
+export const dynamic = 'force-dynamic'
+
+async function getCounts() {
+  const supabase = createAdminClient()
+
+  const [organizations, interviews, grants, news, faqs] = await Promise.all([
+    supabase.from('organizations').select('id', { count: 'exact', head: true }),
+    supabase.from('interviews').select('id', { count: 'exact', head: true }),
+    supabase.from('grants').select('id', { count: 'exact', head: true }),
+    supabase.from('news_posts').select('id', { count: 'exact', head: true }),
+    supabase.from('faqs').select('id', { count: 'exact', head: true }),
+  ])
+
+  return {
+    organizations: organizations.count ?? 0,
+    interviews: interviews.count ?? 0,
+    grants: grants.count ?? 0,
+    news: news.count ?? 0,
+    faqs: faqs.count ?? 0,
+  }
+}
+
+export default async function AdminDashboard() {
+  const counts = await getCounts()
+
   return (
     <AdminLayout>
       <div className="space-y-6">
@@ -20,35 +45,35 @@ export default function AdminDashboard() {
             description="市民活動団体の追加・編集"
             icon={<Users className="h-8 w-8" />}
             href="/admin/organizations"
-            count={0}
+            count={counts.organizations}
           />
           <QuickAccessCard
             title="インタビュー"
             description="インタビュー記事の管理"
             icon={<MessageSquare className="h-8 w-8" />}
             href="/admin/interviews"
-            count={0}
+            count={counts.interviews}
           />
           <QuickAccessCard
             title="助成金情報"
             description="助成金・補助金の管理"
             icon={<Coins className="h-8 w-8" />}
             href="/admin/grants"
-            count={0}
+            count={counts.grants}
           />
           <QuickAccessCard
             title="お知らせ"
             description="お知らせの投稿・編集"
             icon={<Newspaper className="h-8 w-8" />}
             href="/admin/news"
-            count={0}
+            count={counts.news}
           />
           <QuickAccessCard
             title="FAQ"
             description="よくある質問の管理"
             icon={<HelpCircle className="h-8 w-8" />}
             href="/admin/faqs"
-            count={0}
+            count={counts.faqs}
           />
         </div>
 
