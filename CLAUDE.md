@@ -485,15 +485,6 @@ import { FadeInOnScroll, HoverCard } from '@/lib/animations'
 </FadeInOnScroll>
 ```
 
-## 完了済みチケット
-
-- [x] 001 - Supabase プロジェクト作成
-- [x] 003 - shadcn/ui セットアップ
-- [x] 004 - Framer Motion セットアップ
-- [x] 005 - Supabase テーブル作成
-- [x] 006 - 中間テーブル作成（005で完了）
-- [x] 007 - マスターデータ投入
-
 ## 管理画面実装の注意点
 
 ### Supabaseクライアントの使い分け
@@ -596,12 +587,15 @@ organization: interview.organization as { name: string } | null
 
 ## 完了済みチケット
 
+### 環境構築・基盤
 - [x] 001 - Supabase プロジェクト作成
 - [x] 003 - shadcn/ui セットアップ
 - [x] 004 - Framer Motion セットアップ
 - [x] 005 - Supabase テーブル作成
 - [x] 006 - 中間テーブル作成（005で完了）
 - [x] 007 - マスターデータ投入
+
+### 管理画面
 - [x] 008 - 管理画面認証（簡易パスワード認証）
 - [x] 009 - 管理画面共通レイアウト
 - [x] 010 - リッチテキストエディタ（Tiptap）
@@ -611,6 +605,27 @@ organization: interview.organization as { name: string } | null
 - [x] 014 - お知らせCRUD
 - [x] 015 - FAQ CRUD
 - [x] 016 - マスター管理
+
+### 公開サイト
+- [x] 021 - 共通レイアウト（Header/Footer）
+- [x] 022 - トップページ
+- [x] 023 - 市民活動一覧ページ
+- [x] 024 - 市民活動詳細ページ
+
+## カラーパレット（Apple風4色）
+
+| 用途 | 色名 | CSS変数 | 使用場面 |
+|------|------|---------|----------|
+| Primary | 赤 | `--apple-red` | メインボタン、アクセント、リンク |
+| Secondary | 緑 | `--apple-green` | タグ、サブアクセント |
+| Accent | オレンジ | `--apple-orange` | ハイライト、バッジ |
+| Info | 青 | `--apple-blue` | 情報系アクセント |
+
+```tsx
+// Tailwindでの使用例
+<span className="text-apple-red">赤</span>
+<span className="bg-apple-green/10 text-apple-green">緑タグ</span>
+```
 
 ## 備考
 
