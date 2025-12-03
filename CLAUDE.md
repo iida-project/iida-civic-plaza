@@ -571,15 +571,27 @@ const editor = useEditor({
 ### マスターデータ取得
 
 マスターテーブル（`activity_categories`, `activity_areas`, `tags`）のソート：
-- `display_order` カラムは存在しない場合がある
-- `name` でソートするのが安全
+- `activity_categories` と `activity_areas` は `sort_order` カラムでソート可能
+- `tags` は `sort_order` がないため `name` でソート
+
+```typescript
+// 活動分野・エリア（sort_orderあり）
+supabase.from('activity_categories').select('id, name').order('sort_order')
+
+// タグ（sort_orderなし）
+supabase.from('tags').select('id, name').order('name')
+```
+
+### Supabase リレーションの型アサーション
+
+Supabaseのネストしたselectでは型が配列として推論されるため、`as unknown as` を使用：
 
 ```typescript
 // 正しい例
-supabase.from('activity_categories').select('id, name').order('name')
+organization: interview.organization as unknown as { name: string } | null
 
-// 間違い（カラムが存在しない場合エラー）
-supabase.from('activity_categories').select('id, name').order('display_order')
+// 間違い（型エラー）
+organization: interview.organization as { name: string } | null
 ```
 
 ## 完了済みチケット
@@ -594,9 +606,15 @@ supabase.from('activity_categories').select('id, name').order('display_order')
 - [x] 009 - 管理画面共通レイアウト
 - [x] 010 - リッチテキストエディタ（Tiptap）
 - [x] 011 - 団体CRUD
+- [x] 012 - インタビューCRUD
+- [x] 013 - 助成金CRUD
+- [x] 014 - お知らせCRUD
+- [x] 015 - FAQ CRUD
+- [x] 016 - マスター管理
 
 ## 備考
 
 - Payload CMSは互換性問題のため削除済み
 - 管理画面は自作で実装
 - 認証は本番前にセキュリティ強化予定（チケット045）
+- 全テーブルの`payload_id`カラムはNULL許可に変更済み
