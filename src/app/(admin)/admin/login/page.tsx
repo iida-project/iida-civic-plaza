@@ -6,7 +6,8 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { AlertCircle, Loader2 } from 'lucide-react'
+import { AlertCircle, Loader2, ArrowLeft } from 'lucide-react'
+import Link from 'next/link'
 
 export default function LoginPage() {
   const [password, setPassword] = useState('')
@@ -80,6 +81,16 @@ export default function LoginPage() {
               )}
             </Button>
           </form>
+
+          <div className="mt-6 pt-4 border-t">
+            <Link
+              href="/"
+              className="flex items-center justify-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              サイトに戻る
+            </Link>
+          </div>
         </CardContent>
       </Card>
     </div>
