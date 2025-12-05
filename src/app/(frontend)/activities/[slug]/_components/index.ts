@@ -1,2 +1,2 @@
-export { ImageGallery } from './ImageGallery'
+export { ImageGallery } from '@/components/common'
 export { RelatedInterviews } from './RelatedInterviews'

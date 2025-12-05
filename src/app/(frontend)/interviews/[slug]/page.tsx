@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { Mic, ArrowLeft, Building2, Calendar } from 'lucide-react'
 import { TableOfContents, ArticleBody } from './_components'
-import { ImageGallery } from '../../activities/[slug]/_components'
+import { ImageGallery } from '@/components/common'
 import { formatDistanceToNow } from 'date-fns'
 import { ja } from 'date-fns/locale'
 
@@ -157,7 +157,7 @@ export default async function InterviewDetailPage({ params }: Props) {
             {/* 画像ギャラリー */}
             {galleryImages.length > 0 && (
               <div className="mt-12">
-                <ImageGallery images={galleryImages} orgName={interview.title} />
+                <ImageGallery images={galleryImages} alt={interview.title} title="写真ギャラリー" />
               </div>
             )}
 

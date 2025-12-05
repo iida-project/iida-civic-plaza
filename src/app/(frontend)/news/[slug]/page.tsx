@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/server'
 import { ArrowLeft, Bell, Calendar } from 'lucide-react'
 import { format } from 'date-fns'
 import { ja } from 'date-fns/locale'
+import { RichTextRenderer } from '@/components/common'
 
 export const revalidate = 60
 
@@ -117,20 +118,7 @@ export default async function NewsDetailPage({ params }: Props) {
 
             {/* 本文 */}
             {news.body && (
-              <div
-                className="prose prose-lg max-w-none
-                  prose-headings:font-bold prose-headings:text-foreground
-                  prose-h2:text-2xl prose-h2:mt-12 prose-h2:mb-6 prose-h2:pb-3 prose-h2:border-b prose-h2:border-border
-                  prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-4
-                  prose-p:text-foreground/80 prose-p:leading-relaxed prose-p:my-6
-                  prose-a:text-primary prose-a:no-underline hover:prose-a:underline
-                  prose-strong:text-foreground prose-strong:font-semibold
-                  prose-ul:my-6 prose-ul:list-disc prose-ul:pl-6
-                  prose-ol:my-6 prose-ol:list-decimal prose-ol:pl-6
-                  prose-li:text-foreground/80 prose-li:my-2
-                  prose-blockquote:border-l-4 prose-blockquote:border-primary prose-blockquote:pl-6 prose-blockquote:italic prose-blockquote:text-foreground/70"
-                dangerouslySetInnerHTML={{ __html: news.body }}
-              />
+              <RichTextRenderer html={news.body} size="large" />
             )}
 
             {/* 一覧へ戻るボタン */}

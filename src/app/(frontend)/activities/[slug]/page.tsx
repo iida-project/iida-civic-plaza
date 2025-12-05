@@ -15,7 +15,7 @@ import {
   ArrowLeft,
   UserPlus,
 } from 'lucide-react'
-import { ImageGallery } from './_components/ImageGallery'
+import { ImageGallery } from '@/components/common'
 import { RelatedInterviews } from './_components/RelatedInterviews'
 
 // SNSアイコンコンポーネント
@@ -275,7 +275,7 @@ export default async function OrganizationDetailPage({ params }: Props) {
 
             {/* 画像ギャラリー */}
             {galleryImages.length > 0 && (
-              <ImageGallery images={galleryImages} orgName={org.name} />
+              <ImageGallery images={galleryImages} alt={`${org.name}の活動写真`} title="活動の様子" />
             )}
 
             {/* 参加方法 */}
