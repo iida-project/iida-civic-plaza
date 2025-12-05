@@ -611,6 +611,21 @@ organization: interview.organization as { name: string } | null
 - [x] 022 - トップページ
 - [x] 023 - 市民活動一覧ページ
 - [x] 024 - 市民活動詳細ページ
+- [x] 025 - インタビュー一覧ページ
+- [x] 026 - インタビュー詳細ページ
+- [x] 027 - 助成金一覧ページ
+- [x] 028 - 助成金詳細ページ
+- [x] 029 - お知らせ一覧ページ
+- [x] 030 - お知らせ詳細ページ
+- [x] 031 - FAQページ
+- [x] 032 - サイトについてページ
+
+### 共通コンポーネント
+- [x] 033 - カードコンポーネント（BaseCard）
+- [x] 034 - フィルターコンポーネント
+- [x] 035 - 画像ギャラリー（ImageGallery）
+- [x] 036 - リッチテキストレンダラー（RichTextRenderer）
+- [x] 037 - バッジ・タグコンポーネント
 
 ## カラーパレット（Apple風4色）
 
@@ -627,9 +642,53 @@ organization: interview.organization as { name: string } | null
 <span className="bg-apple-green/10 text-apple-green">緑タグ</span>
 ```
 
+## 共通コンポーネント（src/components/common）
+
+再利用可能なコンポーネント群：
+
+```typescript
+import {
+  // カード
+  BaseCard, CardImage, CardContent, CardTitle, CardDescription, CardBadge,
+  // フィルター
+  FilterContainer, FilterSection, ChipFilter, SortButtons, ClearFilterButton, ResultCount, useFilterParams,
+  // 画像ギャラリー
+  ImageGallery,
+  // リッチテキスト
+  RichTextRenderer, ArticleBody,
+  // バッジ
+  CategoryBadge, AreaBadge, TagBadge, StatusBadge, DeadlineBadge, BadgeList, NewBadge, PickupBadge,
+} from '@/components/common'
+```
+
+### ImageGallery
+画像ギャラリー（ライトボックス、キーボード操作、スワイプ対応）
+
+```tsx
+<ImageGallery images={galleryImages} alt="団体名の活動写真" title="活動の様子" />
+```
+
+### RichTextRenderer / ArticleBody
+リッチテキスト（HTML）のスタイリング表示
+
+```tsx
+<RichTextRenderer html={content} size="large" />
+<ArticleBody html={article.body} />  // 見出しID自動付与
+```
+
+### バッジコンポーネント
+```tsx
+<CategoryBadge icon>子ども</CategoryBadge>      // 赤
+<AreaBadge>上郷</AreaBadge>                      // 緑
+<TagBadge>ボランティア</TagBadge>                // 青
+<StatusBadge variant="open">受付中</StatusBadge> // open/closed/soon/urgent/info
+<DeadlineBadge daysRemaining={5} />              // 日数から自動判定
+```
+
 ## 備考
 
 - Payload CMSは互換性問題のため削除済み
 - 管理画面は自作で実装
 - 認証は本番前にセキュリティ強化予定（チケット045）
 - 全テーブルの`payload_id`カラムはNULL許可に変更済み
+- Vercelにデプロイ済み（Hobbyプラン）
