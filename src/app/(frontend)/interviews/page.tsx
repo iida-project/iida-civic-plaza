@@ -1,5 +1,5 @@
 import { Metadata } from 'next'
-import { createClient } from '@/lib/supabase/server'
+import { createPublicClient } from '@/lib/supabase/public'
 import { Mic } from 'lucide-react'
 import { InterviewCard } from './_components'
 
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export const revalidate = 60
 
 async function getInterviews() {
-  const supabase = await createClient()
+  const supabase = createPublicClient()
 
   const { data } = await supabase
     .from('interviews')

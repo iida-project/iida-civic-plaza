@@ -1,5 +1,5 @@
 import { Suspense } from 'react'
-import { createClient } from '@/lib/supabase/server'
+import { createPublicClient } from '@/lib/supabase/public'
 import { FilterSection, OrganizationCard } from './_components'
 import { Users } from 'lucide-react'
 
@@ -10,7 +10,7 @@ type Props = {
 }
 
 async function getCategories() {
-  const supabase = await createClient()
+  const supabase = createPublicClient()
   const { data } = await supabase
     .from('activity_categories')
     .select('id, name, slug')
@@ -19,7 +19,7 @@ async function getCategories() {
 }
 
 async function getAreas() {
-  const supabase = await createClient()
+  const supabase = createPublicClient()
   const { data } = await supabase
     .from('activity_areas')
     .select('id, name, slug')
@@ -28,7 +28,7 @@ async function getAreas() {
 }
 
 async function getOrganizations(categorySlug?: string, areaSlug?: string) {
-  const supabase = await createClient()
+  const supabase = createPublicClient()
 
   // まず公開済みの団体を取得
   const { data: organizations } = await supabase

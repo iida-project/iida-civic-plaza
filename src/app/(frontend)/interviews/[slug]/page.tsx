@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
-import { createClient } from '@/lib/supabase/server'
+import { createPublicClient } from '@/lib/supabase/public'
 import { Mic, ArrowLeft, Building2, Calendar } from 'lucide-react'
 import { TableOfContents, ArticleBody } from './_components'
 import { ImageGallery } from '@/components/common'
@@ -16,7 +16,7 @@ type Props = {
 }
 
 async function getInterview(slug: string) {
-  const supabase = await createClient()
+  const supabase = createPublicClient()
 
   const { data } = await supabase
     .from('interviews')
@@ -37,7 +37,7 @@ async function getInterview(slug: string) {
 }
 
 async function getOtherInterviews(currentId: string) {
-  const supabase = await createClient()
+  const supabase = createPublicClient()
 
   const { data } = await supabase
     .from('interviews')

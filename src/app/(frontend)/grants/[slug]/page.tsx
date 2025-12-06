@@ -1,7 +1,7 @@
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { createClient } from '@/lib/supabase/server'
+import { createPublicClient } from '@/lib/supabase/public'
 import {
   ArrowLeft,
   Building2,
@@ -28,7 +28,7 @@ type Props = {
 type CategoryItem = { id: string; name: string; slug: string }
 
 async function getGrant(slug: string) {
-  const supabase = await createClient()
+  const supabase = createPublicClient()
 
   const { data: grant } = await supabase
     .from('grants')
@@ -54,7 +54,7 @@ async function getGrant(slug: string) {
 }
 
 async function getOtherGrants(currentId: string) {
-  const supabase = await createClient()
+  const supabase = createPublicClient()
   const today = new Date().toISOString().split('T')[0]
 
   const { data } = await supabase

@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
-import { createClient } from '@/lib/supabase/server'
+import { createPublicClient } from '@/lib/supabase/public'
 import {
   Users,
   MapPin,
@@ -54,7 +54,7 @@ type AreaItem = { id: string; name: string; slug: string }
 type TagItem = { id: string; name: string; slug: string }
 
 async function getOrganization(slug: string) {
-  const supabase = await createClient()
+  const supabase = createPublicClient()
 
   const { data: org } = await supabase
     .from('organizations')
@@ -98,7 +98,7 @@ async function getOrganization(slug: string) {
 }
 
 async function getRelatedInterviews(organizationId: string) {
-  const supabase = await createClient()
+  const supabase = createPublicClient()
   const { data } = await supabase
     .from('interviews')
     .select('id, slug, title, thumbnail_url')
@@ -111,7 +111,7 @@ async function getRelatedInterviews(organizationId: string) {
 }
 
 async function getOtherOrganizations(currentOrgId: string) {
-  const supabase = await createClient()
+  const supabase = createPublicClient()
   const { data } = await supabase
     .from('organizations')
     .select('id, slug, name, short_name, main_image_url')

@@ -1,7 +1,7 @@
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { createClient } from '@/lib/supabase/server'
+import { createPublicClient } from '@/lib/supabase/public'
 import { ArrowLeft, Bell, Calendar } from 'lucide-react'
 import { format } from 'date-fns'
 import { ja } from 'date-fns/locale'
@@ -14,7 +14,7 @@ type Props = {
 }
 
 async function getNewsPost(slug: string) {
-  const supabase = await createClient()
+  const supabase = createPublicClient()
 
   const { data } = await supabase
     .from('news_posts')
@@ -27,7 +27,7 @@ async function getNewsPost(slug: string) {
 }
 
 async function getOtherNews(currentId: string) {
-  const supabase = await createClient()
+  const supabase = createPublicClient()
 
   const { data } = await supabase
     .from('news_posts')

@@ -1,5 +1,5 @@
 import { Metadata } from 'next'
-import { createClient } from '@/lib/supabase/server'
+import { createPublicClient } from '@/lib/supabase/public'
 import { Coins } from 'lucide-react'
 import { GrantCard, FilterSection } from './_components'
 
@@ -15,7 +15,7 @@ type Props = {
 }
 
 async function getGrants(showClosed: boolean, sort: string) {
-  const supabase = await createClient()
+  const supabase = createPublicClient()
 
   let query = supabase
     .from('grants')
@@ -42,7 +42,7 @@ async function getGrants(showClosed: boolean, sort: string) {
 }
 
 async function getClosedCount() {
-  const supabase = await createClient()
+  const supabase = createPublicClient()
   const today = new Date().toISOString().split('T')[0]
 
   const { count } = await supabase

@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server'
+import { createPublicClient } from '@/lib/supabase/public'
 import {
   HeroSection,
   LatestArticlesSection,
@@ -20,7 +20,7 @@ type Article = {
 }
 
 async function getLatestArticles(): Promise<Article[]> {
-  const supabase = await createClient()
+  const supabase = createPublicClient()
   const articles: Article[] = []
 
   // 団体（最新3件）
@@ -106,7 +106,7 @@ async function getLatestArticles(): Promise<Article[]> {
 }
 
 async function getCategories() {
-  const supabase = await createClient()
+  const supabase = createPublicClient()
   const { data } = await supabase
     .from('activity_categories')
     .select('id, name, slug')
@@ -115,7 +115,7 @@ async function getCategories() {
 }
 
 async function getAreas() {
-  const supabase = await createClient()
+  const supabase = createPublicClient()
   const { data } = await supabase
     .from('activity_areas')
     .select('id, name, slug')
@@ -124,7 +124,7 @@ async function getAreas() {
 }
 
 async function getFeaturedInterviews() {
-  const supabase = await createClient()
+  const supabase = createPublicClient()
   const { data } = await supabase
     .from('interviews')
     .select(`
@@ -147,7 +147,7 @@ async function getFeaturedInterviews() {
 }
 
 async function getPickupOrganizations() {
-  const supabase = await createClient()
+  const supabase = createPublicClient()
   const { data } = await supabase
     .from('organizations')
     .select(`

@@ -1,5 +1,5 @@
 import { Metadata } from 'next'
-import { createClient } from '@/lib/supabase/server'
+import { createPublicClient } from '@/lib/supabase/public'
 import { Bell } from 'lucide-react'
 import { NewsItem } from './_components'
 
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export const revalidate = 60
 
 async function getNewsPosts() {
-  const supabase = await createClient()
+  const supabase = createPublicClient()
 
   const { data } = await supabase
     .from('news_posts')
