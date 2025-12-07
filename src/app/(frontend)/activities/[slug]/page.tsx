@@ -15,7 +15,7 @@ import {
   ArrowLeft,
   UserPlus,
 } from 'lucide-react'
-import { ImageGallery } from '@/components/common'
+import { ImageGallery, RichTextRenderer } from '@/components/common'
 import { RelatedInterviews } from './_components/RelatedInterviews'
 
 // SNSアイコンコンポーネント
@@ -55,11 +55,13 @@ type TagItem = { id: string; name: string; slug: string }
 
 async function getOrganization(slug: string) {
   const supabase = createPublicClient()
+  // URLエンコードされた日本語スラッグをデコード
+  const decodedSlug = decodeURIComponent(slug)
 
   const { data: org } = await supabase
     .from('organizations')
     .select('*')
-    .eq('slug', slug)
+    .eq('slug', decodedSlug)
     .eq('is_published', true)
     .single()
 
@@ -285,9 +287,7 @@ export default async function OrganizationDetailPage({ params }: Props) {
                   <UserPlus className="h-5 w-5 text-primary" />
                   参加方法
                 </h2>
-                <p className="text-foreground/80 whitespace-pre-wrap">
-                  {org.participation_info}
-                </p>
+                <RichTextRenderer html={org.participation_info} size="default" />
               </div>
             )}
 

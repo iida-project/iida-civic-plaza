@@ -83,10 +83,16 @@ export function FaqList({ faqs }: FaqListProps) {
     })
   }
 
-  // 質問を短縮表示
+  // HTMLタグを除去
+  const stripHtml = (html: string) => {
+    return html.replace(/<[^>]*>/g, '')
+  }
+
+  // テキストを短縮表示
   const truncate = (text: string, maxLength: number = 50) => {
-    if (text.length <= maxLength) return text
-    return text.substring(0, maxLength) + '...'
+    const plainText = stripHtml(text)
+    if (plainText.length <= maxLength) return plainText
+    return plainText.substring(0, maxLength) + '...'
   }
 
   if (faqs.length === 0) {

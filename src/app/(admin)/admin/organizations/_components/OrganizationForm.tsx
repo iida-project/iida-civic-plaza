@@ -1,6 +1,6 @@
 'use client'
 
-import { useActionState, useState } from 'react'
+import { useActionState, useState, useRef } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -16,6 +16,7 @@ import {
   type OrganizationFormState,
 } from '../actions'
 import { Loader2 } from 'lucide-react'
+import { createClient } from '@/lib/supabase/client'
 
 type Category = { id: string; name: string }
 type Area = { id: string; name: string }
@@ -78,6 +79,54 @@ export function OrganizationForm({
   const [isPublished, setIsPublished] = useState(
     organization?.is_published || false
   )
+
+  const editorImageInputRef = useRef<HTMLInputElement>(null)
+  const [imageUploadResolve, setImageUploadResolve] = useState<((url: string | null) => void) | null>(null)
+
+  // リッチテキスト内の画像アップロード
+  const handleEditorImageUpload = (): Promise<string | null> => {
+    return new Promise((resolve) => {
+      setImageUploadResolve(() => resolve)
+      editorImageInputRef.current?.click()
+    })
+  }
+
+  const handleEditorImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) {
+      imageUploadResolve?.(null)
+      return
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      alert('ファイルサイズは5MB以下にしてください')
+      imageUploadResolve?.(null)
+      return
+    }
+
+    try {
+      const supabase = createClient()
+      const ext = file.name.split('.').pop()
+      const fileName = `organizations/content/${Date.now()}-${Math.random().toString(36).substring(2, 9)}.${ext}`
+
+      const { error: uploadError } = await supabase.storage
+        .from('media')
+        .upload(fileName, file, { cacheControl: '3600', upsert: false })
+
+      if (uploadError) throw uploadError
+
+      const { data: { publicUrl } } = supabase.storage.from('media').getPublicUrl(fileName)
+      imageUploadResolve?.(publicUrl)
+    } catch (err) {
+      console.error('Upload error:', err)
+      alert('アップロードに失敗しました')
+      imageUploadResolve?.(null)
+    } finally {
+      if (editorImageInputRef.current) {
+        editorImageInputRef.current.value = ''
+      }
+    }
+  }
 
   // Server Action
   const boundAction = isEditing
@@ -299,6 +348,14 @@ export function OrganizationForm({
           content={participationInfo}
           onChange={setParticipationInfo}
           placeholder="活動への参加方法を入力..."
+          onImageUpload={handleEditorImageUpload}
+        />
+        <input
+          ref={editorImageInputRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={handleEditorImageChange}
         />
       </div>
 

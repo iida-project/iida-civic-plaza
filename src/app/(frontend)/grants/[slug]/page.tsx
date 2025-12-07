@@ -29,11 +29,13 @@ type CategoryItem = { id: string; name: string; slug: string }
 
 async function getGrant(slug: string) {
   const supabase = createPublicClient()
+  // URLエンコードされた日本語スラッグをデコード
+  const decodedSlug = decodeURIComponent(slug)
 
   const { data: grant } = await supabase
     .from('grants')
     .select('*')
-    .eq('slug', slug)
+    .eq('slug', decodedSlug)
     .eq('is_published', true)
     .single()
 

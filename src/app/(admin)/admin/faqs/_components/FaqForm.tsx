@@ -5,10 +5,10 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
 import { Switch } from '@/components/ui/switch'
 import { createFaq, updateFaq, type FaqFormState } from '../actions'
 import { Loader2 } from 'lucide-react'
+import { RichTextEditor } from '@/components/admin/editor/RichTextEditor'
 
 type Faq = {
   id: string
@@ -29,6 +29,7 @@ export function FaqForm({ faq }: FaqFormProps) {
 
   // フォーム状態
   const [isPublished, setIsPublished] = useState(faq?.is_published ?? true)
+  const [answer, setAnswer] = useState(faq?.answer || '')
 
   // Server Action
   const boundAction = isEditing ? updateFaq.bind(null, faq.id) : createFaq
@@ -37,6 +38,7 @@ export function FaqForm({ faq }: FaqFormProps) {
 
   const handleSubmit = (formData: FormData) => {
     formData.set('is_published', isPublished.toString())
+    formData.set('answer', answer)
     formAction(formData)
   }
 
@@ -70,16 +72,13 @@ export function FaqForm({ faq }: FaqFormProps) {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="answer">
+          <Label>
             回答 <span className="text-red-500">*</span>
           </Label>
-          <Textarea
-            id="answer"
-            name="answer"
-            rows={6}
-            defaultValue={faq?.answer || ''}
+          <RichTextEditor
+            content={answer}
+            onChange={setAnswer}
             placeholder="回答を入力..."
-            required
           />
           {state.errors?.answer && (
             <p className="text-sm text-red-500">{state.errors.answer[0]}</p>

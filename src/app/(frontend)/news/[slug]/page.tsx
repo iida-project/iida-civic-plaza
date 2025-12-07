@@ -15,11 +15,13 @@ type Props = {
 
 async function getNewsPost(slug: string) {
   const supabase = createPublicClient()
+  // URLエンコードされた日本語スラッグをデコード
+  const decodedSlug = decodeURIComponent(slug)
 
   const { data } = await supabase
     .from('news_posts')
     .select('*')
-    .eq('slug', slug)
+    .eq('slug', decodedSlug)
     .eq('is_published', true)
     .single()
 

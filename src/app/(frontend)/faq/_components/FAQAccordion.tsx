@@ -7,6 +7,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion'
+import { RichTextRenderer } from '@/components/common'
 
 type FAQ = {
   id: string
@@ -51,12 +52,9 @@ export function FAQAccordion({ faqs }: Props) {
                   <span className="flex-shrink-0 w-8 h-8 rounded-full bg-apple-green/10 text-apple-green font-bold flex items-center justify-center text-sm">
                     A
                   </span>
-                  <div
-                    className="pt-1 text-foreground/80 leading-relaxed prose prose-sm max-w-none
-                      prose-p:my-2 prose-ul:my-2 prose-ol:my-2
-                      prose-a:text-primary"
-                    dangerouslySetInnerHTML={{ __html: faq.answer }}
-                  />
+                  <div className="pt-1 flex-1">
+                    <RichTextRenderer html={faq.answer} size="small" />
+                  </div>
                 </div>
               </AccordionContent>
             </AccordionItem>

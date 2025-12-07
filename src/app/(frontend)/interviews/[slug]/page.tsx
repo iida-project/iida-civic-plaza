@@ -17,6 +17,8 @@ type Props = {
 
 async function getInterview(slug: string) {
   const supabase = createPublicClient()
+  // URLエンコードされた日本語スラッグをデコード
+  const decodedSlug = decodeURIComponent(slug)
 
   const { data } = await supabase
     .from('interviews')
@@ -24,7 +26,7 @@ async function getInterview(slug: string) {
       *,
       organization:organizations(id, name, slug)
     `)
-    .eq('slug', slug)
+    .eq('slug', decodedSlug)
     .eq('is_published', true)
     .single()
 
