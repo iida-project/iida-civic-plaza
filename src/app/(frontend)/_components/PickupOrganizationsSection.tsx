@@ -3,7 +3,8 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
-import { ArrowRight, Users, MapPin } from 'lucide-react'
+import { ArrowRight, Users, MapPin, UserPlus } from 'lucide-react'
+import { stripHtml } from '@/lib/utils'
 
 type Organization = {
   id: string
@@ -12,6 +13,7 @@ type Organization = {
   short_name: string | null
   summary: string
   main_image_url: string | null
+  is_recruiting: boolean | null
   categories: { name: string }[]
   areas: { name: string }[]
 }
@@ -75,6 +77,13 @@ export function PickupOrganizationsSection({ organizations }: Props) {
                       <Users className="h-16 w-16 text-muted-foreground/30" />
                     </div>
                   )}
+                  {/* 会員募集中バッジ */}
+                  {org.is_recruiting && (
+                    <span className="absolute top-3 right-3 z-10 inline-flex items-center gap-1 px-2.5 py-1 bg-purple-500 text-white text-xs font-bold rounded-sm shadow-lg ring-2 ring-white">
+                      <UserPlus className="h-3 w-3" />
+                      募集中
+                    </span>
+                  )}
                 </div>
 
                 {/* コンテンツ */}
@@ -102,7 +111,7 @@ export function PickupOrganizationsSection({ organizations }: Props) {
                   </div>
 
                   <p className="text-sm text-foreground/70 line-clamp-2">
-                    {org.summary}
+                    {stripHtml(org.summary)}
                   </p>
                 </div>
               </Link>

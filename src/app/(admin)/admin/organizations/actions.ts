@@ -137,6 +137,10 @@ export async function createOrganization(
     const slug = await generateUniqueSlug(supabase, name)
     const isPublished = formData.get('is_published') === 'true'
 
+    const isRecruiting = formData.get('is_recruiting') === 'true'
+    const establishedYearStr = getFormStringOrNull(formData, 'established_year')
+    const establishedYear = establishedYearStr ? parseInt(establishedYearStr, 10) : null
+
     const { data: organization, error } = await supabase
       .from('organizations')
       .insert({
@@ -155,6 +159,15 @@ export async function createOrganization(
         main_image_url: getFormStringOrNull(formData, 'main_image_url'),
         is_published: isPublished,
         published_at: isPublished ? new Date().toISOString() : null,
+        // 新規カラム
+        activity_schedule: getFormStringOrNull(formData, 'activity_schedule'),
+        member_count: getFormStringOrNull(formData, 'member_count'),
+        membership_fee: getFormStringOrNull(formData, 'membership_fee'),
+        activity_location: getFormStringOrNull(formData, 'activity_location'),
+        representative: getFormStringOrNull(formData, 'representative'),
+        established_year: establishedYear,
+        activity_description: getFormStringOrNull(formData, 'activity_description'),
+        is_recruiting: isRecruiting,
       })
       .select()
       .single()
@@ -226,6 +239,10 @@ export async function updateOrganization(
       publishedAt = null
     }
 
+    const isRecruiting = formData.get('is_recruiting') === 'true'
+    const establishedYearStr = getFormStringOrNull(formData, 'established_year')
+    const establishedYear = establishedYearStr ? parseInt(establishedYearStr, 10) : null
+
     const { error } = await supabase
       .from('organizations')
       .update({
@@ -244,6 +261,15 @@ export async function updateOrganization(
         main_image_url: getFormStringOrNull(formData, 'main_image_url'),
         is_published: isPublished,
         published_at: publishedAt,
+        // 新規カラム
+        activity_schedule: getFormStringOrNull(formData, 'activity_schedule'),
+        member_count: getFormStringOrNull(formData, 'member_count'),
+        membership_fee: getFormStringOrNull(formData, 'membership_fee'),
+        activity_location: getFormStringOrNull(formData, 'activity_location'),
+        representative: getFormStringOrNull(formData, 'representative'),
+        established_year: establishedYear,
+        activity_description: getFormStringOrNull(formData, 'activity_description'),
+        is_recruiting: isRecruiting,
       })
       .eq('id', id)
 

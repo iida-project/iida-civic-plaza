@@ -2,9 +2,10 @@
 
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { Users, Mic, Wallet, Bell } from 'lucide-react'
+import { Users, Mic, Wallet, Bell, UserPlus } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
 import { ja } from 'date-fns/locale'
+import { stripHtml } from '@/lib/utils'
 
 type Article = {
   id: string
@@ -13,6 +14,7 @@ type Article = {
   type: 'organization' | 'interview' | 'grant' | 'news'
   published_at: string
   summary?: string
+  is_recruiting?: boolean | null
 }
 
 type Props = {
@@ -93,8 +95,15 @@ export function LatestArticlesSection({ articles }: Props) {
               >
                 <Link
                   href={getArticleHref(article)}
-                  className="block h-full p-6 bg-card rounded-2xl shadow-md hover:shadow-lg transition-all group border border-transparent hover:border-primary/20"
+                  className="relative block h-full p-6 bg-card rounded-2xl shadow-md hover:shadow-lg transition-all group border border-transparent hover:border-primary/20"
                 >
+                  {/* 会員募集中バッジ */}
+                  {article.type === 'organization' && article.is_recruiting && (
+                    <span className="absolute top-3 right-3 z-10 inline-flex items-center gap-1 px-2.5 py-1 bg-purple-500 text-white text-xs font-bold rounded-sm shadow-lg ring-2 ring-white">
+                      <UserPlus className="h-3 w-3" />
+                      募集中
+                    </span>
+                  )}
                   <div className="flex items-center gap-2 mb-3">
                     <span
                       className={`inline-flex items-center gap-1.5 px-3 py-1 ${config.color} text-white text-xs font-medium rounded-full`}
@@ -114,7 +123,7 @@ export function LatestArticlesSection({ articles }: Props) {
                   </h3>
                   {article.summary && (
                     <p className="text-sm text-foreground/70 line-clamp-2">
-                      {article.summary}
+                      {stripHtml(article.summary)}
                     </p>
                   )}
                 </Link>

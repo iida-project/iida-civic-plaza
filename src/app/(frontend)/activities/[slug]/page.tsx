@@ -14,6 +14,10 @@ import {
   ExternalLink,
   ArrowLeft,
   UserPlus,
+  Calendar,
+  Banknote,
+  Building,
+  User,
 } from 'lucide-react'
 import { ImageGallery, RichTextRenderer } from '@/components/common'
 import { RelatedInterviews } from './_components/RelatedInterviews'
@@ -141,12 +145,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     }
   }
 
+  // summaryからHTMLタグを除去してdescriptionに使用
+  const plainSummary = org.summary.replace(/<[^>]*>/g, '').slice(0, 160)
+
   return {
     title: `${org.short_name || org.name} | 市民活動紹介`,
-    description: org.summary,
+    description: plainSummary,
     openGraph: {
       title: org.short_name || org.name,
-      description: org.summary,
+      description: plainSummary,
       images: org.main_image_url ? [org.main_image_url] : [],
     },
   }
@@ -169,6 +176,13 @@ export default async function OrganizationDetailPage({ params }: Props) {
   const hasSocialLinks =
     org.facebook_url || org.twitter_url || org.instagram_url || org.website_url
   const hasContactInfo = org.contact_email || org.contact_phone || org.contact_name
+  const hasOrgInfo =
+    org.representative ||
+    org.established_year ||
+    org.member_count ||
+    org.membership_fee ||
+    org.activity_schedule ||
+    org.activity_location
 
   return (
     <div className="py-8 sm:py-12">
@@ -205,15 +219,27 @@ export default async function OrganizationDetailPage({ params }: Props) {
 
             {/* タイトル・概要 */}
             <div>
-              <h1 className="text-2xl sm:text-3xl font-bold mb-2">
-                {org.name}
-              </h1>
+              <div className="flex flex-wrap items-center gap-3 mb-2">
+                <h1 className="text-2xl sm:text-3xl font-bold">
+                  {org.name}
+                </h1>
+                {/* 会員募集中バッジ */}
+                {org.is_recruiting && (
+                  <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-purple-500 text-white text-sm font-bold rounded-sm shadow-md">
+                    <UserPlus className="h-4 w-4" />
+                    会員募集中
+                  </span>
+                )}
+              </div>
               {org.short_name && org.short_name !== org.name && (
                 <p className="text-lg text-muted-foreground mb-4">
                   {org.short_name}
                 </p>
               )}
-              <p className="text-foreground/80 leading-relaxed">{org.summary}</p>
+              {/* 概要説明（リッチテキスト） */}
+              <div className="text-foreground/80">
+                <RichTextRenderer html={org.summary} size="default" />
+              </div>
             </div>
 
             {/* カテゴリ・エリア・タグ */}
@@ -275,6 +301,17 @@ export default async function OrganizationDetailPage({ params }: Props) {
               )}
             </div>
 
+            {/* 活動内容 */}
+            {org.activity_description && (
+              <div className="bg-card rounded-2xl p-6 border border-border">
+                <h2 className="flex items-center gap-2 text-lg font-semibold mb-4">
+                  <Users className="h-5 w-5 text-primary" />
+                  活動内容
+                </h2>
+                <RichTextRenderer html={org.activity_description} size="default" />
+              </div>
+            )}
+
             {/* 画像ギャラリー */}
             {galleryImages.length > 0 && (
               <ImageGallery images={galleryImages} alt={`${org.name}の活動写真`} title="活動の様子" />
@@ -299,6 +336,69 @@ export default async function OrganizationDetailPage({ params }: Props) {
 
           {/* 右カラム: サイドバー */}
           <div className="space-y-6">
+            {/* 団体情報 */}
+            {hasOrgInfo && (
+              <div className="bg-card rounded-2xl p-6 border border-border">
+                <h2 className="text-lg font-semibold mb-4">団体情報</h2>
+                <dl className="space-y-3">
+                  {org.representative && (
+                    <div className="flex items-start gap-3">
+                      <dt className="flex items-center gap-2 text-sm text-muted-foreground min-w-[80px]">
+                        <User className="h-4 w-4" />
+                        代表者
+                      </dt>
+                      <dd className="text-sm">{org.representative}</dd>
+                    </div>
+                  )}
+                  {org.established_year && (
+                    <div className="flex items-start gap-3">
+                      <dt className="flex items-center gap-2 text-sm text-muted-foreground min-w-[80px]">
+                        <Building className="h-4 w-4" />
+                        設立
+                      </dt>
+                      <dd className="text-sm">{org.established_year}年</dd>
+                    </div>
+                  )}
+                  {org.member_count && (
+                    <div className="flex items-start gap-3">
+                      <dt className="flex items-center gap-2 text-sm text-muted-foreground min-w-[80px]">
+                        <Users className="h-4 w-4" />
+                        会員数
+                      </dt>
+                      <dd className="text-sm">{org.member_count}</dd>
+                    </div>
+                  )}
+                  {org.membership_fee && (
+                    <div className="flex items-start gap-3">
+                      <dt className="flex items-center gap-2 text-sm text-muted-foreground min-w-[80px]">
+                        <Banknote className="h-4 w-4" />
+                        会費
+                      </dt>
+                      <dd className="text-sm">{org.membership_fee}</dd>
+                    </div>
+                  )}
+                  {org.activity_schedule && (
+                    <div className="flex items-start gap-3">
+                      <dt className="flex items-center gap-2 text-sm text-muted-foreground min-w-[80px]">
+                        <Calendar className="h-4 w-4" />
+                        活動日
+                      </dt>
+                      <dd className="text-sm">{org.activity_schedule}</dd>
+                    </div>
+                  )}
+                  {org.activity_location && (
+                    <div className="flex items-start gap-3">
+                      <dt className="flex items-center gap-2 text-sm text-muted-foreground min-w-[80px]">
+                        <MapPin className="h-4 w-4" />
+                        活動場所
+                      </dt>
+                      <dd className="text-sm">{org.activity_location}</dd>
+                    </div>
+                  )}
+                </dl>
+              </div>
+            )}
+
             {/* 連絡先 */}
             {hasContactInfo && (
               <div className="bg-card rounded-2xl p-6 border border-border">

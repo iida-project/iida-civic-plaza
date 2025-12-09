@@ -585,6 +585,53 @@ organization: interview.organization as unknown as { name: string } | null
 organization: interview.organization as { name: string } | null
 ```
 
+## Organizations テーブル拡張カラム
+
+チケット047で追加されたカラム：
+
+| カラム名 | 型 | 説明 |
+|---------|-----|------|
+| `activity_schedule` | TEXT | 活動日（例: 毎月第2土曜日） |
+| `member_count` | TEXT | 会員数（例: 約30名） |
+| `membership_fee` | TEXT | 会費（例: 年会費3,000円） |
+| `activity_location` | TEXT | 活動場所（例: 飯田市公民館） |
+| `representative` | TEXT | 代表者名 |
+| `established_year` | INTEGER | 設立年（西暦） |
+| `activity_description` | TEXT | 活動内容（リッチテキスト） |
+| `is_recruiting` | BOOLEAN | 会員募集中フラグ |
+
+### 会員募集バッジ
+
+会員募集中の団体には紫色（`bg-purple-500`）の四角形バッジを表示：
+
+```tsx
+{organization.is_recruiting && (
+  <span className="absolute top-3 right-3 z-10 inline-flex items-center gap-1 px-2.5 py-1 bg-purple-500 text-white text-xs font-bold rounded-sm shadow-lg ring-2 ring-white">
+    <UserPlus className="h-3 w-3" />
+    募集中
+  </span>
+)}
+```
+
+表示場所：
+- `/activities` 一覧ページ（カード右上）
+- `/activities/[slug]` 詳細ページ（タイトル横）
+- トップページ 新着情報（カード右上）
+- トップページ ピックアップ団体（カード右上）
+
+## 共通ユーティリティ関数
+
+### stripHtml（src/lib/utils.ts）
+
+HTMLタグを除去してプレーンテキストに変換：
+
+```typescript
+import { stripHtml } from '@/lib/utils'
+
+// 使用例
+const plainText = stripHtml('<p>HTMLコンテンツ</p>')  // "HTMLコンテンツ"
+```
+
 ## 完了済みチケット
 
 ### 環境構築・基盤
@@ -605,6 +652,7 @@ organization: interview.organization as { name: string } | null
 - [x] 014 - お知らせCRUD
 - [x] 015 - FAQ CRUD
 - [x] 016 - マスター管理
+- [x] 047 - Organizations テーブル拡張（8カラム追加、会員募集バッジ）
 
 ### 公開サイト
 - [x] 021 - 共通レイアウト（Header/Footer）

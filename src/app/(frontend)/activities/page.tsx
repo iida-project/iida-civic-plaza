@@ -33,7 +33,7 @@ async function getOrganizations(categorySlug?: string, areaSlug?: string) {
   // まず公開済みの団体を取得
   const { data: organizations } = await supabase
     .from('organizations')
-    .select('id, slug, name, short_name, summary, main_image_url')
+    .select('id, slug, name, short_name, summary, main_image_url, is_recruiting')
     .eq('is_published', true)
     .order('published_at', { ascending: false })
 

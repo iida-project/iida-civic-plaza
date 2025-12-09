@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
 import { Switch } from '@/components/ui/switch'
 import { RichTextEditor } from '@/components/admin/editor'
 import { ImageUpload } from './ImageUpload'
@@ -38,6 +37,15 @@ type Organization = {
   participation_info: string | null
   main_image_url: string | null
   is_published: boolean
+  // 新規カラム
+  activity_schedule: string | null
+  member_count: string | null
+  membership_fee: string | null
+  activity_location: string | null
+  representative: string | null
+  established_year: number | null
+  activity_description: string | null
+  is_recruiting: boolean | null
   organization_categories?: { category_id: string }[]
   organization_areas?: { area_id: string }[]
   organization_tags?: { tag_id: string }[]
@@ -61,6 +69,10 @@ export function OrganizationForm({
   const isEditing = !!organization
 
   // フォーム状態
+  const [summary, setSummary] = useState(organization?.summary || '')
+  const [activityDescription, setActivityDescription] = useState(
+    organization?.activity_description || ''
+  )
   const [participationInfo, setParticipationInfo] = useState(
     organization?.participation_info || ''
   )
@@ -78,6 +90,9 @@ export function OrganizationForm({
   )
   const [isPublished, setIsPublished] = useState(
     organization?.is_published || false
+  )
+  const [isRecruiting, setIsRecruiting] = useState(
+    organization?.is_recruiting || false
   )
 
   const editorImageInputRef = useRef<HTMLInputElement>(null)
@@ -137,18 +152,21 @@ export function OrganizationForm({
 
   const handleSubmit = (formData: FormData) => {
     // hidden フィールドのデータを追加
+    formData.set('summary', summary)
+    formData.set('activity_description', activityDescription)
     formData.set('participation_info', participationInfo)
     formData.set('main_image_url', mainImageUrl)
     formData.set('categories', JSON.stringify(selectedCategories))
     formData.set('areas', JSON.stringify(selectedAreas))
     formData.set('tags', JSON.stringify(selectedTags))
     formData.set('is_published', isPublished.toString())
+    formData.set('is_recruiting', isRecruiting.toString())
 
     formAction(formData)
   }
 
   return (
-    <form action={handleSubmit} className="space-y-8">
+    <form action={handleSubmit} className="space-y-6">
       {/* エラー表示 */}
       {state.errors?.general && (
         <div className="bg-red-50 border border-red-200 text-red-700 p-4 rounded-md">
@@ -156,231 +174,337 @@ export function OrganizationForm({
         </div>
       )}
 
-      {/* 基本情報 */}
-      <div className="bg-white p-6 rounded-lg shadow space-y-4">
-        <h2 className="text-lg font-semibold border-b pb-2">基本情報</h2>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* メインエリア（左側 2/3） */}
+        <div className="lg:col-span-2 space-y-6">
+          {/* 基本情報 */}
+          <div className="bg-white p-6 rounded-lg shadow space-y-4">
+            <h2 className="text-lg font-semibold border-b pb-2">基本情報</h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="name">
-              団体名 <span className="text-red-500">*</span>
-            </Label>
-            <Input
-              id="name"
-              name="name"
-              defaultValue={organization?.name || ''}
-              required
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="name">
+                  団体名 <span className="text-red-500">*</span>
+                </Label>
+                <Input
+                  id="name"
+                  name="name"
+                  defaultValue={organization?.name || ''}
+                  required
+                />
+                {state.errors?.name && (
+                  <p className="text-sm text-red-500">{state.errors.name[0]}</p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="short_name">略称</Label>
+                <Input
+                  id="short_name"
+                  name="short_name"
+                  defaultValue={organization?.short_name || ''}
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="slug">スラッグ（URL）</Label>
+              <Input
+                id="slug"
+                name="slug"
+                defaultValue={organization?.slug || ''}
+                placeholder="自動生成されます"
+              />
+              <p className="text-xs text-gray-500">
+                空欄の場合は団体名から自動生成されます
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="activity_schedule">活動日</Label>
+              <Input
+                id="activity_schedule"
+                name="activity_schedule"
+                defaultValue={organization?.activity_schedule || ''}
+                placeholder="例: 毎月第2土曜日、不定期など"
+              />
+            </div>
+          </div>
+
+          {/* 概要説明 */}
+          <div className="bg-white p-6 rounded-lg shadow space-y-4">
+            <h2 className="text-lg font-semibold border-b pb-2">
+              概要説明 <span className="text-red-500">*</span>
+            </h2>
+            <RichTextEditor
+              content={summary}
+              onChange={setSummary}
+              placeholder="団体の概要を入力..."
+              onImageUpload={handleEditorImageUpload}
             />
-            {state.errors?.name && (
-              <p className="text-sm text-red-500">{state.errors.name[0]}</p>
+            {state.errors?.summary && (
+              <p className="text-sm text-red-500">{state.errors.summary[0]}</p>
             )}
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="short_name">略称</Label>
-            <Input
-              id="short_name"
-              name="short_name"
-              defaultValue={organization?.short_name || ''}
+          {/* 活動内容 */}
+          <div className="bg-white p-6 rounded-lg shadow space-y-4">
+            <h2 className="text-lg font-semibold border-b pb-2">活動内容</h2>
+            <RichTextEditor
+              content={activityDescription}
+              onChange={setActivityDescription}
+              placeholder="具体的な活動内容を入力..."
+              onImageUpload={handleEditorImageUpload}
             />
           </div>
-        </div>
 
-        {isEditing && (
-          <div className="space-y-2">
-            <Label htmlFor="slug">スラッグ（URL）</Label>
-            <Input
-              id="slug"
-              name="slug"
-              defaultValue={organization?.slug || ''}
-              placeholder="自動生成されます"
+          {/* 参加方法 */}
+          <div className="bg-white p-6 rounded-lg shadow space-y-4">
+            <h2 className="text-lg font-semibold border-b pb-2">参加方法</h2>
+            <RichTextEditor
+              content={participationInfo}
+              onChange={setParticipationInfo}
+              placeholder="活動への参加方法を入力..."
+              onImageUpload={handleEditorImageUpload}
             />
-            <p className="text-xs text-gray-500">
-              空欄の場合は団体名から自動生成されます
-            </p>
           </div>
-        )}
 
-        <div className="space-y-2">
-          <Label htmlFor="summary">
-            概要説明 <span className="text-red-500">*</span>
-          </Label>
-          <Textarea
-            id="summary"
-            name="summary"
-            rows={3}
-            defaultValue={organization?.summary || ''}
-            required
+          {/* 隠しファイルインプット */}
+          <input
+            ref={editorImageInputRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={handleEditorImageChange}
           />
-          {state.errors?.summary && (
-            <p className="text-sm text-red-500">{state.errors.summary[0]}</p>
-          )}
         </div>
-      </div>
 
-      {/* カテゴリ・エリア・タグ */}
-      <div className="bg-white p-6 rounded-lg shadow space-y-4">
-        <h2 className="text-lg font-semibold border-b pb-2">分類</h2>
+        {/* サイドバー（右側 1/3） */}
+        <div className="space-y-6">
+          {/* 公開設定 */}
+          <div className="bg-white p-6 rounded-lg shadow space-y-4">
+            <h2 className="text-lg font-semibold border-b pb-2">公開設定</h2>
+            <div className="flex items-center space-x-3">
+              <Switch
+                id="is_published"
+                checked={isPublished}
+                onCheckedChange={setIsPublished}
+              />
+              <Label htmlFor="is_published" className="cursor-pointer">
+                {isPublished ? '公開する' : '下書きとして保存'}
+              </Label>
+            </div>
+          </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="space-y-2">
-            <Label>活動分野</Label>
-            <MultiSelect
-              options={categories}
-              selected={selectedCategories}
-              onChange={setSelectedCategories}
-              placeholder="活動分野を選択"
+          {/* 会員募集 */}
+          <div className="bg-white p-6 rounded-lg shadow space-y-4">
+            <h2 className="text-lg font-semibold border-b pb-2">会員募集</h2>
+            <div className="flex items-center space-x-3">
+              <Switch
+                id="is_recruiting"
+                checked={isRecruiting}
+                onCheckedChange={setIsRecruiting}
+              />
+              <Label htmlFor="is_recruiting" className="cursor-pointer">
+                {isRecruiting ? (
+                  <span className="text-purple-600 font-medium">会員募集中</span>
+                ) : (
+                  <span className="text-gray-500">募集していない</span>
+                )}
+              </Label>
+            </div>
+          </div>
+
+          {/* メイン画像 */}
+          <div className="bg-white p-6 rounded-lg shadow space-y-4">
+            <h2 className="text-lg font-semibold border-b pb-2">メイン画像</h2>
+            <ImageUpload
+              value={mainImageUrl}
+              onChange={setMainImageUrl}
+              folder="organizations"
             />
           </div>
 
-          <div className="space-y-2">
-            <Label>活動エリア</Label>
-            <MultiSelect
-              options={areas}
-              selected={selectedAreas}
-              onChange={setSelectedAreas}
-              placeholder="活動エリアを選択"
-            />
+          {/* 団体情報 */}
+          <div className="bg-white p-6 rounded-lg shadow space-y-4">
+            <h2 className="text-lg font-semibold border-b pb-2">団体情報</h2>
+
+            <div className="space-y-2">
+              <Label htmlFor="member_count">会員数</Label>
+              <Input
+                id="member_count"
+                name="member_count"
+                defaultValue={organization?.member_count || ''}
+                placeholder="例: 約30名"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="membership_fee">会費</Label>
+              <Input
+                id="membership_fee"
+                name="membership_fee"
+                defaultValue={organization?.membership_fee || ''}
+                placeholder="例: 年会費3,000円"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="representative">代表者</Label>
+              <Input
+                id="representative"
+                name="representative"
+                defaultValue={organization?.representative || ''}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="established_year">設立年（西暦）</Label>
+              <Input
+                id="established_year"
+                name="established_year"
+                type="number"
+                min={1900}
+                max={new Date().getFullYear()}
+                defaultValue={organization?.established_year || ''}
+                placeholder="例: 2010"
+              />
+            </div>
           </div>
 
-          <div className="space-y-2">
-            <Label>タグ</Label>
-            <MultiSelect
-              options={tags}
-              selected={selectedTags}
-              onChange={setSelectedTags}
-              placeholder="タグを選択"
-            />
-          </div>
-        </div>
-      </div>
+          {/* 分類 */}
+          <div className="bg-white p-6 rounded-lg shadow space-y-4">
+            <h2 className="text-lg font-semibold border-b pb-2">分類</h2>
 
-      {/* 連絡先 */}
-      <div className="bg-white p-6 rounded-lg shadow space-y-4">
-        <h2 className="text-lg font-semibold border-b pb-2">連絡先</h2>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label>活動分野</Label>
+                <MultiSelect
+                  options={categories}
+                  selected={selectedCategories}
+                  onChange={setSelectedCategories}
+                  placeholder="活動分野を選択"
+                />
+              </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="contact_name">担当者名</Label>
-            <Input
-              id="contact_name"
-              name="contact_name"
-              defaultValue={organization?.contact_name || ''}
-            />
-          </div>
+              <div className="space-y-2">
+                <Label>活動エリア</Label>
+                <MultiSelect
+                  options={areas}
+                  selected={selectedAreas}
+                  onChange={setSelectedAreas}
+                  placeholder="活動エリアを選択"
+                />
+              </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="contact_email">メールアドレス</Label>
-            <Input
-              id="contact_email"
-              name="contact_email"
-              type="email"
-              defaultValue={organization?.contact_email || ''}
-            />
-          </div>
+              <div className="space-y-2">
+                <Label htmlFor="activity_location">活動場所</Label>
+                <Input
+                  id="activity_location"
+                  name="activity_location"
+                  defaultValue={organization?.activity_location || ''}
+                  placeholder="例: 飯田市公民館"
+                />
+              </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="contact_phone">電話番号</Label>
-            <Input
-              id="contact_phone"
-              name="contact_phone"
-              defaultValue={organization?.contact_phone || ''}
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* SNS・Web */}
-      <div className="bg-white p-6 rounded-lg shadow space-y-4">
-        <h2 className="text-lg font-semibold border-b pb-2">Web・SNS</h2>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="website_url">Webサイト</Label>
-            <Input
-              id="website_url"
-              name="website_url"
-              type="url"
-              placeholder="https://"
-              defaultValue={organization?.website_url || ''}
-            />
+              <div className="space-y-2">
+                <Label>タグ</Label>
+                <MultiSelect
+                  options={tags}
+                  selected={selectedTags}
+                  onChange={setSelectedTags}
+                  placeholder="タグを選択"
+                />
+              </div>
+            </div>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="facebook_url">Facebook</Label>
-            <Input
-              id="facebook_url"
-              name="facebook_url"
-              type="url"
-              placeholder="https://facebook.com/"
-              defaultValue={organization?.facebook_url || ''}
-            />
+          {/* 連絡先 */}
+          <div className="bg-white p-6 rounded-lg shadow space-y-4">
+            <h2 className="text-lg font-semibold border-b pb-2">連絡先</h2>
+
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="contact_name">担当者名</Label>
+                <Input
+                  id="contact_name"
+                  name="contact_name"
+                  defaultValue={organization?.contact_name || ''}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="contact_email">メールアドレス</Label>
+                <Input
+                  id="contact_email"
+                  name="contact_email"
+                  type="email"
+                  defaultValue={organization?.contact_email || ''}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="contact_phone">電話番号</Label>
+                <Input
+                  id="contact_phone"
+                  name="contact_phone"
+                  defaultValue={organization?.contact_phone || ''}
+                />
+              </div>
+            </div>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="twitter_url">X (Twitter)</Label>
-            <Input
-              id="twitter_url"
-              name="twitter_url"
-              type="url"
-              placeholder="https://x.com/"
-              defaultValue={organization?.twitter_url || ''}
-            />
+          {/* Web・SNS */}
+          <div className="bg-white p-6 rounded-lg shadow space-y-4">
+            <h2 className="text-lg font-semibold border-b pb-2">Web・SNS</h2>
+
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="website_url">Webサイト</Label>
+                <Input
+                  id="website_url"
+                  name="website_url"
+                  type="url"
+                  placeholder="https://"
+                  defaultValue={organization?.website_url || ''}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="facebook_url">Facebook</Label>
+                <Input
+                  id="facebook_url"
+                  name="facebook_url"
+                  type="url"
+                  placeholder="https://facebook.com/"
+                  defaultValue={organization?.facebook_url || ''}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="twitter_url">X (Twitter)</Label>
+                <Input
+                  id="twitter_url"
+                  name="twitter_url"
+                  type="url"
+                  placeholder="https://x.com/"
+                  defaultValue={organization?.twitter_url || ''}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="instagram_url">Instagram</Label>
+                <Input
+                  id="instagram_url"
+                  name="instagram_url"
+                  type="url"
+                  placeholder="https://instagram.com/"
+                  defaultValue={organization?.instagram_url || ''}
+                />
+              </div>
+            </div>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="instagram_url">Instagram</Label>
-            <Input
-              id="instagram_url"
-              name="instagram_url"
-              type="url"
-              placeholder="https://instagram.com/"
-              defaultValue={organization?.instagram_url || ''}
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* 参加情報 */}
-      <div className="bg-white p-6 rounded-lg shadow space-y-4">
-        <h2 className="text-lg font-semibold border-b pb-2">参加方法</h2>
-        <RichTextEditor
-          content={participationInfo}
-          onChange={setParticipationInfo}
-          placeholder="活動への参加方法を入力..."
-          onImageUpload={handleEditorImageUpload}
-        />
-        <input
-          ref={editorImageInputRef}
-          type="file"
-          accept="image/*"
-          className="hidden"
-          onChange={handleEditorImageChange}
-        />
-      </div>
-
-      {/* メイン画像 */}
-      <div className="bg-white p-6 rounded-lg shadow space-y-4">
-        <h2 className="text-lg font-semibold border-b pb-2">メイン画像</h2>
-        <ImageUpload
-          value={mainImageUrl}
-          onChange={setMainImageUrl}
-          folder="organizations"
-        />
-      </div>
-
-      {/* 公開設定 */}
-      <div className="bg-white p-6 rounded-lg shadow space-y-4">
-        <h2 className="text-lg font-semibold border-b pb-2">公開設定</h2>
-        <div className="flex items-center space-x-3">
-          <Switch
-            id="is_published"
-            checked={isPublished}
-            onCheckedChange={setIsPublished}
-          />
-          <Label htmlFor="is_published" className="cursor-pointer">
-            {isPublished ? '公開する' : '下書きとして保存'}
-          </Label>
         </div>
       </div>
 

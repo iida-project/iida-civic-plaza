@@ -17,6 +17,7 @@ type Article = {
   type: 'organization' | 'interview' | 'grant' | 'news'
   published_at: string
   summary?: string
+  is_recruiting?: boolean | null
 }
 
 async function getLatestArticles(): Promise<Article[]> {
@@ -26,7 +27,7 @@ async function getLatestArticles(): Promise<Article[]> {
   // 団体（最新3件）
   const { data: organizations } = await supabase
     .from('organizations')
-    .select('id, slug, name, summary, published_at')
+    .select('id, slug, name, summary, published_at, is_recruiting')
     .eq('is_published', true)
     .order('published_at', { ascending: false })
     .limit(3)
@@ -39,6 +40,7 @@ async function getLatestArticles(): Promise<Article[]> {
       type: 'organization',
       published_at: org.published_at,
       summary: org.summary,
+      is_recruiting: org.is_recruiting,
     })
   })
 
@@ -156,7 +158,8 @@ async function getPickupOrganizations() {
       name,
       short_name,
       summary,
-      main_image_url
+      main_image_url,
+      is_recruiting
     `)
     .eq('is_published', true)
     .order('published_at', { ascending: false })
