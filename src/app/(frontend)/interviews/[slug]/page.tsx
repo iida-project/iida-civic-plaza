@@ -4,7 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { createPublicClient } from '@/lib/supabase/public'
 import { Mic, ArrowLeft, Building2, Calendar } from 'lucide-react'
-import { TableOfContents, ArticleBody } from './_components'
+import { TableOfContents, ArticleBody, SummarySlider } from './_components'
 import { ImageGallery } from '@/components/common'
 import { formatDistanceToNow } from 'date-fns'
 import { ja } from 'date-fns/locale'
@@ -183,6 +183,13 @@ export default async function InterviewDetailPage({ params }: Props) {
 
           {/* サイドバー */}
           <aside className="space-y-6">
+            {/* AI要約スライダー */}
+            <SummarySlider
+              summaryShort={interview.summary_short}
+              summaryMedium={interview.summary_medium}
+              summaryLong={interview.summary_long}
+            />
+
             {/* 目次 */}
             <TableOfContents html={interview.body} />
 
@@ -200,7 +207,7 @@ export default async function InterviewDetailPage({ params }: Props) {
                       href={`/interviews/${other.slug}`}
                       className="flex items-center gap-3 group"
                     >
-                      <div className="relative w-16 h-12 rounded-lg overflow-hidden bg-muted flex-shrink-0">
+                      <div className="relative w-16 h-12 rounded-lg overflow-hidden bg-muted flex-shrink-0 z-0">
                         {other.main_image_url ? (
                           <Image
                             src={other.main_image_url}

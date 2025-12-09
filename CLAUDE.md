@@ -76,6 +76,7 @@ app/
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 - `SUPABASE_SERVICE_ROLE_KEY`
 - `NEXT_PUBLIC_SITE_URL`
+- `GEMINI_API_KEY` - Google Gemini API（AI要約機能用）
 
 ## デザイン方針
 
@@ -632,6 +633,58 @@ import { stripHtml } from '@/lib/utils'
 const plainText = stripHtml('<p>HTMLコンテンツ</p>')  // "HTMLコンテンツ"
 ```
 
+## AI要約機能（Gemini API）
+
+インタビュー記事に対して3段階のAI要約を生成する機能。
+
+### データベースカラム（interviewsテーブル）
+
+| カラム名 | 型 | 説明 |
+|---------|-----|------|
+| `summary_short` | TEXT | さくっと要約（150文字以内） |
+| `summary_medium` | TEXT | ほどよく要約（400文字以内） |
+| `summary_long` | TEXT | じっくり要約（800文字以内） |
+
+### Gemini API設定（src/lib/gemini.ts）
+
+```typescript
+import { generateSummaries, generateSingleSummary, type SummaryLevel } from '@/lib/gemini'
+
+// 3つすべて生成
+const summaries = await generateSummaries(articleBody)
+// { short: '...', medium: '...', long: '...' }
+
+// 個別に生成
+const summary = await generateSingleSummary(articleBody, 'short')
+```
+
+- **モデル**: `gemini-2.5-flash-lite`（無料枠あり）
+- **無料枠制限**: RPM: 10回/分、RPD: 20回/日、TPM: 250Kトークン/分
+
+### 管理画面（InterviewForm）
+
+- 「AIで生成」ボタン: 3つすべてを一括生成
+- 各フィールドの「再生成」ボタン: 個別に1つだけ再生成
+- 生成後に手動編集可能
+- 文字数カウンター付き
+
+### 公開サイト（SummarySlider）
+
+インタビュー詳細ページのサイドバーに表示：
+
+```tsx
+<SummarySlider
+  summaryShort={interview.summary_short}
+  summaryMedium={interview.summary_medium}
+  summaryLong={interview.summary_long}
+/>
+```
+
+- 3段階スライダー（さくっと/ほどよく/じっくり）
+- アニメーション付き切り替え（Framer Motion）
+- 読む時間の目安を表示
+- 要約が未設定の場合は非表示
+
 ## 完了済みチケット
 
 ### 環境構築・基盤
@@ -653,6 +706,7 @@ const plainText = stripHtml('<p>HTMLコンテンツ</p>')  // "HTMLコンテン�
 - [x] 015 - FAQ CRUD
 - [x] 016 - マスター管理
 - [x] 047 - Organizations テーブル拡張（8カラム追加、会員募集バッジ）
+- [x] 048 - AI要約機能（Gemini API連携、3段階要約生成）
 
 ### 公開サイト
 - [x] 021 - 共通レイアウト（Header/Footer）

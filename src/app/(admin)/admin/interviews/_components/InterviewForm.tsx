@@ -14,9 +14,12 @@ import { GalleryUpload } from './GalleryUpload'
 import {
   createInterview,
   updateInterview,
+  generateAISummaries,
+  generateAISingleSummary,
   type InterviewFormState,
 } from '../actions'
-import { Loader2 } from 'lucide-react'
+import { type SummaryLevel } from '@/lib/gemini'
+import { Loader2, Sparkles, RefreshCw } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 
 type Organization = {
@@ -35,6 +38,9 @@ type Interview = {
   organization_id: string | null
   is_featured: boolean
   is_published: boolean
+  summary_short: string | null
+  summary_medium: string | null
+  summary_long: string | null
 }
 
 interface InterviewFormProps {
@@ -58,6 +64,14 @@ export function InterviewForm({ interview, organizations }: InterviewFormProps) 
   )
   const [isFeatured, setIsFeatured] = useState(interview?.is_featured || false)
   const [isPublished, setIsPublished] = useState(interview?.is_published || false)
+
+  // AI要約
+  const [summaryShort, setSummaryShort] = useState(interview?.summary_short || '')
+  const [summaryMedium, setSummaryMedium] = useState(interview?.summary_medium || '')
+  const [summaryLong, setSummaryLong] = useState(interview?.summary_long || '')
+  const [isGenerating, setIsGenerating] = useState(false)
+  const [generatingLevel, setGeneratingLevel] = useState<SummaryLevel | null>(null)
+  const [generateError, setGenerateError] = useState<string | null>(null)
 
   const editorImageInputRef = useRef<HTMLInputElement>(null)
   const [imageUploadResolve, setImageUploadResolve] = useState<((url: string | null) => void) | null>(null)
@@ -114,6 +128,60 @@ export function InterviewForm({ interview, organizations }: InterviewFormProps) 
 
   const [state, formAction, isPending] = useActionState(boundAction, initialState)
 
+  // AI要約生成（全て）
+  const handleGenerateSummaries = async () => {
+    if (!body.trim()) {
+      setGenerateError('本文を入力してからAI要約を生成してください')
+      return
+    }
+
+    setIsGenerating(true)
+    setGenerateError(null)
+
+    try {
+      const result = await generateAISummaries(body)
+
+      if (result.success && result.summaries) {
+        setSummaryShort(result.summaries.short)
+        setSummaryMedium(result.summaries.medium)
+        setSummaryLong(result.summaries.long)
+      } else {
+        setGenerateError(result.error || 'AI要約の生成に失敗しました')
+      }
+    } catch {
+      setGenerateError('AI要約の生成中にエラーが発生しました')
+    } finally {
+      setIsGenerating(false)
+    }
+  }
+
+  // AI要約生成（個別）
+  const handleGenerateSingleSummary = async (level: SummaryLevel) => {
+    if (!body.trim()) {
+      setGenerateError('本文を入力してからAI要約を生成してください')
+      return
+    }
+
+    setGeneratingLevel(level)
+    setGenerateError(null)
+
+    try {
+      const result = await generateAISingleSummary(body, level)
+
+      if (result.success && result.summary) {
+        if (level === 'short') setSummaryShort(result.summary)
+        else if (level === 'medium') setSummaryMedium(result.summary)
+        else if (level === 'long') setSummaryLong(result.summary)
+      } else {
+        setGenerateError(result.error || 'AI要約の生成に失敗しました')
+      }
+    } catch {
+      setGenerateError('AI要約の生成中にエラーが発生しました')
+    } finally {
+      setGeneratingLevel(null)
+    }
+  }
+
   const handleSubmit = (formData: FormData) => {
     // hidden フィールドのデータを追加
     formData.set('body', body)
@@ -122,6 +190,9 @@ export function InterviewForm({ interview, organizations }: InterviewFormProps) 
     formData.set('organization_id', organizationId || '')
     formData.set('is_featured', isFeatured.toString())
     formData.set('is_published', isPublished.toString())
+    formData.set('summary_short', summaryShort)
+    formData.set('summary_medium', summaryMedium)
+    formData.set('summary_long', summaryLong)
 
     formAction(formData)
   }
@@ -221,6 +292,142 @@ export function InterviewForm({ interview, organizations }: InterviewFormProps) 
         {state.errors?.body && (
           <p className="text-sm text-red-500">{state.errors.body[0]}</p>
         )}
+      </div>
+
+      {/* AI要約 */}
+      <div className="bg-white p-6 rounded-lg shadow space-y-4">
+        <div className="flex items-center justify-between border-b pb-2">
+          <h2 className="text-lg font-semibold">AI要約</h2>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={handleGenerateSummaries}
+            disabled={isGenerating || !body.trim()}
+          >
+            {isGenerating ? (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              <Sparkles className="mr-2 h-4 w-4" />
+            )}
+            {isGenerating ? '生成中...' : 'AIで生成'}
+          </Button>
+        </div>
+
+        <p className="text-sm text-gray-500">
+          本文を入力後、「AIで生成」ボタンを押すと3つの長さの要約が自動生成されます。
+          生成後に手動で編集することもできます。
+        </p>
+
+        {generateError && (
+          <div className="bg-red-50 border border-red-200 text-red-700 p-3 rounded-md text-sm">
+            {generateError}
+          </div>
+        )}
+
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <Label htmlFor="summary_short">
+                さくっと（150文字以内）
+                <span className="text-xs text-gray-500 ml-2">30秒で読める</span>
+              </Label>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() => handleGenerateSingleSummary('short')}
+                disabled={isGenerating || generatingLevel !== null || !body.trim()}
+                className="h-7 px-2 text-xs"
+              >
+                {generatingLevel === 'short' ? (
+                  <Loader2 className="h-3 w-3 animate-spin" />
+                ) : (
+                  <RefreshCw className="h-3 w-3" />
+                )}
+                <span className="ml-1">再生成</span>
+              </Button>
+            </div>
+            <Textarea
+              id="summary_short"
+              value={summaryShort}
+              onChange={(e) => setSummaryShort(e.target.value)}
+              rows={3}
+              placeholder="短い要約..."
+            />
+            <p className="text-xs text-gray-400 text-right">
+              {summaryShort.length}文字
+            </p>
+          </div>
+
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <Label htmlFor="summary_medium">
+                ほどよく（400文字以内）
+                <span className="text-xs text-gray-500 ml-2">1分で読める</span>
+              </Label>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() => handleGenerateSingleSummary('medium')}
+                disabled={isGenerating || generatingLevel !== null || !body.trim()}
+                className="h-7 px-2 text-xs"
+              >
+                {generatingLevel === 'medium' ? (
+                  <Loader2 className="h-3 w-3 animate-spin" />
+                ) : (
+                  <RefreshCw className="h-3 w-3" />
+                )}
+                <span className="ml-1">再生成</span>
+              </Button>
+            </div>
+            <Textarea
+              id="summary_medium"
+              value={summaryMedium}
+              onChange={(e) => setSummaryMedium(e.target.value)}
+              rows={5}
+              placeholder="中程度の要約..."
+            />
+            <p className="text-xs text-gray-400 text-right">
+              {summaryMedium.length}文字
+            </p>
+          </div>
+
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <Label htmlFor="summary_long">
+                じっくり（800文字以内）
+                <span className="text-xs text-gray-500 ml-2">3分で読める</span>
+              </Label>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() => handleGenerateSingleSummary('long')}
+                disabled={isGenerating || generatingLevel !== null || !body.trim()}
+                className="h-7 px-2 text-xs"
+              >
+                {generatingLevel === 'long' ? (
+                  <Loader2 className="h-3 w-3 animate-spin" />
+                ) : (
+                  <RefreshCw className="h-3 w-3" />
+                )}
+                <span className="ml-1">再生成</span>
+              </Button>
+            </div>
+            <Textarea
+              id="summary_long"
+              value={summaryLong}
+              onChange={(e) => setSummaryLong(e.target.value)}
+              rows={8}
+              placeholder="長めの要約..."
+            />
+            <p className="text-xs text-gray-400 text-right">
+              {summaryLong.length}文字
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* メイン画像 */}

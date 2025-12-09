@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { generateSummaries, generateSingleSummary, type SummaryLevel } from '@/lib/gemini'
 
 type SupabaseClient = ReturnType<typeof createAdminClient>
 
@@ -115,6 +116,9 @@ export async function createInterview(
         is_featured: isFeatured,
         is_published: isPublished,
         published_at: isPublished ? new Date().toISOString() : null,
+        summary_short: getFormStringOrNull(formData, 'summary_short'),
+        summary_medium: getFormStringOrNull(formData, 'summary_medium'),
+        summary_long: getFormStringOrNull(formData, 'summary_long'),
       })
 
     if (error) throw error
@@ -198,6 +202,9 @@ export async function updateInterview(
         is_featured: isFeatured,
         is_published: isPublished,
         published_at: publishedAt,
+        summary_short: getFormStringOrNull(formData, 'summary_short'),
+        summary_medium: getFormStringOrNull(formData, 'summary_medium'),
+        summary_long: getFormStringOrNull(formData, 'summary_long'),
       })
       .eq('id', id)
 
@@ -299,5 +306,66 @@ export async function toggleFeatured(
   } catch (error) {
     console.error('Failed to toggle featured:', error)
     return { success: false, error: 'ピックアップ状態の変更に失敗しました' }
+  }
+}
+
+// AI要約生成アクション
+export type GenerateSummariesResult = {
+  success: boolean
+  summaries?: {
+    short: string
+    medium: string
+    long: string
+  }
+  error?: string
+}
+
+export async function generateAISummaries(
+  body: string
+): Promise<GenerateSummariesResult> {
+  if (!body.trim()) {
+    return { success: false, error: '本文が入力されていません' }
+  }
+
+  try {
+    const summaries = await generateSummaries(body)
+
+    if (!summaries.short && !summaries.medium && !summaries.long) {
+      return { success: false, error: '要約の生成に失敗しました。もう一度お試しください。' }
+    }
+
+    return { success: true, summaries }
+  } catch (error) {
+    console.error('Failed to generate summaries:', error)
+    return { success: false, error: 'AI要約の生成に失敗しました' }
+  }
+}
+
+// 個別レベルのAI要約生成アクション
+export type GenerateSingleSummaryResult = {
+  success: boolean
+  summary?: string
+  error?: string
+}
+
+export async function generateAISingleSummary(
+  body: string,
+  level: SummaryLevel
+): Promise<GenerateSingleSummaryResult> {
+  if (!body.trim()) {
+    return { success: false, error: '本文が入力されていません' }
+  }
+
+  try {
+    const summary = await generateSingleSummary(body, level)
+
+    if (!summary) {
+      return { success: false, error: '要約の生成に失敗しました。もう一度お試しください。' }
+    }
+
+    return { success: true, summary }
+  } catch (error) {
+    console.error(`Failed to generate ${level} summary:`, error)
+    return { success: false, error: 'AI要約の生成に失敗しました' }
   }
 }
