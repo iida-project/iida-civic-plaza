@@ -61,7 +61,7 @@ export function TableOfContents({ html }: Props) {
   }
 
   return (
-    <nav className="bg-card rounded-2xl p-5 border border-border sticky top-24 z-10">
+    <nav className="hidden lg:block bg-card rounded-2xl p-5 border border-border sticky top-24 z-10">
       <h2 className="flex items-center gap-2 text-sm font-semibold mb-4">
         <List className="h-4 w-4 text-primary" />
         目次

@@ -4,7 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { createPublicClient } from '@/lib/supabase/public'
 import { Mic, ArrowLeft, Building2, Calendar } from 'lucide-react'
-import { TableOfContents, ArticleBody, SummarySlider } from './_components'
+import { TableOfContents, MobileTableOfContents, ArticleBody, SummarySlider } from './_components'
 import { ImageGallery } from '@/components/common'
 import { formatDistanceToNow } from 'date-fns'
 import { ja } from 'date-fns/locale'
@@ -101,9 +101,9 @@ export default async function InterviewDetailPage({ params }: Props) {
         </Link>
 
         {/* メインコンテンツ */}
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* 記事本文 */}
-          <article className="lg:col-span-3">
+          <article className="lg:col-span-2 order-2 lg:order-1">
             {/* ヘッダー画像 */}
             <div className="relative w-full aspect-video bg-muted rounded-2xl overflow-hidden mb-8">
               {interview.main_image_url ? (
@@ -182,7 +182,7 @@ export default async function InterviewDetailPage({ params }: Props) {
           </article>
 
           {/* サイドバー */}
-          <aside className="space-y-6">
+          <aside className="space-y-6 order-1 lg:order-2">
             {/* AI要約スライダー */}
             <SummarySlider
               summaryShort={interview.summary_short}
@@ -231,6 +231,9 @@ export default async function InterviewDetailPage({ params }: Props) {
             )}
           </aside>
         </div>
+
+        {/* モバイル用フローティング目次 */}
+        <MobileTableOfContents html={interview.body} />
       </div>
     </div>
   )

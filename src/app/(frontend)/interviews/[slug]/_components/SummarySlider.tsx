@@ -86,7 +86,7 @@ export function SummarySlider({ summaryShort, summaryMedium, summaryLong }: Prop
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
           transition={{ duration: 0.2 }}
-          className="text-sm text-foreground/80 leading-relaxed"
+          className="text-sm text-foreground/80 leading-7 tracking-wide whitespace-pre-line"
         >
           {currentSummary || '要約がありません'}
         </motion.div>
