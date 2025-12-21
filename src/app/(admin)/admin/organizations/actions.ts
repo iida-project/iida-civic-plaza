@@ -356,3 +356,63 @@ export async function togglePublish(
     return { success: false, error: '公開状態の変更に失敗しました' }
   }
 }
+
+const MAX_FEATURED_ORGANIZATIONS = 3
+
+export async function toggleFeatured(
+  id: string
+): Promise<{ success: boolean; error?: string }> {
+  const supabase = createAdminClient()
+
+  try {
+    // 現在の状態を取得
+    const { data: current, error: fetchError } = await supabase
+      .from('organizations')
+      .select('is_featured')
+      .eq('id', id)
+      .single()
+
+    if (fetchError) throw fetchError
+
+    const newStatus = !current.is_featured
+
+    // ピックアップに追加する場合、上限チェック
+    if (newStatus) {
+      const { count } = await supabase
+        .from('organizations')
+        .select('*', { count: 'exact', head: true })
+        .eq('is_featured', true)
+
+      if (count !== null && count >= MAX_FEATURED_ORGANIZATIONS) {
+        return {
+          success: false,
+          error: `ピックアップは最大${MAX_FEATURED_ORGANIZATIONS}件までです`
+        }
+      }
+    }
+
+    // 更新
+    const { error } = await supabase
+      .from('organizations')
+      .update({ is_featured: newStatus })
+      .eq('id', id)
+
+    if (error) throw error
+
+    revalidatePath('/admin/organizations')
+    revalidatePath('/')
+    return { success: true }
+  } catch (error) {
+    console.error('Failed to toggle featured:', error)
+    return { success: false, error: 'ピックアップ状態の変更に失敗しました' }
+  }
+}
+
+export async function getFeaturedCount(): Promise<number> {
+  const supabase = createAdminClient()
+  const { count } = await supabase
+    .from('organizations')
+    .select('*', { count: 'exact', head: true })
+    .eq('is_featured', true)
+  return count ?? 0
+}

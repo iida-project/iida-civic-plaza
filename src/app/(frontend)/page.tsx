@@ -162,6 +162,7 @@ async function getPickupOrganizations() {
       is_recruiting
     `)
     .eq('is_published', true)
+    .eq('is_featured', true)
     .order('published_at', { ascending: false })
     .limit(3)
 

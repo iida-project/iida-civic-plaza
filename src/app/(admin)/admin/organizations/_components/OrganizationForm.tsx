@@ -60,6 +60,12 @@ interface OrganizationFormProps {
 
 const initialState: OrganizationFormState = {}
 
+// HTMLタグを除去して文字数をカウント
+function countCharacters(html: string): number {
+  const text = html.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ')
+  return text.length
+}
+
 export function OrganizationForm({
   organization,
   categories,
@@ -233,9 +239,14 @@ export function OrganizationForm({
 
           {/* 概要説明 */}
           <div className="bg-white p-6 rounded-lg shadow space-y-4">
-            <h2 className="text-lg font-semibold border-b pb-2">
-              概要説明 <span className="text-red-500">*</span>
-            </h2>
+            <div className="flex items-center justify-between border-b pb-2">
+              <h2 className="text-lg font-semibold">
+                概要説明 <span className="text-red-500">*</span>
+              </h2>
+              <span className="text-sm text-gray-500">
+                {countCharacters(summary).toLocaleString()} 文字
+              </span>
+            </div>
             <RichTextEditor
               content={summary}
               onChange={setSummary}
@@ -249,7 +260,12 @@ export function OrganizationForm({
 
           {/* 活動内容 */}
           <div className="bg-white p-6 rounded-lg shadow space-y-4">
-            <h2 className="text-lg font-semibold border-b pb-2">活動内容</h2>
+            <div className="flex items-center justify-between border-b pb-2">
+              <h2 className="text-lg font-semibold">活動内容</h2>
+              <span className="text-sm text-gray-500">
+                {countCharacters(activityDescription).toLocaleString()} 文字
+              </span>
+            </div>
             <RichTextEditor
               content={activityDescription}
               onChange={setActivityDescription}
@@ -260,7 +276,12 @@ export function OrganizationForm({
 
           {/* 参加方法 */}
           <div className="bg-white p-6 rounded-lg shadow space-y-4">
-            <h2 className="text-lg font-semibold border-b pb-2">参加方法</h2>
+            <div className="flex items-center justify-between border-b pb-2">
+              <h2 className="text-lg font-semibold">参加方法</h2>
+              <span className="text-sm text-gray-500">
+                {countCharacters(participationInfo).toLocaleString()} 文字
+              </span>
+            </div>
             <RichTextEditor
               content={participationInfo}
               onChange={setParticipationInfo}

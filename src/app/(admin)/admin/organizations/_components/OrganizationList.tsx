@@ -24,14 +24,15 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
-import { Pencil, Trash2, Eye, EyeOff } from 'lucide-react'
-import { deleteOrganization, togglePublish } from '../actions'
+import { Pencil, Trash2, Eye, EyeOff, Star, StarOff } from 'lucide-react'
+import { deleteOrganization, togglePublish, toggleFeatured } from '../actions'
 
 type Organization = {
   id: string
   name: string
   slug: string
   is_published: boolean
+  is_featured: boolean
   updated_at: string
   // Supabase nested select returns object for single relations
   organization_categories?: { category: { name: string } | null }[]
@@ -39,12 +40,16 @@ type Organization = {
 
 interface OrganizationListProps {
   organizations: Organization[]
+  featuredCount: number
 }
 
-export function OrganizationList({ organizations }: OrganizationListProps) {
+const MAX_FEATURED = 3
+
+export function OrganizationList({ organizations, featuredCount }: OrganizationListProps) {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
   const [deletingId, setDeletingId] = useState<string | null>(null)
+  const [currentFeaturedCount, setCurrentFeaturedCount] = useState(featuredCount)
 
   const handleDelete = async (id: string) => {
     setDeletingId(id)
@@ -61,6 +66,16 @@ export function OrganizationList({ organizations }: OrganizationListProps) {
   const handleTogglePublish = async (id: string) => {
     startTransition(async () => {
       const result = await togglePublish(id)
+      if (!result.success) {
+        alert(result.error)
+      }
+      router.refresh()
+    })
+  }
+
+  const handleToggleFeatured = async (id: string) => {
+    startTransition(async () => {
+      const result = await toggleFeatured(id)
       if (!result.success) {
         alert(result.error)
       }
@@ -89,9 +104,10 @@ export function OrganizationList({ organizations }: OrganizationListProps) {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[40%]">団体名</TableHead>
+            <TableHead className="w-[35%]">団体名</TableHead>
             <TableHead className="w-[20%]">活動分野</TableHead>
-            <TableHead className="w-[15%]">ステータス</TableHead>
+            <TableHead className="w-[10%] text-center">ピックアップ</TableHead>
+            <TableHead className="w-[10%]">ステータス</TableHead>
             <TableHead className="w-[15%]">更新日</TableHead>
             <TableHead className="w-[10%] text-right">操作</TableHead>
           </TableRow>
@@ -116,6 +132,33 @@ export function OrganizationList({ organizations }: OrganizationListProps) {
                     </Badge>
                   )}
                 </div>
+              </TableCell>
+              <TableCell className="text-center">
+                {(() => {
+                  const isAtLimit = currentFeaturedCount >= MAX_FEATURED && !org.is_featured
+                  return (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleToggleFeatured(org.id)}
+                      disabled={isPending || isAtLimit}
+                      className={org.is_featured ? 'text-amber-500' : 'text-gray-400'}
+                      title={
+                        isAtLimit
+                          ? `ピックアップは最大${MAX_FEATURED}件までです`
+                          : org.is_featured
+                            ? 'ピックアップ解除'
+                            : 'ピックアップに設定'
+                      }
+                    >
+                      {org.is_featured ? (
+                        <Star className="h-4 w-4 fill-current" />
+                      ) : (
+                        <StarOff className="h-4 w-4" />
+                      )}
+                    </Button>
+                  )
+                })()}
               </TableCell>
               <TableCell>
                 <Badge variant={org.is_published ? 'default' : 'outline'}>
