@@ -107,7 +107,7 @@ async function getRelatedInterviews(organizationId: string) {
   const supabase = createPublicClient()
   const { data } = await supabase
     .from('interviews')
-    .select('id, slug, title, thumbnail_url')
+    .select('id, slug, title, main_image_url')
     .eq('organization_id', organizationId)
     .eq('is_published', true)
     .order('published_at', { ascending: false })
@@ -196,28 +196,11 @@ export default async function OrganizationDetailPage({ params }: Props) {
           市民活動一覧に戻る
         </Link>
 
-        {/* メインコンテンツ */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* 左カラム: メイン情報 */}
-          <div className="lg:col-span-2 space-y-8">
-            {/* ヘッダー画像 */}
-            <div className="relative w-full aspect-video bg-muted rounded-2xl overflow-hidden">
-              {org.main_image_url ? (
-                <Image
-                  src={org.main_image_url}
-                  alt={org.name}
-                  fill
-                  className="object-cover"
-                  priority
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center">
-                  <Users className="h-24 w-24 text-muted-foreground/30" />
-                </div>
-              )}
-            </div>
-
-            {/* タイトル・概要 */}
+        {/* メイングリッド: サイドバーが2行にまたがる */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 mb-8">
+          {/* Row1 Col1: タイトル・リード文・分類 */}
+          <div className="space-y-4 order-2 md:order-1">
+            {/* タイトル */}
             <div>
               <div className="flex flex-wrap items-center gap-3 mb-2">
                 <h1 className="text-2xl sm:text-3xl font-bold">
@@ -232,18 +215,19 @@ export default async function OrganizationDetailPage({ params }: Props) {
                 )}
               </div>
               {org.short_name && org.short_name !== org.name && (
-                <p className="text-lg text-muted-foreground mb-4">
+                <p className="text-lg text-muted-foreground">
                   {org.short_name}
                 </p>
               )}
-              {/* 概要説明（リッチテキスト） */}
-              <div className="text-foreground/80">
-                <RichTextRenderer html={org.summary} size="default" />
-              </div>
+            </div>
+
+            {/* 概要説明（リッチテキスト） */}
+            <div className="text-foreground/80">
+              <RichTextRenderer html={org.summary} size="default" />
             </div>
 
             {/* カテゴリ・エリア・タグ */}
-            <div className="space-y-4">
+            <div className="space-y-3">
               {/* 活動分野 */}
               {org.categories.length > 0 && (
                 <div className="flex flex-wrap items-center gap-2">
@@ -300,42 +284,29 @@ export default async function OrganizationDetailPage({ params }: Props) {
                 </div>
               )}
             </div>
-
-            {/* 活動内容 */}
-            {org.activity_description && (
-              <div className="bg-card rounded-2xl p-6 border border-border">
-                <h2 className="flex items-center gap-2 text-lg font-semibold mb-4">
-                  <Users className="h-5 w-5 text-primary" />
-                  活動内容
-                </h2>
-                <RichTextRenderer html={org.activity_description} size="default" />
-              </div>
-            )}
-
-            {/* 画像ギャラリー */}
-            {galleryImages.length > 0 && (
-              <ImageGallery images={galleryImages} alt={`${org.name}の活動写真`} title="活動の様子" />
-            )}
-
-            {/* 参加方法 */}
-            {org.participation_info && (
-              <div className="bg-card rounded-2xl p-6 border border-border">
-                <h2 className="flex items-center gap-2 text-lg font-semibold mb-4">
-                  <UserPlus className="h-5 w-5 text-primary" />
-                  参加方法
-                </h2>
-                <RichTextRenderer html={org.participation_info} size="default" />
-              </div>
-            )}
-
-            {/* 関連インタビュー */}
-            {relatedInterviews.length > 0 && (
-              <RelatedInterviews interviews={relatedInterviews} />
-            )}
           </div>
 
-          {/* 右カラム: サイドバー */}
-          <div className="space-y-6">
+          {/* Row1 Col2: メイン画像 */}
+          <div className="order-1 md:order-2">
+            <div className="relative w-full aspect-square bg-muted rounded-2xl overflow-hidden">
+              {org.main_image_url ? (
+                <Image
+                  src={org.main_image_url}
+                  alt={org.name}
+                  fill
+                  className="object-cover"
+                  priority
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center">
+                  <Users className="h-24 w-24 text-muted-foreground/30" />
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Row1-2 Col3: サイドバー（2行にまたがる） */}
+          <div className="space-y-6 order-3 md:row-span-2">
             {/* 団体情報 */}
             {hasOrgInfo && (
               <div className="bg-card rounded-2xl p-6 border border-border">
@@ -532,6 +503,43 @@ export default async function OrganizationDetailPage({ params }: Props) {
               </div>
             )}
           </div>
+
+          {/* Row2 Col1-2: 活動内容（2列にまたがる） */}
+          {org.activity_description && (
+            <div className="order-4 md:col-span-2">
+              <div className="bg-card rounded-2xl p-6 lg:p-8 border border-border h-full">
+                <h2 className="flex items-center gap-2 text-xl font-semibold mb-6">
+                  <Users className="h-5 w-5 text-primary" />
+                  活動内容
+                </h2>
+                <RichTextRenderer html={org.activity_description} size="default" />
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* 下部: フル幅セクション */}
+        <div className="space-y-8">
+          {/* 画像ギャラリー */}
+          {galleryImages.length > 0 && (
+            <ImageGallery images={galleryImages} alt={`${org.name}の活動写真`} title="活動の様子" />
+          )}
+
+          {/* 参加方法 */}
+          {org.participation_info && (
+            <div className="bg-card rounded-2xl p-6 lg:p-8 border border-border">
+              <h2 className="flex items-center gap-2 text-xl font-semibold mb-6">
+                <UserPlus className="h-5 w-5 text-primary" />
+                参加方法
+              </h2>
+              <RichTextRenderer html={org.participation_info} size="default" />
+            </div>
+          )}
+
+          {/* 関連インタビュー */}
+          {relatedInterviews.length > 0 && (
+            <RelatedInterviews interviews={relatedInterviews} />
+          )}
         </div>
       </div>
     </div>

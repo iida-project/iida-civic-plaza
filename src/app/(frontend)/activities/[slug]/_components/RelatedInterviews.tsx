@@ -6,7 +6,7 @@ type Interview = {
   id: string
   slug: string
   title: string
-  thumbnail_url: string | null
+  main_image_url: string | null
 }
 
 type Props = {
@@ -29,9 +29,9 @@ export function RelatedInterviews({ interviews }: Props) {
             className="group block"
           >
             <div className="relative aspect-video rounded-lg overflow-hidden bg-muted mb-2">
-              {interview.thumbnail_url ? (
+              {interview.main_image_url ? (
                 <Image
-                  src={interview.thumbnail_url}
+                  src={interview.main_image_url}
                   alt={interview.title}
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-300"
