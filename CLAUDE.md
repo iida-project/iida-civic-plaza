@@ -787,6 +787,71 @@ import {
 <DeadlineBadge daysRemaining={5} />              // 日数から自動判定
 ```
 
+## 団体管理のフォームバリデーション
+
+### 必須項目
+- `団体名` のみ必須
+- `概要説明` は任意（必須ではない）
+
+### ドロップダウンのソート順
+管理画面の活動分野・活動エリアのドロップダウンは `sort_order` でソート：
+
+```typescript
+// 新規・編集ページのマスターデータ取得
+supabase.from('activity_categories').select('id, name').order('sort_order')
+supabase.from('activity_areas').select('id, name').order('sort_order')
+supabase.from('tags').select('id, name').order('name')  // tagsはsort_orderなし
+```
+
+## ピックアップ団体機能
+
+トップページに表示するピックアップ団体の管理機能。
+
+### データベースカラム
+- `is_featured` (BOOLEAN) - ピックアップフラグ
+
+### 制限
+- 最大3件まで
+- 管理画面で★アイコンをクリックしてトグル
+
+### 管理画面の実装
+```typescript
+// actions.ts
+const MAX_FEATURED_ORGANIZATIONS = 3
+
+export async function toggleFeatured(id: string) {
+  // 上限チェック後にトグル
+}
+
+export async function getFeaturedCount(): Promise<number> {
+  // 現在のピックアップ数を取得
+}
+```
+
+## 市民活動詳細ページのレイアウト
+
+現在は1:1:1グリッド + サイドバー2行spanのレイアウト：
+
+```
+[タイトル/リード] | [画像] | [サイドバー]  ← 1:1:1
+[活動内容 (2/3)]          | [サイドバー継続]  ← row-span-2
+```
+
+### レイアウト情報の保存場所
+過去のレイアウト（2:1など）は `docs/layouts/` に保存：
+- `docs/layouts/activities-detail-2-1.md` - 元の2:1レイアウト
+
+レイアウトを戻す場合はこのファイルを参照。
+
+## 画像アップロードの注意
+
+### 推奨画像サイズ
+- **ファイルサイズ**: 500KB〜2MB
+- **解像度**: 1920×1280px以上
+- **形式**: JPG（写真）、PNG（ロゴ・イラスト）
+
+小さすぎる画像（例: 23KB）は画質が悪くなる。Next.jsの最適化では元画像以上の品質にはならない。
+
 ## 備考
 
 - Payload CMSは互換性問題のため削除済み
