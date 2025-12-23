@@ -31,14 +31,14 @@ export default async function EditOrganizationPage({ params }: Props) {
     notFound()
   }
 
-  // マスターデータを取得
+  // マスターデータを取得（sort_orderでソート）
   const [categoriesResult, areasResult, tagsResult] = await Promise.all([
     supabase
       .from('activity_categories')
       .select('id, name')
-      .order('name'),
-    supabase.from('activity_areas').select('id, name').order('name'),
-    supabase.from('tags').select('id, name').order('name'),
+      .order('sort_order'),
+    supabase.from('activity_areas').select('id, name').order('sort_order'),
+    supabase.from('tags').select('id, name').order('name'),  // tagsはsort_orderがないのでname順
   ])
 
   return (

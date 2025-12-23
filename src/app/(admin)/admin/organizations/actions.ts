@@ -104,7 +104,6 @@ async function updateRelations(
 export type OrganizationFormState = {
   errors?: {
     name?: string[]
-    summary?: string[]
     general?: string[]
   }
   message?: string
@@ -124,9 +123,6 @@ export async function createOrganization(
   const errors: OrganizationFormState['errors'] = {}
   if (!name.trim()) {
     errors.name = ['団体名は必須です']
-  }
-  if (!summary.trim()) {
-    errors.summary = ['概要説明は必須です']
   }
 
   if (Object.keys(errors).length > 0) {
@@ -206,9 +202,6 @@ export async function updateOrganization(
   const errors: OrganizationFormState['errors'] = {}
   if (!name.trim()) {
     errors.name = ['団体名は必須です']
-  }
-  if (!summary.trim()) {
-    errors.summary = ['概要説明は必須です']
   }
 
   if (Object.keys(errors).length > 0) {

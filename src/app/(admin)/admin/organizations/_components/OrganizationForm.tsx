@@ -240,9 +240,7 @@ export function OrganizationForm({
           {/* 概要説明 */}
           <div className="bg-white p-6 rounded-lg shadow space-y-4">
             <div className="flex items-center justify-between border-b pb-2">
-              <h2 className="text-lg font-semibold">
-                概要説明 <span className="text-red-500">*</span>
-              </h2>
+              <h2 className="text-lg font-semibold">概要説明</h2>
               <span className="text-sm text-gray-500">
                 {countCharacters(summary).toLocaleString()} 文字
               </span>
@@ -253,9 +251,6 @@ export function OrganizationForm({
               placeholder="団体の概要を入力..."
               onImageUpload={handleEditorImageUpload}
             />
-            {state.errors?.summary && (
-              <p className="text-sm text-red-500">{state.errors.summary[0]}</p>
-            )}
           </div>
 
           {/* 活動内容 */}
