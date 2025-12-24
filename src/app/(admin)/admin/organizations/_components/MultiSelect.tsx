@@ -79,7 +79,7 @@ export function MultiSelect({
               </Badge>
             ))
           ) : (
-            <span className="text-gray-500">{placeholder}</span>
+            <span className="text-gray-400">{placeholder}</span>
           )}
         </div>
         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />

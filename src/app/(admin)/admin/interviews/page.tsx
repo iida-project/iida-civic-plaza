@@ -3,6 +3,7 @@ import { createAdminClient } from '@/lib/supabase/admin'
 import { Button } from '@/components/ui/button'
 import { Plus, ArrowLeft } from 'lucide-react'
 import { InterviewList } from './_components'
+import { ScrollToTop } from '@/components/admin/ScrollToTop'
 
 export const dynamic = 'force-dynamic'
 
@@ -55,6 +56,7 @@ export default async function InterviewsPage() {
 
   return (
     <div className="space-y-6">
+      <ScrollToTop />
       <div className="flex items-center gap-4">
         <Button variant="ghost" size="sm" asChild>
           <Link href="/admin">
