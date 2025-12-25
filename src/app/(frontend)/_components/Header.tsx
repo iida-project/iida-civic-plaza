@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -32,9 +33,14 @@ export function Header() {
             transition={{ duration: 0.5 }}
           >
             <Link href="/" className="flex items-center gap-2 group">
-              <div className="w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow">
-                <span className="text-white font-bold text-lg">飯</span>
-              </div>
+              <Image
+                src="/images/logo.png"
+                alt="ロゴ"
+                width={40}
+                height={40}
+                className="h-10 w-10"
+                priority
+              />
               <div className="hidden sm:block">
                 <span className="font-bold text-lg text-foreground">
                   飯田の市民活動ひろば
