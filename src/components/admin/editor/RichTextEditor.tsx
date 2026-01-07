@@ -10,6 +10,8 @@ import { Image as TiptapImage } from '@tiptap/extension-image'
 import { Link as TiptapLink } from '@tiptap/extension-link'
 import { Placeholder } from '@tiptap/extension-placeholder'
 import { EditorToolbar } from './EditorToolbar'
+import { CustomBubbleMenu } from './CustomBubbleMenu'
+import { CustomFloatingMenu } from './CustomFloatingMenu'
 import { useEffect, useRef, useState } from 'react'
 import { RichTextRenderer } from '@/components/common'
 import { ImageIcon } from 'lucide-react'
@@ -151,6 +153,11 @@ export function RichTextEditor({
           />
           <div className={showTags ? 'show-tags' : ''}>
             <EditorContent editor={editor} />
+            <CustomBubbleMenu editor={editor} />
+            <CustomFloatingMenu
+              editor={editor}
+              onImageUpload={onImageUpload ? handleImageUpload : undefined}
+            />
           </div>
         </div>
 

@@ -4,8 +4,9 @@ import { useState, useRef } from 'react'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { ImageIcon, Upload, X, Loader2 } from 'lucide-react'
+import { ImageIcon, Upload, X, Loader2, FolderOpen } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
+import { MediaPickerDialog } from '@/components/admin'
 
 interface ImageUploadProps {
   value: string
@@ -130,15 +131,9 @@ export function ImageUpload({
 
       {error && <p className="text-sm text-red-500">{error}</p>}
 
-      {/* 直接URL入力 */}
-      <div className="flex gap-2 items-center max-w-md">
-        <Input
-          type="url"
-          placeholder="または画像URLを直接入力"
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-        />
-        {!value && (
+      {/* ボタン群 */}
+      {!value && (
+        <div className="flex gap-2 max-w-md">
           <Button
             type="button"
             variant="outline"
@@ -146,9 +141,29 @@ export function ImageUpload({
             onClick={() => fileInputRef.current?.click()}
             disabled={isUploading}
           >
-            <Upload className="h-4 w-4" />
+            <Upload className="h-4 w-4 mr-2" />
+            新規アップロード
           </Button>
-        )}
+          <MediaPickerDialog
+            onSelect={onChange}
+            trigger={
+              <Button type="button" variant="outline" size="sm">
+                <FolderOpen className="h-4 w-4 mr-2" />
+                ライブラリから選択
+              </Button>
+            }
+          />
+        </div>
+      )}
+
+      {/* 直接URL入力 */}
+      <div className="max-w-md">
+        <Input
+          type="url"
+          placeholder="または画像URLを直接入力"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+        />
       </div>
     </div>
   )

@@ -4,8 +4,9 @@ import { useState, useCallback } from 'react'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { X, Upload, Loader2, GripVertical } from 'lucide-react'
+import { X, Upload, Loader2, GripVertical, FolderOpen } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
+import { MediaPickerDialog } from '@/components/admin'
 
 interface GalleryUploadProps {
   value: string[]
@@ -144,10 +145,23 @@ export function GalleryUpload({
           ) : (
             <>
               <Upload className="mr-2 h-4 w-4" />
-              画像を追加
+              新規アップロード
             </>
           )}
         </Button>
+        <MediaPickerDialog
+          onSelect={(url) => {
+            if (!value.includes(url)) {
+              onChange([...value, url])
+            }
+          }}
+          trigger={
+            <Button type="button" variant="outline" disabled={isUploading}>
+              <FolderOpen className="mr-2 h-4 w-4" />
+              ライブラリから選択
+            </Button>
+          }
+        />
         <Input
           id="gallery-upload"
           type="file"
@@ -156,10 +170,10 @@ export function GalleryUpload({
           className="hidden"
           onChange={handleUpload}
         />
-        <p className="text-sm text-gray-500">
-          複数選択可。ドラッグで順序を変更できます。
-        </p>
       </div>
+      <p className="text-sm text-gray-500">
+        複数選択可。ドラッグで順序を変更できます。
+      </p>
     </div>
   )
 }

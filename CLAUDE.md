@@ -685,6 +685,110 @@ const summary = await generateSingleSummary(articleBody, 'short')
 - 読む時間の目安を表示
 - 要約が未設定の場合は非表示
 
+## メディアライブラリ
+
+Supabase Storageを使用したメディア管理機能（`/admin/media`）。
+
+### 機能
+- **一覧表示**: すべてのフォルダを再帰的にスキャンして画像を表示
+- **アップロード**: ドラッグ&ドロップ対応、複数ファイル同時アップロード
+- **削除**: 使用状況チェック付き、参照クリア機能
+- **URL コピー**: クリックでクリップボードにコピー
+
+### ファイル構成
+```
+src/app/(admin)/admin/media/
+├── page.tsx           # メディア一覧ページ
+├── actions.ts         # Server Actions
+└── _components/
+    ├── MediaCard.tsx      # 画像カード（削除確認ダイアログ付き）
+    ├── MediaGrid.tsx      # グリッド表示
+    └── MediaUploader.tsx  # アップロード（D&D対応）
+```
+
+### Server Actions（actions.ts）
+```typescript
+// 全ファイル取得（再帰的にフォルダをスキャン）
+getMediaFiles(): Promise<MediaFile[]>
+
+// 使用状況チェック（organizations, interviews, grants, news_posts）
+checkMediaUsage(url: string): Promise<MediaUsage[]>
+
+// 削除（参照クリアオプション付き）
+deleteMedia(url: string, clearReferences?: boolean): Promise<{ success: boolean }>
+
+// アップロード（YYYY/MM/timestamp形式で保存）
+uploadMedia(formData: FormData): Promise<{ success: boolean; url?: string }>
+```
+
+### MediaPickerDialog
+
+編集画面で既存画像をライブラリから選択するダイアログ：
+
+```typescript
+import { MediaPickerDialog } from '@/components/admin'
+
+<MediaPickerDialog
+  onSelect={(url) => setImageUrl(url)}
+  trigger={<Button>ライブラリから選択</Button>}
+/>
+```
+
+使用箇所：
+- `ImageUpload`（団体サムネイル、助成金PDF）
+- `GalleryUpload`（インタビューギャラリー）
+
+## リッチテキストエディタ カスタムメニュー
+
+Tiptap 3.x の BubbleMenu/FloatingMenu は z-index 問題があるため、React Portal + Floating UI でカスタム実装。
+
+### CustomBubbleMenu（テキスト選択時）
+
+テキスト選択時に表示されるフォーマットメニュー：
+
+```
+src/components/admin/editor/CustomBubbleMenu.tsx
+```
+
+機能：
+- **Bold** (⌘+B)
+- **Italic** (⌘+I)
+- **Strikethrough**
+- **Code**
+- **Link**（URL入力フィールド付き）
+
+### CustomFloatingMenu（空行/ブロック先頭）
+
+空の段落またはブロック先頭で「+」ボタンを表示：
+
+```
+src/components/admin/editor/CustomFloatingMenu.tsx
+```
+
+機能：
+- **画像挿入**（URL入力）
+- **水平線**
+- **見出し**（H1, H2, H3）
+- **引用**
+- **リスト**（箇条書き、番号付き）
+
+動作仕様：
+- エディタにフォーカスがある時のみ「+」ボタンを表示
+- メニュー外クリックで自動的に閉じる
+- React Portal でモーダル/ダイアログ内でも正常に動作
+
+### 使用方法
+
+```tsx
+import { RichTextEditor } from '@/components/admin/editor'
+
+<RichTextEditor
+  content={body}
+  onChange={setBody}
+  placeholder="本文を入力..."
+/>
+```
+
 ## 完了済みチケット
 
 ### 環境構築・基盤
@@ -707,6 +811,8 @@ const summary = await generateSingleSummary(articleBody, 'short')
 - [x] 016 - マスター管理
 - [x] 047 - Organizations テーブル拡張（8カラム追加、会員募集バッジ）
 - [x] 048 - AI要約機能（Gemini API連携、3段階要約生成）
+- [x] 049 - メディアライブラリ（Supabase Storage管理、使用状況チェック、削除機能）
+- [x] 050 - カスタムBubbleMenu/FloatingMenu（React Portal + Floating UI）
 
 ### 公開サイト
 - [x] 021 - 共通レイアウト（Header/Footer）

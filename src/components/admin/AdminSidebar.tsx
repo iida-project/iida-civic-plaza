@@ -11,6 +11,7 @@ import {
   Newspaper,
   HelpCircle,
   Settings,
+  ImageIcon,
 } from 'lucide-react'
 
 const navItems = [
@@ -20,6 +21,7 @@ const navItems = [
   { label: '助成金', href: '/admin/grants', icon: Coins },
   { label: 'お知らせ', href: '/admin/news', icon: Newspaper },
   { label: 'FAQ', href: '/admin/faqs', icon: HelpCircle },
+  { label: 'メディア', href: '/admin/media', icon: ImageIcon },
   { label: 'マスター管理', href: '/admin/master', icon: Settings },
 ]
 
