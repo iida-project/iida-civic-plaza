@@ -13,23 +13,22 @@ export default async function EditInterviewPage({ params }: Props) {
   const { id } = await params
   const supabase = createAdminClient()
 
-  // インタビューデータを取得
-  const { data: interview, error } = await supabase
-    .from('interviews')
-    .select('*')
-    .eq('id', id)
-    .single()
+  // インタビューデータと団体リストを並列で取得
+  const [interviewResult, organizationsResult] = await Promise.all([
+    supabase.from('interviews').select('*').eq('id', id).single(),
+    supabase
+      .from('organizations')
+      .select('id, name')
+      .eq('is_published', true)
+      .order('name'),
+  ])
+
+  const { data: interview, error } = interviewResult
+  const { data: organizations } = organizationsResult
 
   if (error || !interview) {
     notFound()
   }
-
-  // 公開済みの団体を取得
-  const { data: organizations } = await supabase
-    .from('organizations')
-    .select('id, name')
-    .eq('is_published', true)
-    .order('name')
 
   return (
     <div className="space-y-6">

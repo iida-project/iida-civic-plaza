@@ -43,23 +43,22 @@ async function getOrganizations(categorySlug?: string, areaSlug?: string) {
 
   const orgIds = organizations.map((org) => org.id)
 
-  // カテゴリを取得
-  const { data: orgCategories } = await supabase
-    .from('organization_categories')
-    .select('organization_id, category:activity_categories(name, slug)')
-    .in('organization_id', orgIds)
-
-  // エリアを取得
-  const { data: orgAreas } = await supabase
-    .from('organization_areas')
-    .select('organization_id, area:activity_areas(name, slug)')
-    .in('organization_id', orgIds)
-
-  // タグを取得
-  const { data: orgTags } = await supabase
-    .from('organization_tags')
-    .select('organization_id, tag:tags(name, slug)')
-    .in('organization_id', orgIds)
+  // カテゴリ・エリア・タグを並列で取得
+  const [{ data: orgCategories }, { data: orgAreas }, { data: orgTags }] =
+    await Promise.all([
+      supabase
+        .from('organization_categories')
+        .select('organization_id, category:activity_categories(name, slug)')
+        .in('organization_id', orgIds),
+      supabase
+        .from('organization_areas')
+        .select('organization_id, area:activity_areas(name, slug)')
+        .in('organization_id', orgIds),
+      supabase
+        .from('organization_tags')
+        .select('organization_id, tag:tags(name, slug)')
+        .in('organization_id', orgIds),
+    ])
 
   // データを結合
   let result = organizations.map((org) => ({

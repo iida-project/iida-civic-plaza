@@ -22,15 +22,41 @@ type Article = {
 
 async function getLatestArticles(): Promise<Article[]> {
   const supabase = createPublicClient()
-  const articles: Article[] = []
 
-  // 団体（最新3件）
-  const { data: organizations } = await supabase
-    .from('organizations')
-    .select('id, slug, name, summary, published_at, is_recruiting')
-    .eq('is_published', true)
-    .order('published_at', { ascending: false })
-    .limit(3)
+  // 4つのクエリを並列実行
+  const [
+    { data: organizations },
+    { data: interviews },
+    { data: grants },
+    { data: news },
+  ] = await Promise.all([
+    supabase
+      .from('organizations')
+      .select('id, slug, name, summary, published_at, is_recruiting')
+      .eq('is_published', true)
+      .order('published_at', { ascending: false })
+      .limit(3),
+    supabase
+      .from('interviews')
+      .select('id, slug, title, lead_text, published_at')
+      .eq('is_published', true)
+      .order('published_at', { ascending: false })
+      .limit(2),
+    supabase
+      .from('grants')
+      .select('id, slug, title, provider_name, published_at')
+      .eq('is_published', true)
+      .order('published_at', { ascending: false })
+      .limit(2),
+    supabase
+      .from('news_posts')
+      .select('id, slug, title, published_at')
+      .eq('is_published', true)
+      .order('published_at', { ascending: false })
+      .limit(2),
+  ])
+
+  const articles: Article[] = []
 
   organizations?.forEach((org) => {
     articles.push({
@@ -44,14 +70,6 @@ async function getLatestArticles(): Promise<Article[]> {
     })
   })
 
-  // インタビュー（最新2件）
-  const { data: interviews } = await supabase
-    .from('interviews')
-    .select('id, slug, title, lead_text, published_at')
-    .eq('is_published', true)
-    .order('published_at', { ascending: false })
-    .limit(2)
-
   interviews?.forEach((interview) => {
     articles.push({
       id: interview.id,
@@ -63,14 +81,6 @@ async function getLatestArticles(): Promise<Article[]> {
     })
   })
 
-  // 助成金（最新2件）
-  const { data: grants } = await supabase
-    .from('grants')
-    .select('id, slug, title, provider_name, published_at')
-    .eq('is_published', true)
-    .order('published_at', { ascending: false })
-    .limit(2)
-
   grants?.forEach((grant) => {
     articles.push({
       id: grant.id,
@@ -81,14 +91,6 @@ async function getLatestArticles(): Promise<Article[]> {
       summary: `${grant.provider_name}`,
     })
   })
-
-  // お知らせ（最新2件）
-  const { data: news } = await supabase
-    .from('news_posts')
-    .select('id, slug, title, published_at')
-    .eq('is_published', true)
-    .order('published_at', { ascending: false })
-    .limit(2)
 
   news?.forEach((post) => {
     articles.push({
@@ -168,18 +170,19 @@ async function getPickupOrganizations() {
 
   if (!data) return []
 
-  // カテゴリとエリアを別途取得
+  // カテゴリとエリアを並列で取得
   const orgIds = data.map((org) => org.id)
 
-  const { data: orgCategories } = await supabase
-    .from('organization_categories')
-    .select('organization_id, category:activity_categories(name)')
-    .in('organization_id', orgIds)
-
-  const { data: orgAreas } = await supabase
-    .from('organization_areas')
-    .select('organization_id, area:activity_areas(name)')
-    .in('organization_id', orgIds)
+  const [{ data: orgCategories }, { data: orgAreas }] = await Promise.all([
+    supabase
+      .from('organization_categories')
+      .select('organization_id, category:activity_categories(name)')
+      .in('organization_id', orgIds),
+    supabase
+      .from('organization_areas')
+      .select('organization_id, area:activity_areas(name)')
+      .in('organization_id', orgIds),
+  ])
 
   return data.map((org) => ({
     ...org,

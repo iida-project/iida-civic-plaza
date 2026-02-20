@@ -11,7 +11,7 @@ export default async function NewGrantPage() {
   const { data: categories } = await supabase
     .from('activity_categories')
     .select('id, name')
-    .order('name')
+    .order('sort_order')
 
   return (
     <div className="space-y-6">

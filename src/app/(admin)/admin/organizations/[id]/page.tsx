@@ -13,33 +13,34 @@ export default async function EditOrganizationPage({ params }: Props) {
   const { id } = await params
   const supabase = createAdminClient()
 
-  // 団体データを取得
-  const { data: organization, error } = await supabase
-    .from('organizations')
-    .select(
-      `
-      *,
-      organization_categories (category_id),
-      organization_areas (area_id),
-      organization_tags (tag_id)
-    `
-    )
-    .eq('id', id)
-    .single()
+  // 団体データとマスターデータを並列で取得
+  const [orgResult, categoriesResult, areasResult, tagsResult] =
+    await Promise.all([
+      supabase
+        .from('organizations')
+        .select(
+          `
+          *,
+          organization_categories (category_id),
+          organization_areas (area_id),
+          organization_tags (tag_id)
+        `
+        )
+        .eq('id', id)
+        .single(),
+      supabase
+        .from('activity_categories')
+        .select('id, name')
+        .order('sort_order'),
+      supabase.from('activity_areas').select('id, name').order('sort_order'),
+      supabase.from('tags').select('id, name').order('name'),
+    ])
+
+  const { data: organization, error } = orgResult
 
   if (error || !organization) {
     notFound()
   }
-
-  // マスターデータを取得（sort_orderでソート）
-  const [categoriesResult, areasResult, tagsResult] = await Promise.all([
-    supabase
-      .from('activity_categories')
-      .select('id, name')
-      .order('sort_order'),
-    supabase.from('activity_areas').select('id, name').order('sort_order'),
-    supabase.from('tags').select('id, name').order('name'),  // tagsはsort_orderがないのでname順
-  ])
 
   return (
     <div className="space-y-6">

@@ -1,13 +1,18 @@
 'use client'
 
 import { useActionState, useState, useRef } from 'react'
+import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Switch } from '@/components/ui/switch'
-import { RichTextEditor } from '@/components/admin/editor'
+
+const RichTextEditor = dynamic(
+  () => import('@/components/admin/editor/RichTextEditor').then((mod) => mod.RichTextEditor),
+  { ssr: false, loading: () => <div className="h-64 bg-gray-50 rounded-md animate-pulse" /> }
+)
 import { ImageUpload } from '../../organizations/_components/ImageUpload'
 import { OrganizationSelect } from './OrganizationSelect'
 import { GalleryUpload } from './GalleryUpload'

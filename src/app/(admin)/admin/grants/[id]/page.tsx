@@ -13,29 +13,32 @@ export default async function EditGrantPage({ params }: Props) {
   const { id } = await params
   const supabase = createAdminClient()
 
-  // 助成金データを取得
-  const { data: grant, error } = await supabase
-    .from('grants')
-    .select(
+  // 助成金データと活動分野を並列で取得
+  const [grantResult, categoriesResult] = await Promise.all([
+    supabase
+      .from('grants')
+      .select(
+        `
+        *,
+        grant_categories (
+          category_id
+        )
       `
-      *,
-      grant_categories (
-        category_id
       )
-    `
-    )
-    .eq('id', id)
-    .single()
+      .eq('id', id)
+      .single(),
+    supabase
+      .from('activity_categories')
+      .select('id, name')
+      .order('sort_order'),
+  ])
+
+  const { data: grant, error } = grantResult
+  const { data: categories } = categoriesResult
 
   if (error || !grant) {
     notFound()
   }
-
-  // 活動分野を取得
-  const { data: categories } = await supabase
-    .from('activity_categories')
-    .select('id, name')
-    .order('name')
 
   return (
     <div className="space-y-6">

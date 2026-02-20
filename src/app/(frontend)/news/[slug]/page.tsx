@@ -1,7 +1,9 @@
+import { cache } from 'react'
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { createPublicClient } from '@/lib/supabase/public'
+import { stripHtml } from '@/lib/utils'
 import { ArrowLeft, Bell, Calendar } from 'lucide-react'
 import { format } from 'date-fns'
 import { ja } from 'date-fns/locale'
@@ -13,7 +15,7 @@ type Props = {
   params: Promise<{ slug: string }>
 }
 
-async function getNewsPost(slug: string) {
+const getNewsPost = cache(async (slug: string) => {
   const supabase = createPublicClient()
   // URLエンコードされた日本語スラッグをデコード
   const decodedSlug = decodeURIComponent(slug)
@@ -26,7 +28,7 @@ async function getNewsPost(slug: string) {
     .single()
 
   return data
-}
+})
 
 async function getOtherNews(currentId: string) {
   const supabase = createPublicClient()
@@ -44,10 +46,6 @@ async function getOtherNews(currentId: string) {
 
 export async function generateStaticParams() {
   return []
-}
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, '').trim()
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

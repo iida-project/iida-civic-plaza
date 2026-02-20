@@ -62,11 +62,46 @@ const editor = useEditor({
 })
 ```
 
+### 4. RichTextEditor は dynamic import で読み込む
+
+Tiptap は ~500KB あるため、`next/dynamic` で遅延読み込み。全管理フォームに適用済み：
+
+```typescript
+import dynamic from 'next/dynamic'
+
+const RichTextEditor = dynamic(
+  () => import('@/components/admin/editor/RichTextEditor').then((mod) => mod.RichTextEditor),
+  { ssr: false, loading: () => <div className="h-64 bg-gray-50 rounded-md animate-pulse" /> }
+)
+```
+
+適用済みフォーム: `OrganizationForm`, `InterviewForm`, `NewsForm`, `FaqForm`
+
 ## テーブルカラムの注意
 
 - Payload CMS 削除後、一部テーブルに `payload_id` カラムが残っている
 - NOT NULL 制約がある場合はNULL許可に変更が必要
 - `display_order` など存在しないカラムを参照していないか確認
+
+## updated_at トリガー
+
+全メインテーブル（`organizations`, `interviews`, `grants`, `news_posts`, `faqs`）に
+`updated_at` 自動更新トリガーが設定済み。レコード更新時に自動で `now()` がセットされるため、
+Server Actions で明示的に `updated_at` を設定する必要はない。
+
+## 管理画面の並列データ取得
+
+編集ページでは `Promise.all` でデータとマスターを並列取得する：
+
+```typescript
+// 例: 助成金編集ページ
+const [grantResult, categoriesResult] = await Promise.all([
+  supabase.from('grants').select('*, grant_categories(category_id)').eq('id', id).single(),
+  supabase.from('activity_categories').select('id, name').order('sort_order'),
+])
+```
+
+適用済み: 団体編集、インタビュー編集、助成金編集
 
 ## マスターデータ取得
 

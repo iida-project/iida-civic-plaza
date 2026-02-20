@@ -1,6 +1,7 @@
 'use client'
 
 import { useActionState, useState } from 'react'
+import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -8,7 +9,11 @@ import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 import { createFaq, updateFaq, type FaqFormState } from '../actions'
 import { Loader2 } from 'lucide-react'
-import { RichTextEditor } from '@/components/admin/editor/RichTextEditor'
+
+const RichTextEditor = dynamic(
+  () => import('@/components/admin/editor/RichTextEditor').then((mod) => mod.RichTextEditor),
+  { ssr: false, loading: () => <div className="h-64 bg-gray-50 rounded-md animate-pulse" /> }
+)
 
 type Faq = {
   id: string

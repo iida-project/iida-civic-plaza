@@ -1,3 +1,4 @@
+import { cache } from 'react'
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
@@ -57,7 +58,7 @@ type CategoryItem = { id: string; name: string; slug: string }
 type AreaItem = { id: string; name: string; slug: string }
 type TagItem = { id: string; name: string; slug: string }
 
-async function getOrganization(slug: string) {
+const getOrganization = cache(async (slug: string) => {
   const supabase = createPublicClient()
   // URLエンコードされた日本語スラッグをデコード
   const decodedSlug = decodeURIComponent(slug)
@@ -71,23 +72,22 @@ async function getOrganization(slug: string) {
 
   if (!org) return null
 
-  // カテゴリを取得
-  const { data: orgCategories } = await supabase
-    .from('organization_categories')
-    .select('category:activity_categories(id, name, slug)')
-    .eq('organization_id', org.id)
-
-  // エリアを取得
-  const { data: orgAreas } = await supabase
-    .from('organization_areas')
-    .select('area:activity_areas(id, name, slug)')
-    .eq('organization_id', org.id)
-
-  // タグを取得
-  const { data: orgTags } = await supabase
-    .from('organization_tags')
-    .select('tag:tags(id, name, slug)')
-    .eq('organization_id', org.id)
+  // カテゴリ・エリア・タグを並列で取得
+  const [{ data: orgCategories }, { data: orgAreas }, { data: orgTags }] =
+    await Promise.all([
+      supabase
+        .from('organization_categories')
+        .select('category:activity_categories(id, name, slug)')
+        .eq('organization_id', org.id),
+      supabase
+        .from('organization_areas')
+        .select('area:activity_areas(id, name, slug)')
+        .eq('organization_id', org.id),
+      supabase
+        .from('organization_tags')
+        .select('tag:tags(id, name, slug)')
+        .eq('organization_id', org.id),
+    ])
 
   return {
     ...org,
@@ -101,7 +101,7 @@ async function getOrganization(slug: string) {
       (ot) => ot.tag as unknown as TagItem
     ),
   }
-}
+})
 
 async function getRelatedInterviews(organizationId: string) {
   const supabase = createPublicClient()

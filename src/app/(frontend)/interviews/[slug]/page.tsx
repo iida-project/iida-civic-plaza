@@ -1,3 +1,4 @@
+import { cache } from 'react'
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
@@ -15,7 +16,7 @@ type Props = {
   params: Promise<{ slug: string }>
 }
 
-async function getInterview(slug: string) {
+const getInterview = cache(async (slug: string) => {
   const supabase = createPublicClient()
   // URLエンコードされた日本語スラッグをデコード
   const decodedSlug = decodeURIComponent(slug)
@@ -36,7 +37,7 @@ async function getInterview(slug: string) {
     ...data,
     organization: data.organization as unknown as { id: string; name: string; slug: string } | null,
   }
-}
+})
 
 async function getOtherInterviews(currentId: string) {
   const supabase = createPublicClient()
