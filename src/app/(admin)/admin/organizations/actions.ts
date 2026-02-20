@@ -291,6 +291,20 @@ export async function deleteOrganization(id: string): Promise<{ success: boolean
   const supabase = createAdminClient()
 
   try {
+    // 関連するインタビューがあるかチェック
+    const { data: relatedInterviews } = await supabase
+      .from('interviews')
+      .select('id, title')
+      .eq('organization_id', id)
+
+    if (relatedInterviews && relatedInterviews.length > 0) {
+      const titles = relatedInterviews.map((i) => i.title).join('、')
+      return {
+        success: false,
+        error: `この団体に紐づくインタビューがあるため削除できません（${titles}）。先にインタビューを削除するか、紐づけを解除してください。`,
+      }
+    }
+
     // 中間テーブルを先に削除
     await supabase
       .from('organization_categories')

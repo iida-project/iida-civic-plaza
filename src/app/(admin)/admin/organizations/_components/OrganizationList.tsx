@@ -24,7 +24,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
-import { Pencil, Trash2, Eye, EyeOff, Star, StarOff } from 'lucide-react'
+import { Pencil, Trash2, Eye, EyeOff, Star, StarOff, AlertTriangle, X } from 'lucide-react'
 import { deleteOrganization, togglePublish, toggleFeatured } from '../actions'
 
 type Organization = {
@@ -50,13 +50,15 @@ export function OrganizationList({ organizations, featuredCount }: OrganizationL
   const [isPending, startTransition] = useTransition()
   const [deletingId, setDeletingId] = useState<string | null>(null)
   const [currentFeaturedCount, setCurrentFeaturedCount] = useState(featuredCount)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   const handleDelete = async (id: string) => {
     setDeletingId(id)
+    setErrorMessage(null)
     startTransition(async () => {
       const result = await deleteOrganization(id)
       if (!result.success) {
-        alert(result.error)
+        setErrorMessage(result.error || '削除に失敗しました')
       }
       setDeletingId(null)
       router.refresh()
@@ -64,20 +66,22 @@ export function OrganizationList({ organizations, featuredCount }: OrganizationL
   }
 
   const handleTogglePublish = async (id: string) => {
+    setErrorMessage(null)
     startTransition(async () => {
       const result = await togglePublish(id)
       if (!result.success) {
-        alert(result.error)
+        setErrorMessage(result.error || '操作に失敗しました')
       }
       router.refresh()
     })
   }
 
   const handleToggleFeatured = async (id: string) => {
+    setErrorMessage(null)
     startTransition(async () => {
       const result = await toggleFeatured(id)
       if (!result.success) {
-        alert(result.error)
+        setErrorMessage(result.error || '操作に失敗しました')
       }
       router.refresh()
     })
@@ -100,7 +104,22 @@ export function OrganizationList({ organizations, featuredCount }: OrganizationL
   }
 
   return (
-    <div className="bg-white rounded-lg shadow">
+    <div className="space-y-4">
+      {/* エラーメッセージ */}
+      {errorMessage && (
+        <div className="flex items-start gap-3 bg-red-50 border border-red-200 rounded-lg p-4">
+          <AlertTriangle className="h-5 w-5 text-red-500 flex-shrink-0 mt-0.5" />
+          <div className="flex-1 text-sm text-red-700">{errorMessage}</div>
+          <button
+            onClick={() => setErrorMessage(null)}
+            className="flex-shrink-0 text-red-400 hover:text-red-600 transition-colors"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+      )}
+
+      <div className="bg-white rounded-lg shadow">
       <Table>
         <TableHeader>
           <TableRow>
@@ -222,6 +241,7 @@ export function OrganizationList({ organizations, featuredCount }: OrganizationL
           ))}
         </TableBody>
       </Table>
+      </div>
     </div>
   )
 }

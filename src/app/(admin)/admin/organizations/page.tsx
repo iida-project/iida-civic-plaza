@@ -38,7 +38,7 @@ export default async function OrganizationsPage() {
       )
     `
     )
-    .order('updated_at', { ascending: false })
+    .order('name', { ascending: true })
 
   if (error) {
     console.error('Failed to fetch organizations:', error)
