@@ -134,6 +134,7 @@ export async function createOrganization(
     const isPublished = formData.get('is_published') === 'true'
 
     const isRecruiting = formData.get('is_recruiting') === 'true'
+    const isContactPublic = formData.get('is_contact_public') !== 'false'
     const establishedYearStr = getFormStringOrNull(formData, 'established_year')
     const establishedYear = establishedYearStr ? parseInt(establishedYearStr, 10) : null
 
@@ -164,6 +165,7 @@ export async function createOrganization(
         established_year: establishedYear,
         activity_description: getFormStringOrNull(formData, 'activity_description'),
         is_recruiting: isRecruiting,
+        is_contact_public: isContactPublic,
       })
       .select()
       .single()
@@ -233,6 +235,7 @@ export async function updateOrganization(
     }
 
     const isRecruiting = formData.get('is_recruiting') === 'true'
+    const isContactPublic = formData.get('is_contact_public') !== 'false'
     const establishedYearStr = getFormStringOrNull(formData, 'established_year')
     const establishedYear = establishedYearStr ? parseInt(establishedYearStr, 10) : null
 
@@ -263,6 +266,7 @@ export async function updateOrganization(
         established_year: establishedYear,
         activity_description: getFormStringOrNull(formData, 'activity_description'),
         is_recruiting: isRecruiting,
+        is_contact_public: isContactPublic,
       })
       .eq('id', id)
 

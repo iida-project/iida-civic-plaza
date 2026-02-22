@@ -175,7 +175,7 @@ export default async function OrganizationDetailPage({ params }: Props) {
 
   const hasSocialLinks =
     org.facebook_url || org.twitter_url || org.instagram_url || org.website_url
-  const hasContactInfo = org.contact_email || org.contact_phone || org.contact_name
+  const hasContactInfo = org.is_contact_public && (org.contact_email || org.contact_phone || org.contact_name)
   const hasOrgInfo =
     org.representative ||
     org.established_year ||

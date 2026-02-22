@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { Button } from '@/components/ui/button'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, ExternalLink } from 'lucide-react'
 import { NewsForm } from '../_components'
 
 type Props = {
@@ -33,6 +33,16 @@ export default async function EditNewsPage({ params }: Props) {
           </Link>
         </Button>
         <h1 className="text-2xl font-bold">お知らせを編集</h1>
+        <Button variant="outline" size="sm" asChild>
+          <a
+            href={`/news/${encodeURIComponent(news.slug)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <ExternalLink className="mr-1.5 h-3.5 w-3.5" />
+            サイトで確認
+          </a>
+        </Button>
       </div>
 
       <NewsForm news={news} />

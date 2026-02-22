@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { Button } from '@/components/ui/button'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, ExternalLink } from 'lucide-react'
 import { GrantForm } from '../_components'
 
 type Props = {
@@ -50,6 +50,16 @@ export default async function EditGrantPage({ params }: Props) {
           </Link>
         </Button>
         <h1 className="text-2xl font-bold">助成金を編集</h1>
+        <Button variant="outline" size="sm" asChild>
+          <a
+            href={`/grants/${encodeURIComponent(grant.slug)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <ExternalLink className="mr-1.5 h-3.5 w-3.5" />
+            サイトで確認
+          </a>
+        </Button>
       </div>
 
       <GrantForm

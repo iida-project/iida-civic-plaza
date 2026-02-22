@@ -24,7 +24,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
-import { Pencil, Trash2, Eye, EyeOff, Star, StarOff, AlertTriangle, X } from 'lucide-react'
+import { Pencil, Trash2, Eye, EyeOff, Star, StarOff, AlertTriangle, X, ExternalLink } from 'lucide-react'
 import { deleteOrganization, togglePublish, toggleFeatured } from '../actions'
 
 type Organization = {
@@ -202,7 +202,16 @@ export function OrganizationList({ organizations, featuredCount }: OrganizationL
                       <Eye className="h-4 w-4" />
                     )}
                   </Button>
-                  <Button variant="ghost" size="sm" asChild>
+                  <Button variant="ghost" size="sm" asChild title="サイトで確認">
+                    <a
+                      href={`/activities/${encodeURIComponent(org.slug)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <ExternalLink className="h-4 w-4 text-blue-500" />
+                    </a>
+                  </Button>
+                  <Button variant="ghost" size="sm" asChild title="編集">
                     <Link href={`/admin/organizations/${org.id}`}>
                       <Pencil className="h-4 w-4" />
                     </Link>

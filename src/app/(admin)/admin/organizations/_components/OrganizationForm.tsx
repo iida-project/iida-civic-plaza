@@ -51,6 +51,7 @@ type Organization = {
   established_year: number | null
   activity_description: string | null
   is_recruiting: boolean | null
+  is_contact_public: boolean
   organization_categories?: { category_id: string }[]
   organization_areas?: { area_id: string }[]
   organization_tags?: { tag_id: string }[]
@@ -104,6 +105,9 @@ export function OrganizationForm({
   )
   const [isRecruiting, setIsRecruiting] = useState(
     organization?.is_recruiting || false
+  )
+  const [isContactPublic, setIsContactPublic] = useState(
+    organization?.is_contact_public ?? true
   )
 
   const editorImageInputRef = useRef<HTMLInputElement>(null)
@@ -172,6 +176,7 @@ export function OrganizationForm({
     formData.set('tags', JSON.stringify(selectedTags))
     formData.set('is_published', isPublished.toString())
     formData.set('is_recruiting', isRecruiting.toString())
+    formData.set('is_contact_public', isContactPublic.toString())
 
     formAction(formData)
   }
@@ -443,6 +448,21 @@ export function OrganizationForm({
           {/* 連絡先 */}
           <div className="bg-white p-6 rounded-lg shadow space-y-4">
             <h2 className="text-lg font-semibold border-b pb-2">連絡先</h2>
+
+            <div className="flex items-center space-x-3">
+              <Switch
+                id="is_contact_public"
+                checked={isContactPublic}
+                onCheckedChange={setIsContactPublic}
+              />
+              <Label htmlFor="is_contact_public" className="cursor-pointer">
+                {isContactPublic ? (
+                  <span className="text-green-600 font-medium">連絡先を公開する</span>
+                ) : (
+                  <span className="text-gray-500">連絡先を非公開にする</span>
+                )}
+              </Label>
+            </div>
 
             <div className="space-y-4">
               <div className="space-y-2">
