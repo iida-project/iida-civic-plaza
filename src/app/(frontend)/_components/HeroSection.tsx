@@ -4,16 +4,20 @@ import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { ArrowRight, Search } from 'lucide-react'
 
+const heroBadges = [
+  { text: 'COMMUNITY', color: 'bg-apple-red' },
+  { text: 'SENIOR WISDOM', color: 'bg-apple-orange' },
+  { text: 'IIDA CITY', color: 'bg-apple-green' },
+]
+
 export function HeroSection() {
   return (
-    <section className="relative overflow-hidden py-16 sm:py-24 lg:py-32">
-      {/* 背景の装飾 */}
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute top-10 left-10 w-64 h-64 sm:w-72 sm:h-72 bg-primary/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-10 right-10 w-80 h-80 sm:w-96 sm:h-96 bg-secondary/10 rounded-full blur-3xl" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-accent/5 rounded-full blur-3xl" />
-      </div>
-
+    <section
+      className="relative overflow-hidden py-20 sm:py-28 lg:py-32"
+      style={{
+        background: 'linear-gradient(135deg, rgba(244,167,185,0.25) 0%, rgba(249,199,132,0.2) 25%, rgba(168,213,162,0.2) 60%, rgba(144,200,224,0.25) 100%)',
+      }}
+    >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -21,36 +25,53 @@ export function HeroSection() {
           transition={{ duration: 0.6 }}
           className="text-center max-w-4xl mx-auto"
         >
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground mb-6 leading-tight">
-            <span className="text-primary">飯田</span>の
-            <br className="sm:hidden" />
-            市民活動ひろば
-          </h1>
-          <p className="text-lg sm:text-xl text-foreground/80 mb-8 leading-relaxed max-w-2xl mx-auto">
-            飯田市内のNPO・市民活動を可視化し、
-            <br className="hidden sm:block" />
-            市民の皆さんと活動団体をつなぐプラットフォームです。
-          </p>
-
+          {/* バッジ */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="flex flex-wrap justify-center gap-2 mb-8"
+          >
+            {heroBadges.map((badge) => (
+              <span
+                key={badge.text}
+                className={`${badge.color} text-white font-heading font-medium text-xs px-4 py-1 rounded-full`}
+              >
+                {badge.text}
+              </span>
+            ))}
+          </motion.div>
+
+          {/* タイトル */}
+          <h1 className="font-heading font-extrabold text-[32px] sm:text-[44px] lg:text-[52px] text-foreground mb-4 leading-[1.3]">
+            みんなのムトスを応援
+          </h1>
+
+          {/* サブタイトル */}
+          <p className="font-body text-lg sm:text-xl text-muted-foreground mb-10 leading-relaxed max-w-2xl mx-auto">
+            つなげる、広がる、飯田市の市民活動
+          </p>
+
+          {/* ボタン */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
             className="flex flex-col sm:flex-row gap-4 justify-center items-center"
           >
             <Link
-              href="/activities"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-primary text-primary-foreground rounded-full text-lg font-medium hover:bg-primary/90 transition-all shadow-lg hover:shadow-xl group"
+              href="/about"
+              className="inline-flex items-center gap-2 px-9 py-3.5 bg-apple-red text-white rounded-full text-base font-heading font-bold hover:opacity-85 hover:-translate-y-0.5 transition-all shadow-md cursor-pointer"
             >
-              <Search className="h-5 w-5" />
-              活動団体を探す
-              <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+              活動をはじめる
+              <ArrowRight className="h-4 w-4" />
             </Link>
             <Link
-              href="/interviews"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-card text-foreground rounded-full text-lg font-medium hover:bg-muted transition-all shadow-md hover:shadow-lg border border-border"
+              href="/activities"
+              className="inline-flex items-center gap-2 px-9 py-3.5 bg-white text-apple-blue border-2 border-apple-blue rounded-full text-base font-heading font-bold hover:opacity-85 hover:-translate-y-0.5 transition-all shadow-md cursor-pointer"
             >
-              インタビューを読む
+              <Search className="h-4 w-4" />
+              団体を探す
             </Link>
           </motion.div>
         </motion.div>

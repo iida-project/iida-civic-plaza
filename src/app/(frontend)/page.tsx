@@ -6,6 +6,7 @@ import {
   FeaturedInterviewsSection,
   PickupOrganizationsSection,
   CTASection,
+  WaveDivider,
 } from './_components'
 
 export const revalidate = 60 // ISR: 60秒ごとに再検証
@@ -208,10 +209,15 @@ export default async function Home() {
   return (
     <div>
       <HeroSection />
+      <WaveDivider />
       <LatestArticlesSection articles={articles} />
+      <WaveDivider />
       <SearchSection categories={categories} areas={areas} />
+      <WaveDivider />
       <PickupOrganizationsSection organizations={pickupOrganizations} />
+      <WaveDivider />
       <FeaturedInterviewsSection interviews={featuredInterviews} />
+      <WaveDivider />
       <CTASection />
     </div>
   )

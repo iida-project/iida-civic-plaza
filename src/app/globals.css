@@ -4,60 +4,64 @@
 
 body {
   background-color: var(--background);
-  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system,
-    BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: var(--font-body), var(--font-geist-sans), ui-sans-serif, system-ui,
+    -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 @layer base {
   :root {
     /*
      * 飯田の市民活動ひろば カラーパレット
-     * りんごマークの4色をベースに構成
-     * - Primary: 赤（りんご、メインカラー）
-     * - Secondary: 緑（市民活動、自然）
+     * りんごマークの4色をベースにパステル調で構成
+     * - Primary: ピンク（りんご、メインカラー）
+     * - Secondary: グリーン（市民活動、自然）
      * - Accent: オレンジ（親しみ、ハイライト）
-     * - Info: 青（信頼、リンク）
+     * - Info: ブルー（信頼、リンク）
      */
 
-    --background: 0 0% 98%; /* ほぼ白、少し温かみ */
-    --foreground: 0 0% 15%; /* ダークグレー */
+    --background: 0 0% 100%; /* ホワイト */
+    --foreground: 0 0% 20%; /* #333333 テキストメイン */
 
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 15%;
+    --card-foreground: 0 0% 20%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 15%;
+    --popover-foreground: 0 0% 20%;
 
-    --primary: 4 72% 56%; /* #E25555 赤（りんご） */
+    --primary: 346 82% 81%; /* #F4A7B9 りんごピンク */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 140 45% 55%; /* #5DB075 緑 */
+    --secondary: 115 40% 74%; /* #A8D5A2 りんごグリーン */
     --secondary-foreground: 0 0% 100%;
 
-    --muted: 40 30% 94%; /* 薄いベージュ */
-    --muted-foreground: 0 0% 40%;
+    --muted: 40 30% 96%; /* 薄いベージュ */
+    --muted-foreground: 0 0% 40%; /* #666666 テキストサブ */
 
-    --accent: 36 90% 60%; /* #F5A623 オレンジ */
-    --accent-foreground: 0 0% 15%;
+    --accent: 34 91% 72%; /* #F9C784 りんごオレンジ */
+    --accent-foreground: 0 0% 20%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 0 0% 85%;
-    --input: 0 0% 85%;
-    --ring: 4 72% 56%; /* primary と同じ赤 */
+    --border: 0 0% 88%;
+    --input: 0 0% 88%;
+    --ring: 346 82% 81%; /* primary と同じピンク */
 
     /* 4色それぞれのCSS変数（コンポーネントで直接使用） */
-    --apple-red: 4 72% 56%;      /* #E25555 */
-    --apple-green: 140 45% 55%;  /* #5DB075 */
-    --apple-orange: 36 90% 60%;  /* #F5A623 */
-    --apple-blue: 207 70% 59%;   /* #4A9FD9 */
+    --apple-red: 346 82% 81%;    /* #F4A7B9 ピンク */
+    --apple-green: 115 40% 74%;  /* #A8D5A2 グリーン */
+    --apple-orange: 34 91% 72%;  /* #F9C784 オレンジ */
+    --apple-blue: 199 53% 72%;   /* #90C8E0 ブルー */
 
-    --chart-1: 4 72% 56%;    /* 赤 */
-    --chart-2: 140 45% 55%;  /* 緑 */
-    --chart-3: 36 90% 60%;   /* オレンジ */
-    --chart-4: 207 70% 59%;  /* 青 */
-    --chart-5: 4 72% 45%;    /* 暗めの赤 */
+    --chart-1: 346 82% 81%;  /* ピンク */
+    --chart-2: 115 40% 74%;  /* グリーン */
+    --chart-3: 34 91% 72%;   /* オレンジ */
+    --chart-4: 199 53% 72%;  /* ブルー */
+    --chart-5: 346 82% 70%;  /* 濃いめピンク */
+
+    /* カードシャドウ */
+    --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.08);
+    --shadow-card-hover: 0 6px 20px rgba(0, 0, 0, 0.14);
 
     --radius: 0.75rem; /* 曲線多めのデザイン */
   }
@@ -72,16 +76,16 @@ body {
     --popover: 0 0% 12%;
     --popover-foreground: 0 0% 95%;
 
-    --primary: 4 72% 60%; /* 赤（少し明るめ） */
+    --primary: 346 72% 72%; /* ピンク（ダーク調整） */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 140 45% 50%; /* 緑 */
+    --secondary: 115 35% 60%; /* グリーン */
     --secondary-foreground: 0 0% 100%;
 
     --muted: 0 0% 18%;
     --muted-foreground: 0 0% 65%;
 
-    --accent: 36 90% 55%; /* オレンジ */
+    --accent: 34 80% 62%; /* オレンジ */
     --accent-foreground: 0 0% 10%;
 
     --destructive: 0 62.8% 50%;
@@ -89,18 +93,21 @@ body {
 
     --border: 0 0% 20%;
     --input: 0 0% 20%;
-    --ring: 4 72% 60%;
+    --ring: 346 72% 72%;
 
-    --apple-red: 4 72% 60%;
-    --apple-green: 140 45% 50%;
-    --apple-orange: 36 90% 55%;
-    --apple-blue: 207 70% 55%;
+    --apple-red: 346 72% 72%;
+    --apple-green: 115 35% 60%;
+    --apple-orange: 34 80% 62%;
+    --apple-blue: 199 50% 62%;
 
-    --chart-1: 4 72% 60%;
-    --chart-2: 140 45% 50%;
-    --chart-3: 36 90% 55%;
-    --chart-4: 207 70% 55%;
-    --chart-5: 4 72% 50%;
+    --chart-1: 346 72% 72%;
+    --chart-2: 115 35% 60%;
+    --chart-3: 34 80% 62%;
+    --chart-4: 199 50% 62%;
+    --chart-5: 346 72% 60%;
+
+    --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.2);
+    --shadow-card-hover: 0 6px 20px rgba(0, 0, 0, 0.3);
   }
 }
 
@@ -111,6 +118,17 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* 4色グラデーションボーダー */
+.gradient-border-bottom {
+  border-bottom: 3px solid transparent;
+  border-image: linear-gradient(to right, #F4A7B9, #F9C784, #A8D5A2, #90C8E0) 1;
+}
+
+.gradient-border-top {
+  border-top: 3px solid transparent;
+  border-image: linear-gradient(to right, #F4A7B9, #F9C784, #A8D5A2, #90C8E0) 1;
 }
 
 /* Tiptap Editor Styles */

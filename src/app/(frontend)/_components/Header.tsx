@@ -23,7 +23,7 @@ export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   return (
-    <header className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
+    <header className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 gradient-border-bottom">
       <nav className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* ロゴ */}
@@ -42,7 +42,7 @@ export function Header() {
                 priority
               />
               <div className="hidden sm:block">
-                <span className="font-bold text-lg text-foreground">
+                <span className="font-heading font-bold text-lg text-foreground">
                   飯田の市民活動ひろば
                 </span>
               </div>
@@ -63,10 +63,10 @@ export function Header() {
                   key={item.href}
                   href={item.href}
                   className={cn(
-                    'px-3 py-2 rounded-full text-sm font-medium transition-all duration-200',
+                    'px-3 py-2 rounded-full text-sm font-heading font-medium transition-all duration-200',
                     isActive
                       ? 'bg-primary text-primary-foreground shadow-md'
-                      : 'text-foreground/80 hover:text-foreground hover:bg-muted'
+                      : 'text-foreground/80 hover:text-apple-red hover:bg-muted'
                   )}
                 >
                   {item.name}
@@ -128,10 +128,10 @@ export function Header() {
                         href={item.href}
                         onClick={() => setMobileMenuOpen(false)}
                         className={cn(
-                          'block px-4 py-3 rounded-xl text-base font-medium transition-all duration-200',
+                          'block px-4 py-3 rounded-xl text-base font-heading font-medium transition-all duration-200',
                           isActive
                             ? 'bg-primary text-primary-foreground shadow-md'
-                            : 'text-foreground/80 hover:text-foreground hover:bg-muted'
+                            : 'text-foreground/80 hover:text-apple-red hover:bg-muted'
                         )}
                       >
                         {item.name}

@@ -22,6 +22,13 @@ type Props = {
   organizations: Organization[]
 }
 
+const cardBorderColors = [
+  'border-l-apple-red',
+  'border-l-apple-orange',
+  'border-l-apple-green',
+  'border-l-apple-blue',
+]
+
 export function PickupOrganizationsSection({ organizations }: Props) {
   if (organizations.length === 0) return null
 
@@ -36,14 +43,15 @@ export function PickupOrganizationsSection({ organizations }: Props) {
           className="flex items-center justify-between mb-10"
         >
           <div className="flex items-center gap-3">
+            <span className="w-1.5 h-[1.2em] bg-apple-orange rounded-sm flex-shrink-0" />
             <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
               <Users className="h-5 w-5 text-white" />
             </div>
-            <h2 className="text-2xl sm:text-3xl font-bold">ピックアップ団体</h2>
+            <h2 className="text-2xl sm:text-3xl font-heading font-bold">ピックアップ団体</h2>
           </div>
           <Link
             href="/activities"
-            className="hidden sm:inline-flex items-center gap-2 text-primary font-medium hover:underline"
+            className="hidden sm:inline-flex items-center gap-2 text-apple-blue font-heading font-bold border-b border-apple-blue hover:opacity-70 transition-opacity"
           >
             すべて見る
             <ArrowRight className="h-4 w-4" />
@@ -61,7 +69,7 @@ export function PickupOrganizationsSection({ organizations }: Props) {
             >
               <Link
                 href={`/activities/${org.slug}`}
-                className="block h-full bg-card rounded-2xl shadow-md hover:shadow-lg transition-all group overflow-hidden border border-transparent hover:border-primary/20"
+                className={`block h-full bg-card rounded-xl shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-card-hover)] hover:-translate-y-1 transition-all group overflow-hidden border-l-4 ${cardBorderColors[index % 4]}`}
               >
                 {/* 画像 */}
                 <div className="relative w-full h-48 bg-muted">
@@ -88,7 +96,7 @@ export function PickupOrganizationsSection({ organizations }: Props) {
 
                 {/* コンテンツ */}
                 <div className="p-5">
-                  <h3 className="text-lg font-semibold mb-2 line-clamp-1 group-hover:text-primary transition-colors">
+                  <h3 className="text-lg font-heading font-semibold mb-2 line-clamp-1 group-hover:text-primary transition-colors">
                     {org.short_name || org.name}
                   </h3>
 
@@ -110,7 +118,7 @@ export function PickupOrganizationsSection({ organizations }: Props) {
                     )}
                   </div>
 
-                  <p className="text-sm text-foreground/70 line-clamp-2">
+                  <p className="text-sm font-body text-muted-foreground line-clamp-2">
                     {stripHtml(org.summary)}
                   </p>
                 </div>
@@ -128,7 +136,7 @@ export function PickupOrganizationsSection({ organizations }: Props) {
         >
           <Link
             href="/activities"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-full font-medium hover:bg-primary/90 transition-colors"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-apple-blue text-white rounded-full font-heading font-medium hover:opacity-85 transition-opacity cursor-pointer"
           >
             すべての団体を見る
             <ArrowRight className="h-4 w-4" />

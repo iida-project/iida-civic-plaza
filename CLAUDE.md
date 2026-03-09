@@ -32,6 +32,7 @@ npm run lint
 - **ストレージ**: Supabase Storage - 画像・メディア（バケット名: media）
 - **UIライブラリ**: shadcn/ui, Lucide Icons
 - **アニメーション**: Framer Motion
+- **フォント**: M PLUS Rounded 1c (見出し/UI) + Noto Serif JP (本文) ※公開サイト
 - **ホスティング**: Vercel (ISR)
 - **管理画面**: 自作
 

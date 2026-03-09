@@ -69,16 +69,17 @@ export function LatestArticlesSection({ articles }: Props) {
   if (articles.length === 0) return null
 
   return (
-    <section className="py-16 sm:py-24 bg-muted/30">
+    <section className="py-16 sm:py-24">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="flex items-center justify-between mb-10"
+          className="flex items-center gap-3 mb-10"
         >
-          <h2 className="text-2xl sm:text-3xl font-bold">新着情報</h2>
+          <span className="w-1.5 h-[1.2em] bg-apple-orange rounded-sm flex-shrink-0" />
+          <h2 className="text-2xl sm:text-3xl font-heading font-bold">新着情報</h2>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -95,7 +96,7 @@ export function LatestArticlesSection({ articles }: Props) {
               >
                 <Link
                   href={getArticleHref(article)}
-                  className="relative block h-full p-6 bg-card rounded-2xl shadow-md hover:shadow-lg transition-all group border border-transparent hover:border-primary/20"
+                  className="relative block h-full p-6 bg-card rounded-xl shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-card-hover)] hover:-translate-y-1 transition-all group border border-transparent hover:border-primary/20"
                 >
                   {/* 会員募集中バッジ */}
                   {article.type === 'organization' && article.is_recruiting && (
@@ -106,7 +107,7 @@ export function LatestArticlesSection({ articles }: Props) {
                   )}
                   <div className="flex items-center gap-2 mb-3">
                     <span
-                      className={`inline-flex items-center gap-1.5 px-3 py-1 ${config.color} text-white text-xs font-medium rounded-full`}
+                      className={`inline-flex items-center gap-1.5 px-3 py-1 ${config.color} text-white text-xs font-heading font-medium rounded-full`}
                     >
                       <Icon className="h-3 w-3" />
                       {config.label}
@@ -118,11 +119,11 @@ export function LatestArticlesSection({ articles }: Props) {
                       })}
                     </span>
                   </div>
-                  <h3 className="text-lg font-semibold mb-2 line-clamp-2 group-hover:text-primary transition-colors">
+                  <h3 className="text-lg font-heading font-semibold mb-2 line-clamp-2 group-hover:text-primary transition-colors">
                     {article.title}
                   </h3>
                   {article.summary && (
-                    <p className="text-sm text-foreground/70 line-clamp-2">
+                    <p className="text-sm font-body text-muted-foreground line-clamp-2">
                       {stripHtml(article.summary)}
                     </p>
                   )}

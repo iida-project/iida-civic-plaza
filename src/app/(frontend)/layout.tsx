@@ -1,16 +1,20 @@
 import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
+import { M_PLUS_Rounded_1c, Noto_Serif_JP } from 'next/font/google'
 import '../globals.css'
 import { Header, Footer } from './_components'
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
+const mPlusRounded = M_PLUS_Rounded_1c({
+  weight: ['400', '500', '700', '800'],
   subsets: ['latin'],
+  variable: '--font-heading',
+  display: 'swap',
 })
 
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
+const notoSerifJP = Noto_Serif_JP({
+  weight: ['400', '500'],
   subsets: ['latin'],
+  variable: '--font-body',
+  display: 'swap',
 })
 
 export const metadata: Metadata = {
@@ -34,7 +38,7 @@ export default function FrontendLayout({
 }>) {
   return (
     <html lang="ja">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body className={`${mPlusRounded.variable} ${notoSerifJP.variable} antialiased`}>
         <div className="min-h-screen flex flex-col">
           <Header />
           <main className="flex-1">{children}</main>

@@ -34,14 +34,15 @@ export function FeaturedInterviewsSection({ interviews }: Props) {
           className="flex items-center justify-between mb-10"
         >
           <div className="flex items-center gap-3">
+            <span className="w-1.5 h-[1.2em] bg-apple-orange rounded-sm flex-shrink-0" />
             <div className="w-10 h-10 bg-secondary rounded-xl flex items-center justify-center">
               <Mic className="h-5 w-5 text-white" />
             </div>
-            <h2 className="text-2xl sm:text-3xl font-bold">おすすめインタビュー</h2>
+            <h2 className="text-2xl sm:text-3xl font-heading font-bold">おすすめインタビュー</h2>
           </div>
           <Link
             href="/interviews"
-            className="hidden sm:inline-flex items-center gap-2 text-secondary font-medium hover:underline"
+            className="hidden sm:inline-flex items-center gap-2 text-apple-blue font-heading font-bold border-b border-apple-blue hover:opacity-70 transition-opacity"
           >
             すべて見る
             <ArrowRight className="h-4 w-4" />
@@ -59,7 +60,7 @@ export function FeaturedInterviewsSection({ interviews }: Props) {
             >
               <Link
                 href={`/interviews/${interview.slug}`}
-                className="flex flex-col sm:flex-row gap-4 p-4 bg-card rounded-2xl shadow-md hover:shadow-lg transition-all group border border-transparent hover:border-secondary/20"
+                className="flex flex-col sm:flex-row gap-4 p-4 bg-card rounded-xl shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-card-hover)] hover:-translate-y-1 transition-all group border border-transparent hover:border-secondary/20"
               >
                 {/* 画像 */}
                 <div className="relative w-full sm:w-48 h-48 sm:h-32 flex-shrink-0 rounded-xl overflow-hidden bg-muted">
@@ -80,14 +81,14 @@ export function FeaturedInterviewsSection({ interviews }: Props) {
                 {/* コンテンツ */}
                 <div className="flex-1 min-w-0">
                   {interview.organization && (
-                    <p className="text-sm text-secondary font-medium mb-1">
+                    <p className="text-sm font-heading text-secondary font-medium mb-1">
                       {interview.organization.name}
                     </p>
                   )}
-                  <h3 className="text-lg font-semibold mb-2 line-clamp-2 group-hover:text-secondary transition-colors">
+                  <h3 className="text-lg font-heading font-semibold mb-2 line-clamp-2 group-hover:text-secondary transition-colors">
                     {interview.title}
                   </h3>
-                  <p className="text-sm text-foreground/70 line-clamp-2">
+                  <p className="text-sm font-body text-muted-foreground line-clamp-2">
                     {interview.lead_text}
                   </p>
                 </div>
@@ -105,7 +106,7 @@ export function FeaturedInterviewsSection({ interviews }: Props) {
         >
           <Link
             href="/interviews"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-secondary text-secondary-foreground rounded-full font-medium hover:bg-secondary/90 transition-colors"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-secondary text-secondary-foreground rounded-full font-heading font-medium hover:opacity-85 transition-opacity cursor-pointer"
           >
             すべてのインタビューを見る
             <ArrowRight className="h-4 w-4" />

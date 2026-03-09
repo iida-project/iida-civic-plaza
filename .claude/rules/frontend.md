@@ -9,61 +9,74 @@ paths:
 
 ## デザイン方針
 
-- 親しみやすい・信頼感・わくわく感
-- コンテンポラリーで現代的 + アート寄り（行政3:アート7）
-- 暖色系カラーパレット、曲線多め
-- スマホ:PC = 5:5 を想定したレスポンシブ
+- ロゴ4色（ピンク・オレンジ・グリーン・ブルー）を常に意識できるデザイン
+- 明るくポップ、パステル調カラー
+- 角丸12px + 薄いドロップシャドウ
+- スマホ:PC = 5:5 を想定したレスポンシブ（ブレークポイント: 768px）
+- セクション間に4色波線区切り（WaveDivider）を配置
 
-## カラーパレット
+## カラーパレット（りんご4色パステル）
 
-| 用途 | 色名 | HEX | Tailwind | 使用場面 |
-|------|------|-----|----------|----------|
-| Primary | オレンジ | `#F97316` | `orange-500` | メインボタン、アクセント、リンク |
-| Primary Dark | ダークオレンジ | `#EA580C` | `orange-600` | ホバー状態 |
-| Secondary | コーラル | `#FB7185` | `rose-400` | サブアクセント、タグ |
-| Secondary Dark | ローズ | `#E11D48` | `rose-600` | ホバー状態 |
-| Accent | アンバー | `#F59E0B` | `amber-500` | ハイライト、バッジ、CTA |
-| Background | クリーム | `#FFFBEB` | `amber-50` | 背景色 |
-| Background Alt | ライトクリーム | `#FEF3C7` | `amber-100` | カード背景、セクション区切り |
-| Text | ダークブラウン | `#451A03` | `orange-950` | 本文テキスト |
-| Text Light | ブラウン | `#78350F` | `amber-900` | サブテキスト |
-| Border | ライトオレンジ | `#FDBA74` | `orange-300` | ボーダー、区切り線 |
-
-### CSS変数設定（globals.css）
-
-```css
-:root {
-  --primary: 24.6 95% 53.1%;        /* orange-500 */
-  --primary-foreground: 60 9.1% 97.8%;
-  --secondary: 349.7 89.2% 72.9%;   /* rose-400 */
-  --accent: 37.7 92.1% 50.2%;       /* amber-500 */
-  --background: 48 100% 96.1%;      /* amber-50 */
-  --foreground: 20.9 91.7% 14.1%;   /* orange-950 */
-  --muted: 48 96.5% 88.8%;          /* amber-100 */
-  --border: 24.6 94.5% 72.2%;       /* orange-300 */
-}
-```
+| 用途 | 色名 | HEX | CSS変数 | Tailwind |
+|------|------|-----|---------|----------|
+| Primary | りんごピンク | `#F4A7B9` | `--apple-red` / `--primary` | `bg-apple-red` / `bg-primary` |
+| Secondary | りんごグリーン | `#A8D5A2` | `--apple-green` / `--secondary` | `bg-apple-green` / `bg-secondary` |
+| Accent | りんごオレンジ | `#F9C784` | `--apple-orange` / `--accent` | `bg-apple-orange` / `bg-accent` |
+| Info | りんごブルー | `#90C8E0` | `--apple-blue` | `bg-apple-blue` |
+| Text Main | ダークグレー | `#333333` | `--foreground` | `text-foreground` |
+| Text Sub | グレー | `#666666` | `--muted-foreground` | `text-muted-foreground` |
+| Background | ホワイト | `#FFFFFF` | `--background` | `bg-background` |
 
 ### 使用ガイドライン
 
-- **Primary（オレンジ）**: CTAボタン、重要なリンク、ナビゲーションのアクティブ状態
-- **Secondary（コーラル）**: カテゴリタグ、サブボタン、アイコン
-- **Accent（アンバー）**: 新着バッジ、締切警告、ピックアップ表示
-- **Background（クリーム）**: 全体背景、柔らかく温かみのある印象
-- **Text（ダークブラウン）**: 黒ではなく茶系で暖色パレットに調和
-
-## カラーパレット（Apple風4色）
-
-| 用途 | 色名 | CSS変数 | 使用場面 |
-|------|------|---------|----------|
-| Primary | 赤 | `--apple-red` | メインボタン、アクセント、リンク |
-| Secondary | 緑 | `--apple-green` | タグ、サブアクセント |
-| Accent | オレンジ | `--apple-orange` | ハイライト、バッジ |
-| Info | 青 | `--apple-blue` | 情報系アクセント |
+- **Primary（ピンク）**: CTAボタン、ナビアクティブ、メインアクション
+- **Secondary（グリーン）**: サブタイトルアンダーライン、エリア系チップ
+- **Accent（オレンジ）**: セクションタイトル左カラーバー、助成金バッジ
+- **Info（ブルー）**: 「すべて見る」リンク、セカンダリボタン、お知らせバッジ
 
 ```tsx
-<span className="text-apple-red">赤</span>
-<span className="bg-apple-green/10 text-apple-green">緑タグ</span>
+<span className="bg-apple-red text-white">ピンクバッジ</span>
+<span className="text-apple-blue border-b border-apple-blue">ブルーリンク</span>
+```
+
+## フォント
+
+| 用途 | フォント | Tailwindクラス |
+|------|---------|---------------|
+| 見出し・ボタン・UI | M PLUS Rounded 1c | `font-heading` |
+| 本文・説明文 | Noto Serif JP | `font-body` |
+
+```tsx
+<h2 className="font-heading font-bold">セクションタイトル</h2>
+<p className="font-body text-muted-foreground">説明文</p>
+```
+
+## 共通スタイルパターン
+
+### セクションタイトル（左カラーバー付き）
+```tsx
+<div className="flex items-center gap-3">
+  <span className="w-1.5 h-[1.2em] bg-apple-orange rounded-sm flex-shrink-0" />
+  <h2 className="text-2xl sm:text-3xl font-heading font-bold">タイトル</h2>
+</div>
+```
+
+### 4色グラデーションボーダー
+```tsx
+<header className="gradient-border-bottom">...</header>
+<footer className="gradient-border-top">...</footer>
+```
+
+### 「すべて見る」リンク
+```tsx
+<Link className="text-apple-blue font-heading font-bold border-b border-apple-blue hover:opacity-70">
+  すべて見る <ArrowRight />
+</Link>
+```
+
+### カードシャドウ
+```tsx
+<div className="shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-card-hover)] hover:-translate-y-1 transition-all">
 ```
 
 ## Framer Motion アニメーション

@@ -77,6 +77,14 @@ const config: Config = {
   				'Liberation Mono',
   				'Courier New',
   				'monospace'
+  			],
+  			heading: [
+  				'var(--font-heading)',
+  				'sans-serif'
+  			],
+  			body: [
+  				'var(--font-body)',
+  				'serif'
   			]
   		},
   		borderRadius: {
