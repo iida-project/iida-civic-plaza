@@ -19,7 +19,18 @@ type NavGroup = {
   items: SubItem[]
 }
 
-const navGroups: NavGroup[] = [
+type NavLink = {
+  label: string
+  href: string
+}
+
+type NavEntry = NavGroup | NavLink
+
+function isNavLink(entry: NavEntry): entry is NavLink {
+  return 'href' in entry
+}
+
+const navEntries: NavEntry[] = [
   {
     label: 'ムトス市民活動ひろば',
     items: [
@@ -48,6 +59,10 @@ const navGroups: NavGroup[] = [
       { name: '他団体主催の助成金事業', href: '/coming-soon', comingSoon: true },
       { name: '他団体主催の講座情報', href: '/coming-soon', comingSoon: true },
     ],
+  },
+  {
+    label: '一般社団法人ムトス飯田市民ファンド',
+    href: '/coming-soon',
   },
   {
     label: 'ムトス飯田事業のあらまし',
@@ -272,9 +287,19 @@ export function Header() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
-            {navGroups.map((group) => (
-              <DesktopDropdown key={group.label} group={group} />
-            ))}
+            {navEntries.map((entry) =>
+              isNavLink(entry) ? (
+                <Link
+                  key={entry.label}
+                  href={entry.href}
+                  className="px-3 py-2 rounded-full text-sm font-heading font-medium text-foreground/80 hover:bg-muted/50 transition-all duration-200"
+                >
+                  {entry.label}
+                </Link>
+              ) : (
+                <DesktopDropdown key={entry.label} group={entry} />
+              )
+            )}
           </motion.div>
 
           {/* モバイルメニューボタン */}
@@ -305,13 +330,24 @@ export function Header() {
           >
             <nav className="container mx-auto px-4 py-4">
               <div className="flex flex-col gap-1">
-                {navGroups.map((group) => (
-                  <MobileAccordion
-                    key={group.label}
-                    group={group}
-                    onNavigate={closeMobileMenu}
-                  />
-                ))}
+                {navEntries.map((entry) =>
+                  isNavLink(entry) ? (
+                    <Link
+                      key={entry.label}
+                      href={entry.href}
+                      onClick={closeMobileMenu}
+                      className="flex items-center px-4 py-3 rounded-xl text-base font-heading font-medium text-foreground/80 hover:bg-muted transition-colors"
+                    >
+                      {entry.label}
+                    </Link>
+                  ) : (
+                    <MobileAccordion
+                      key={entry.label}
+                      group={entry}
+                      onNavigate={closeMobileMenu}
+                    />
+                  )
+                )}
               </div>
             </nav>
           </motion.div>
