@@ -133,7 +133,7 @@ export function OrganizationList({ organizations, featuredCount }: OrganizationL
         </TableHeader>
         <TableBody>
           {organizations.map((org) => (
-            <TableRow key={org.id}>
+            <TableRow key={org.id} className="hover:bg-blue-50/50 transition-colors">
               <TableCell className="font-medium">{org.name}</TableCell>
               <TableCell>
                 <div className="flex flex-wrap gap-1">

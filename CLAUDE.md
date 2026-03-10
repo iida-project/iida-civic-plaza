@@ -52,7 +52,8 @@ Supabase (PostgreSQL) ←→ Next.js (公開サイト + 管理画面)
 app/
 ├─ (frontend)/         # 公開サイト
 │   ├─ page.tsx        # トップ /
-│   ├─ activities/     # 市民活動紹介 /activities, /activities/[slug]
+│   ├─ activities/     # 活動団体紹介 /activities, /activities/[slug]
+│   ├─ coming-soon/    # 準備中ページ /coming-soon
 │   ├─ interviews/     # インタビュー /interviews, /interviews/[slug]
 │   ├─ grants/         # 助成金情報 /grants, /grants/[slug]
 │   ├─ news/           # お知らせ /news, /news/[slug]
@@ -62,6 +63,18 @@ app/
 │   └─ admin/          # /admin
 └─ api/                # API Routes
 ```
+
+### ヘッダーナビゲーション（ドロップダウン形式）
+
+5グループ + 1単体リンクの構成：
+- ムトス市民活動ひろば（準備中）
+- 市民活動団体紹介 → 活動団体紹介(/activities), 活動レポート(/interviews)
+- ムトス飯田事業（準備中）
+- ムトス飯田以外の助成金・講座情報（準備中）
+- 一般社団法人ムトス飯田市民ファンド（単体リンク、準備中）
+- ムトス飯田事業のあらまし（準備中）
+
+未実装ページは `/coming-soon` にリダイレクト。
 
 ## パスエイリアス
 

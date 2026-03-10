@@ -131,6 +131,16 @@ body {
   border-image: linear-gradient(to right, #F4A7B9, #F9C784, #A8D5A2, #90C8E0) 1;
 }
 
+/* Pulse animation for badges */
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.75; }
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 2s ease-in-out infinite;
+}
+
 /* Tiptap Editor Styles */
 .ProseMirror {
   outline: none;

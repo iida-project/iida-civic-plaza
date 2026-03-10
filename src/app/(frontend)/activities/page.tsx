@@ -97,8 +97,8 @@ function EmptyState() {
       <div className="w-20 h-20 mx-auto mb-6 bg-muted rounded-full flex items-center justify-center">
         <Users className="h-10 w-10 text-muted-foreground" />
       </div>
-      <h3 className="text-xl font-semibold mb-2">団体が見つかりませんでした</h3>
-      <p className="text-muted-foreground">
+      <h3 className="text-xl font-heading font-semibold mb-2">団体が見つかりませんでした</h3>
+      <p className="font-body text-muted-foreground">
         条件を変更して再度お試しください
       </p>
     </div>
@@ -125,23 +125,26 @@ export default async function ActivitiesPage({ searchParams }: Props) {
     : null
 
   return (
-    <div className="py-8 sm:py-12">
+    <div className="py-16 sm:py-24">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* ヘッダー */}
-        <div className="mb-8">
-          <h1 className="text-3xl sm:text-4xl font-bold mb-2">市民活動紹介</h1>
-          <p className="text-foreground/70">
+        <div className="mb-10">
+          <div className="flex items-center gap-3 mb-3">
+            <span className="w-1.5 h-[1.2em] bg-apple-orange rounded-sm flex-shrink-0" />
+            <h1 className="text-2xl sm:text-3xl font-heading font-bold">活動団体紹介</h1>
+          </div>
+          <p className="font-body text-muted-foreground">
             飯田市内で活動する団体を紹介しています
           </p>
           {(selectedCategoryName || selectedAreaName) && (
             <div className="mt-4 flex flex-wrap gap-2">
               {selectedCategoryName && (
-                <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">
+                <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-heading font-medium">
                   {selectedCategoryName}
                 </span>
               )}
               {selectedAreaName && (
-                <span className="px-3 py-1 bg-secondary/10 text-secondary rounded-full text-sm">
+                <span className="px-3 py-1 bg-secondary/10 text-secondary rounded-full text-sm font-heading font-medium">
                   {selectedAreaName}
                 </span>
               )}

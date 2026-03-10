@@ -150,16 +150,18 @@ import {
 
 ## 会員募集バッジ
 
-会員募集中の団体には紫色（`bg-purple-500`）の四角形バッジを表示：
+会員募集中の団体には赤→オレンジのグラデーション + パルスアニメーションバッジを表示：
 
 ```tsx
 {organization.is_recruiting && (
-  <span className="absolute top-3 right-3 z-10 inline-flex items-center gap-1 px-2.5 py-1 bg-purple-500 text-white text-xs font-bold rounded-sm shadow-lg ring-2 ring-white">
+  <span className="absolute top-3 right-3 z-10 inline-flex items-center gap-1 px-3 py-1 text-white text-xs font-bold rounded-sm shadow-lg ring-2 ring-white/80 bg-gradient-to-r from-red-500 to-orange-400 animate-pulse-soft">
     <UserPlus className="h-3 w-3" />
     募集中
   </span>
 )}
 ```
+
+- `animate-pulse-soft`: globals.css で定義（2秒周期の明滅アニメーション）
 
 表示場所：
 - `/activities` 一覧ページ（カード右上）

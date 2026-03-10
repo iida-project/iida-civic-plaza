@@ -24,6 +24,8 @@ type Props = {
   index?: number
 }
 
+const borderColors = ['border-l-apple-red', 'border-l-apple-orange', 'border-l-apple-green', 'border-l-apple-blue']
+
 export function OrganizationCard({ organization, index = 0 }: Props) {
   return (
     <motion.article
@@ -33,7 +35,7 @@ export function OrganizationCard({ organization, index = 0 }: Props) {
     >
       <Link
         href={`/activities/${organization.slug}`}
-        className="block h-full bg-card rounded-2xl shadow-md hover:shadow-lg transition-all group overflow-hidden border border-transparent hover:border-primary/20"
+        className={`block h-full bg-card rounded-xl shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-card-hover)] hover:-translate-y-1 transition-all group overflow-hidden border-l-4 ${borderColors[index % 4]}`}
       >
         {/* 画像 */}
         <div className="relative w-full h-48 bg-muted">
@@ -51,7 +53,8 @@ export function OrganizationCard({ organization, index = 0 }: Props) {
           )}
           {/* 会員募集中バッジ */}
           {organization.is_recruiting && (
-            <span className="absolute top-3 right-3 z-10 inline-flex items-center gap-1 px-2.5 py-1 bg-purple-500 text-white text-xs font-bold rounded-sm shadow-lg ring-2 ring-white">
+            <span className="absolute top-3 right-3 z-10 inline-flex items-center gap-1 px-3 py-1 text-white text-xs font-bold rounded-sm shadow-lg ring-2 ring-white/80 bg-gradient-to-r from-red-500 to-orange-400 animate-pulse-soft"
+            >
               <UserPlus className="h-3 w-3" />
               募集中
             </span>
@@ -60,7 +63,7 @@ export function OrganizationCard({ organization, index = 0 }: Props) {
 
         {/* コンテンツ */}
         <div className="p-5">
-          <h3 className="text-lg font-semibold mb-2 line-clamp-1 group-hover:text-primary transition-colors">
+          <h3 className="text-lg font-heading font-semibold mb-2 line-clamp-1 group-hover:text-primary transition-colors">
             {organization.short_name || organization.name}
           </h3>
 
@@ -69,7 +72,7 @@ export function OrganizationCard({ organization, index = 0 }: Props) {
             {organization.categories.slice(0, 2).map((cat) => (
               <span
                 key={cat.slug}
-                className="px-2 py-0.5 bg-primary/10 text-primary text-xs rounded-full"
+                className="px-2 py-0.5 bg-primary/10 text-primary text-xs font-heading font-medium rounded-full"
               >
                 {cat.name}
               </span>
@@ -85,7 +88,7 @@ export function OrganizationCard({ organization, index = 0 }: Props) {
             )}
           </div>
 
-          <p className="text-sm text-foreground/70 line-clamp-2">
+          <p className="text-sm font-body text-muted-foreground line-clamp-2">
             {stripHtml(organization.summary)}
           </p>
 

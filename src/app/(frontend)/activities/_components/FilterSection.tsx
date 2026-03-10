@@ -67,20 +67,20 @@ export function FilterSection({
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="bg-card rounded-2xl p-6 shadow-md border border-border mb-8"
+      className="bg-card rounded-xl p-6 sm:p-8 shadow-[var(--shadow-card)] border border-border mb-10"
     >
       {/* 活動分野 */}
       <div className="mb-6">
         <div className="flex items-center gap-2 mb-3">
           <Folder className="h-5 w-5 text-primary" />
-          <h3 className="font-semibold">活動分野</h3>
+          <h3 className="font-heading font-semibold">活動分野</h3>
         </div>
         <div className="flex flex-wrap gap-2">
           {categories.map((category) => (
             <button
               key={category.id}
               onClick={() => handleCategoryChange(category.slug)}
-              className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+              className={`px-4 py-2 rounded-full text-sm font-heading font-medium transition-colors cursor-pointer ${
                 selectedCategory === category.slug
                   ? 'bg-primary text-primary-foreground'
                   : 'bg-muted hover:bg-primary/10 text-foreground'
@@ -96,14 +96,14 @@ export function FilterSection({
       <div className="mb-6">
         <div className="flex items-center gap-2 mb-3">
           <MapPin className="h-5 w-5 text-secondary" />
-          <h3 className="font-semibold">活動エリア</h3>
+          <h3 className="font-heading font-semibold">活動エリア</h3>
         </div>
         <div className="flex flex-wrap gap-2">
           {areas.map((area) => (
             <button
               key={area.id}
               onClick={() => handleAreaChange(area.slug)}
-              className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+              className={`px-4 py-2 rounded-full text-sm font-heading font-medium transition-colors cursor-pointer ${
                 selectedArea === area.slug
                   ? 'bg-secondary text-secondary-foreground'
                   : 'bg-muted hover:bg-secondary/10 text-foreground'

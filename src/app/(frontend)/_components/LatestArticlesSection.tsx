@@ -100,7 +100,8 @@ export function LatestArticlesSection({ articles }: Props) {
                 >
                   {/* 会員募集中バッジ */}
                   {article.type === 'organization' && article.is_recruiting && (
-                    <span className="absolute top-3 right-3 z-10 inline-flex items-center gap-1 px-2.5 py-1 bg-purple-500 text-white text-xs font-bold rounded-sm shadow-lg ring-2 ring-white">
+                    <span className="absolute top-3 right-3 z-10 inline-flex items-center gap-1 px-3 py-1 text-white text-xs font-bold rounded-sm shadow-lg ring-2 ring-white/80 bg-gradient-to-r from-red-500 to-orange-400 animate-pulse-soft"
+                    >
                       <UserPlus className="h-3 w-3" />
                       募集中
                     </span>

@@ -207,7 +207,8 @@ export default async function OrganizationDetailPage({ params }: Props) {
                   {org.name}
                 </h1>
                 {org.is_recruiting && (
-                  <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-purple-500 text-white text-sm font-bold rounded-sm shadow-md">
+                  <span className="inline-flex items-center gap-1 px-3.5 py-1.5 text-white text-sm font-bold rounded-sm shadow-lg ring-2 ring-white/80 bg-gradient-to-r from-red-500 to-orange-400 animate-pulse-soft"
+                  >
                     <UserPlus className="h-4 w-4" />
                     会員募集中
                   </span>
