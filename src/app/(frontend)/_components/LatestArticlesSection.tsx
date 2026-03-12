@@ -85,6 +85,7 @@ export function LatestArticlesSection({ articles }: Props) {
             const Icon = config.icon
             const date = new Date(article.published_at)
             const dateStr = `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`
+            const isNew = (Date.now() - date.getTime()) < 7 * 24 * 60 * 60 * 1000
             return (
               <motion.article
                 key={`${article.type}-${article.id}`}
@@ -100,6 +101,14 @@ export function LatestArticlesSection({ articles }: Props) {
                   <span className="text-sm text-muted-foreground font-heading whitespace-nowrap pt-0.5 sm:pt-0">
                     {dateStr}
                   </span>
+                  {isNew && (
+                    <span
+                      className="inline-flex items-center px-2 py-0.5 text-[10px] font-bold text-white rounded-sm whitespace-nowrap flex-shrink-0 animate-pulse-soft"
+                      style={{ background: 'linear-gradient(90deg, #F4A7B9, #F9C784, #A8D5A2, #90C8E0)' }}
+                    >
+                      NEW
+                    </span>
+                  )}
                   <span
                     className={`inline-flex items-center gap-1 px-2.5 py-0.5 ${config.color} text-white text-xs font-heading font-medium rounded-full whitespace-nowrap flex-shrink-0`}
                   >
@@ -119,6 +128,15 @@ export function LatestArticlesSection({ articles }: Props) {
               </motion.article>
             )
           })}
+        </div>
+
+        <div className="mt-6 text-right">
+          <Link
+            href="/coming-soon"
+            className="inline-flex items-center gap-1 text-sm font-heading font-medium text-apple-blue hover:opacity-75 transition-opacity"
+          >
+            一覧を見る →
+          </Link>
         </div>
       </div>
     </section>
