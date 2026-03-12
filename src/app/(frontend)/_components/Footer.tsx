@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { ExternalLink } from 'lucide-react'
 
@@ -32,9 +33,13 @@ export function Footer() {
           {/* サイト情報 */}
           <div className="space-y-4">
             <div className="flex items-center gap-2">
-              <div className="w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center">
-                <span className="text-white font-heading font-bold text-lg">飯</span>
-              </div>
+              <Image
+                src="/images/logo.png"
+                alt="ロゴ"
+                width={32}
+                height={40}
+                className="h-10 w-auto"
+              />
               <span className="font-heading font-bold text-lg">飯田の市民活動ひろば</span>
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed">
