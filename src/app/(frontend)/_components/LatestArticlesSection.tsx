@@ -3,9 +3,6 @@
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Users, Mic, Wallet, Bell, UserPlus } from 'lucide-react'
-import { formatDistanceToNow } from 'date-fns'
-import { ja } from 'date-fns/locale'
-import { stripHtml } from '@/lib/utils'
 
 type Article = {
   id: string
@@ -82,51 +79,41 @@ export function LatestArticlesSection({ articles }: Props) {
           <h2 className="text-2xl sm:text-3xl font-heading font-bold">新着情報</h2>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="bg-card rounded-xl shadow-[var(--shadow-card)] border border-border overflow-hidden divide-y divide-border">
           {articles.map((article, index) => {
             const config = typeConfig[article.type]
             const Icon = config.icon
+            const date = new Date(article.published_at)
+            const dateStr = `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`
             return (
               <motion.article
                 key={`${article.type}-${article.id}`}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
+                transition={{ duration: 0.3, delay: index * 0.05 }}
               >
                 <Link
                   href={getArticleHref(article)}
-                  className="relative block h-full p-6 bg-card rounded-xl shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-card-hover)] hover:-translate-y-1 transition-all group border border-transparent hover:border-primary/20"
+                  className="flex items-start sm:items-center gap-3 sm:gap-4 px-5 py-4 hover:bg-muted/50 transition-colors group"
                 >
-                  {/* 会員募集中バッジ */}
+                  <span className="text-sm text-muted-foreground font-heading whitespace-nowrap pt-0.5 sm:pt-0">
+                    {dateStr}
+                  </span>
+                  <span
+                    className={`inline-flex items-center gap-1 px-2.5 py-0.5 ${config.color} text-white text-xs font-heading font-medium rounded-full whitespace-nowrap flex-shrink-0`}
+                  >
+                    <Icon className="h-3 w-3" />
+                    {config.label}
+                  </span>
+                  <span className="font-heading font-medium text-sm sm:text-base line-clamp-1 group-hover:text-primary transition-colors">
+                    {article.title}
+                  </span>
                   {article.type === 'organization' && article.is_recruiting && (
-                    <span className="absolute top-3 right-3 z-10 inline-flex items-center gap-1 px-3 py-1 text-white text-xs font-bold rounded-sm shadow-lg ring-2 ring-white/80 bg-gradient-to-r from-red-500 to-orange-400 animate-pulse-soft"
-                    >
-                      <UserPlus className="h-3 w-3" />
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 text-white text-[10px] font-bold rounded-sm bg-gradient-to-r from-red-500 to-orange-400 animate-pulse-soft whitespace-nowrap flex-shrink-0">
+                      <UserPlus className="h-2.5 w-2.5" />
                       募集中
                     </span>
-                  )}
-                  <div className="flex items-center gap-2 mb-3">
-                    <span
-                      className={`inline-flex items-center gap-1.5 px-3 py-1 ${config.color} text-white text-xs font-heading font-medium rounded-full`}
-                    >
-                      <Icon className="h-3 w-3" />
-                      {config.label}
-                    </span>
-                    <span className="text-xs text-muted-foreground">
-                      {formatDistanceToNow(new Date(article.published_at), {
-                        addSuffix: true,
-                        locale: ja,
-                      })}
-                    </span>
-                  </div>
-                  <h3 className="text-lg font-heading font-semibold mb-2 line-clamp-2 group-hover:text-primary transition-colors">
-                    {article.title}
-                  </h3>
-                  {article.summary && (
-                    <p className="text-sm font-body text-muted-foreground line-clamp-2">
-                      {stripHtml(article.summary)}
-                    </p>
                   )}
                 </Link>
               </motion.article>
