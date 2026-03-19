@@ -129,7 +129,8 @@ function DesktopDropdown({ group }: { group: NavGroup }) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 8, scale: 0.96 }}
             transition={{ duration: 0.18, ease: 'easeOut' }}
-            className="absolute top-full left-0 mt-1 min-w-[260px] bg-background/98 backdrop-blur-xl rounded-xl shadow-lg border border-border/60 p-2 z-50"
+            className="absolute top-full left-0 mt-1 min-w-[260px] backdrop-blur-lg rounded-xl shadow-xl border border-border/40 p-2 z-50"
+            style={{ background: 'linear-gradient(135deg, rgba(244,167,185,0.12), rgba(249,199,132,0.10), rgba(168,213,162,0.10), rgba(144,200,224,0.12)), rgba(255,255,255,0.88)' }}
           >
             {group.items.map((item, index) => {
               const isActive = pathname === item.href && !item.comingSoon

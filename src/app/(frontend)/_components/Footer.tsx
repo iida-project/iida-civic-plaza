@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { ExternalLink } from 'lucide-react'
 
+/* 旧ナビゲーション（将来使う可能性あり）
 const footerNavigation = {
   main: [
     { name: 'トップ', href: '/' },
@@ -18,6 +19,56 @@ const footerNavigation = {
     { name: 'サイトについて', href: '/about' },
   ],
 }
+*/
+
+type FooterNavGroup =
+  | { label: string; items: { name: string; href: string }[] }
+  | { label: string; href: string }
+
+const footerNavGroups: FooterNavGroup[] = [
+  {
+    label: 'ムトス市民活動ひろば',
+    items: [
+      { name: 'ムトス市民活動ひろばとは', href: '/coming-soon' },
+      { name: '相談窓口', href: '/coming-soon' },
+    ],
+  },
+  {
+    label: '市民活動団体紹介',
+    items: [
+      { name: '活動団体紹介', href: '/activities' },
+      { name: '活動レポート', href: '/interviews' },
+    ],
+  },
+  {
+    label: 'ムトス飯田事業',
+    items: [
+      { name: 'ムトス飯田助成事業', href: '/coming-soon' },
+      { name: 'ムトス飯田賞', href: '/coming-soon' },
+      { name: 'ムトス飯田学習交流会／各種講座', href: '/coming-soon' },
+    ],
+  },
+  {
+    label: 'ムトス飯田以外の助成金・講座情報',
+    items: [
+      { name: '他団体主催の助成金事業', href: '/coming-soon' },
+      { name: '他団体主催の講座情報', href: '/coming-soon' },
+    ],
+  },
+  {
+    label: '一般社団法人ムトス飯田市民ファンド',
+    href: '/coming-soon',
+  },
+  {
+    label: 'ムトス飯田事業のあらまし',
+    items: [
+      { name: '「ムトス」とは', href: '/coming-soon' },
+      { name: 'ムトス飯田推進委員会／コーディネート専門委員', href: '/coming-soon' },
+      { name: 'ムトス飯田の歩み', href: '/coming-soon' },
+      { name: 'ムトス飯田ロゴマークについて', href: '/coming-soon' },
+    ],
+  },
+]
 
 export function Footer() {
   return (
@@ -28,7 +79,7 @@ export function Footer() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-8"
+          className="grid grid-cols-1 lg:grid-cols-[1fr_2fr_1fr] gap-10"
         >
           {/* サイト情報 */}
           <div className="space-y-4">
@@ -49,38 +100,38 @@ export function Footer() {
             </p>
           </div>
 
-          {/* ナビゲーションリンク */}
-          <div className="grid grid-cols-2 gap-8">
-            <div>
-              <h3 className="font-heading font-semibold mb-4 text-foreground/90">コンテンツ</h3>
-              <ul className="space-y-2">
-                {footerNavigation.main.map((item) => (
-                  <li key={item.href}>
-                    <Link
-                      href={item.href}
-                      className="text-sm text-muted-foreground hover:text-apple-red transition-colors"
-                    >
-                      {item.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <h3 className="font-heading font-semibold mb-4 text-foreground/90">サイト情報</h3>
-              <ul className="space-y-2">
-                {footerNavigation.sub.map((item) => (
-                  <li key={item.href}>
-                    <Link
-                      href={item.href}
-                      className="text-sm text-muted-foreground hover:text-apple-red transition-colors"
-                    >
-                      {item.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
+          {/* ナビゲーション */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-6">
+            {footerNavGroups.map((group) => (
+              <div key={group.label}>
+                {'href' in group ? (
+                  <Link
+                    href={group.href}
+                    className="font-heading font-semibold text-sm text-foreground/90 hover:text-apple-red transition-colors"
+                  >
+                    {group.label}
+                  </Link>
+                ) : (
+                  <>
+                    <h3 className="font-heading font-semibold text-sm mb-3 text-foreground/90">
+                      {group.label}
+                    </h3>
+                    <ul className="space-y-1.5">
+                      {group.items.map((item) => (
+                        <li key={item.name}>
+                          <Link
+                            href={item.href}
+                            className="text-xs text-muted-foreground hover:text-apple-red transition-colors"
+                          >
+                            {item.name}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                )}
+              </div>
+            ))}
           </div>
 
           {/* お問い合わせ */}

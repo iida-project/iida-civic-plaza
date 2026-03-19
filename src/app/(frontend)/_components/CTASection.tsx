@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { ArrowRight, HelpCircle } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 
 export function CTASection() {
   return (
@@ -34,6 +34,7 @@ export function CTASection() {
               団体を探す
               <ArrowRight className="h-4 w-4" />
             </Link>
+            {/* よくある質問ボタン - 必要になったら復活
             <Link
               href="/faq"
               className="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-apple-blue text-white rounded-full font-heading font-bold hover:opacity-85 hover:-translate-y-0.5 transition-all shadow-md cursor-pointer"
@@ -41,6 +42,7 @@ export function CTASection() {
               <HelpCircle className="h-4 w-4" />
               よくある質問
             </Link>
+            */}
           </div>
         </motion.div>
       </div>
