@@ -327,7 +327,8 @@ export function Header() {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3, ease: 'easeInOut' }}
-            className="xl:hidden overflow-hidden border-t border-border bg-background"
+            className="xl:hidden overflow-hidden border-t border-border/40 backdrop-blur-lg"
+            style={{ background: 'linear-gradient(135deg, rgba(244,167,185,0.12), rgba(249,199,132,0.10), rgba(168,213,162,0.10), rgba(144,200,224,0.12)), rgba(255,255,255,0.88)' }}
           >
             <nav className="container mx-auto px-4 py-4">
               <div className="flex flex-col gap-1">

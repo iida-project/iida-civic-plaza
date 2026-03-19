@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { ArrowRight, Search } from 'lucide-react'
+import { Search } from 'lucide-react'
 
 const heroBadges = [
   { text: 'COMMUNITY', color: 'bg-apple-red' },
@@ -59,6 +59,7 @@ export function HeroSection() {
             transition={{ duration: 0.6, delay: 0.3 }}
             className="flex flex-col sm:flex-row gap-4 justify-center items-center"
           >
+            {/* 活動をはじめるボタン - 必要になったら復活
             <Link
               href="/about"
               className="inline-flex items-center gap-2 px-9 py-3.5 bg-apple-red text-white rounded-full text-base font-heading font-bold hover:opacity-85 hover:-translate-y-0.5 transition-all shadow-md cursor-pointer"
@@ -66,6 +67,7 @@ export function HeroSection() {
               活動をはじめる
               <ArrowRight className="h-4 w-4" />
             </Link>
+            */}
             <Link
               href="/activities"
               className="inline-flex items-center gap-2 px-9 py-3.5 bg-white text-apple-blue border-2 border-apple-blue rounded-full text-base font-heading font-bold hover:opacity-85 hover:-translate-y-0.5 transition-all shadow-md cursor-pointer"
