@@ -31,3 +31,5 @@ export {
   NewBadge,
   PickupBadge,
 } from './Badges'
+
+export { JsonLd } from './JsonLd'

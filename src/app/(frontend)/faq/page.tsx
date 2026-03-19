@@ -2,6 +2,9 @@ import { Metadata } from 'next'
 import { createPublicClient } from '@/lib/supabase/public'
 import { HelpCircle } from 'lucide-react'
 import { FAQAccordion } from './_components'
+import { JsonLd } from '@/components/common'
+import { generateFAQPageJsonLd, generateBreadcrumbJsonLd } from '@/lib/jsonld'
+import { stripHtml } from '@/lib/utils'
 
 export const metadata: Metadata = {
   title: 'よくある質問 | 飯田の市民活動ひろば',
@@ -26,6 +29,9 @@ export default async function FAQPage() {
   const faqs = await getFAQs()
 
   return (
+    <>
+      <JsonLd data={generateFAQPageJsonLd(faqs.map((f) => ({ question: f.question, answer: stripHtml(f.answer) })))} />
+      <JsonLd data={generateBreadcrumbJsonLd([{ name: 'ホーム', url: '/' }, { name: 'よくある質問', url: '/faq' }])} />
     <div className="py-8 sm:py-12">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* ヘッダー */}
@@ -56,5 +62,6 @@ export default async function FAQPage() {
         )}
       </div>
     </div>
+    </>
   )
 }

@@ -20,7 +20,8 @@ import {
   Building,
   User,
 } from 'lucide-react'
-import { ImageGallery, RichTextRenderer } from '@/components/common'
+import { ImageGallery, RichTextRenderer, JsonLd } from '@/components/common'
+import { generateOrganizationJsonLd, generateBreadcrumbJsonLd } from '@/lib/jsonld'
 import { RelatedInterviews } from './_components/RelatedInterviews'
 
 // SNSアイコンコンポーネント
@@ -148,13 +149,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   // summaryからHTMLタグを除去してdescriptionに使用
   const plainSummary = org.summary.replace(/<[^>]*>/g, '').slice(0, 160)
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://example.com'
+  const ogImage = org.main_image_url || `${siteUrl}/api/og?title=${encodeURIComponent(org.short_name || org.name)}&type=organization`
+
   return {
-    title: `${org.short_name || org.name} | 市民活動紹介`,
+    title: `${org.short_name || org.name} | 活動団体紹介`,
     description: plainSummary,
+    alternates: {
+      canonical: `/activities/${org.slug}`,
+    },
     openGraph: {
       title: org.short_name || org.name,
       description: plainSummary,
-      images: org.main_image_url ? [org.main_image_url] : [],
+      images: [ogImage],
     },
   }
 }
@@ -184,7 +191,12 @@ export default async function OrganizationDetailPage({ params }: Props) {
     org.activity_schedule ||
     org.activity_location
 
+  const plainSummary = org.summary.replace(/<[^>]*>/g, '').slice(0, 160)
+
   return (
+    <>
+      <JsonLd data={generateOrganizationJsonLd({ name: org.name, description: plainSummary, url: `/activities/${org.slug}`, image: org.main_image_url })} />
+      <JsonLd data={generateBreadcrumbJsonLd([{ name: 'ホーム', url: '/' }, { name: '活動団体紹介', url: '/activities' }, { name: org.short_name || org.name, url: `/activities/${org.slug}` }])} />
     <div className="py-8 sm:py-12">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* 戻るリンク */}
@@ -536,5 +548,6 @@ export default async function OrganizationDetailPage({ params }: Props) {
         </div>
       </div>
     </div>
+    </>
   )
 }

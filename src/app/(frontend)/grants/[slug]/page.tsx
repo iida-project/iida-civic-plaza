@@ -3,6 +3,8 @@ import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { createPublicClient } from '@/lib/supabase/public'
+import { JsonLd } from '@/components/common'
+import { generateArticleJsonLd, generateBreadcrumbJsonLd } from '@/lib/jsonld'
 import {
   ArrowLeft,
   Building2,
@@ -86,9 +88,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     }
   }
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://example.com'
+  const description = grant.description || `${grant.provider_name}による助成金情報`
+
   return {
     title: `${grant.title} | 助成金情報`,
-    description: grant.description || `${grant.provider_name}による助成金情報`,
+    description,
+    alternates: {
+      canonical: `/grants/${grant.slug}`,
+    },
+    openGraph: {
+      title: grant.title,
+      description,
+      images: [`${siteUrl}/api/og?title=${encodeURIComponent(grant.title)}&type=grant`],
+    },
   }
 }
 
@@ -146,7 +159,12 @@ export default async function GrantDetailPage({ params }: Props) {
   const otherGrants = await getOtherGrants(grant.id)
   const appStatus = getApplicationStatus(grant.application_start_date, grant.application_end_date)
 
+  const grantDescription = grant.description || `${grant.provider_name}による助成金情報`
+
   return (
+    <>
+      <JsonLd data={generateArticleJsonLd({ title: grant.title, description: grantDescription, url: `/grants/${grant.slug}`, publishedAt: grant.published_at, modifiedAt: grant.updated_at })} />
+      <JsonLd data={generateBreadcrumbJsonLd([{ name: 'ホーム', url: '/' }, { name: '助成金情報', url: '/grants' }, { name: grant.title, url: `/grants/${grant.slug}` }])} />
     <div className="py-8 sm:py-12">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* 戻るリンク */}
@@ -393,5 +411,6 @@ export default async function GrantDetailPage({ params }: Props) {
         </div>
       </div>
     </div>
+    </>
   )
 }

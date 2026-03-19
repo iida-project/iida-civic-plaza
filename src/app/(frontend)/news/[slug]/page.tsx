@@ -7,7 +7,8 @@ import { stripHtml } from '@/lib/utils'
 import { ArrowLeft, Bell, Calendar } from 'lucide-react'
 import { format } from 'date-fns'
 import { ja } from 'date-fns/locale'
-import { RichTextRenderer } from '@/components/common'
+import { RichTextRenderer, JsonLd } from '@/components/common'
+import { generateArticleJsonLd, generateBreadcrumbJsonLd } from '@/lib/jsonld'
 
 export const revalidate = 60
 
@@ -60,12 +61,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const description = news.body ? stripHtml(news.body).slice(0, 120) : ''
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://example.com'
+
   return {
     title: `${news.title} | お知らせ`,
     description,
+    alternates: {
+      canonical: `/news/${news.slug}`,
+    },
     openGraph: {
       title: news.title,
       description,
+      images: [`${siteUrl}/api/og?title=${encodeURIComponent(news.title)}&type=news`],
     },
   }
 }
@@ -80,7 +87,12 @@ export default async function NewsDetailPage({ params }: Props) {
 
   const otherNews = await getOtherNews(news.id)
 
+  const description = news.body ? stripHtml(news.body).slice(0, 120) : ''
+
   return (
+    <>
+      <JsonLd data={generateArticleJsonLd({ title: news.title, description, url: `/news/${news.slug}`, publishedAt: news.published_at, modifiedAt: news.updated_at })} />
+      <JsonLd data={generateBreadcrumbJsonLd([{ name: 'ホーム', url: '/' }, { name: 'お知らせ', url: '/news' }, { name: news.title, url: `/news/${news.slug}` }])} />
     <div className="py-8 sm:py-12">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* 戻るリンク */}
@@ -168,5 +180,6 @@ export default async function NewsDetailPage({ params }: Props) {
         </div>
       </div>
     </div>
+    </>
   )
 }

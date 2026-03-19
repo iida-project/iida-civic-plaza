@@ -6,7 +6,8 @@ import Link from 'next/link'
 import { createPublicClient } from '@/lib/supabase/public'
 import { Mic, ArrowLeft, Building2, Calendar } from 'lucide-react'
 import { TableOfContents, MobileTableOfContents, ArticleBody, SummarySlider } from './_components'
-import { ImageGallery } from '@/components/common'
+import { ImageGallery, JsonLd } from '@/components/common'
+import { generateArticleJsonLd, generateBreadcrumbJsonLd } from '@/lib/jsonld'
 import { formatDistanceToNow } from 'date-fns'
 import { ja } from 'date-fns/locale'
 
@@ -67,13 +68,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     }
   }
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://example.com'
+  const ogImage = interview.main_image_url || `${siteUrl}/api/og?title=${encodeURIComponent(interview.title)}&type=interview`
+
   return {
     title: `${interview.title} | 団体インタビュー`,
     description: interview.lead_text,
+    alternates: {
+      canonical: `/interviews/${interview.slug}`,
+    },
     openGraph: {
       title: interview.title,
       description: interview.lead_text,
-      images: interview.main_image_url ? [interview.main_image_url] : [],
+      images: [ogImage],
     },
   }
 }
@@ -90,6 +97,9 @@ export default async function InterviewDetailPage({ params }: Props) {
   const galleryImages = (interview.gallery_images as string[] | null) || []
 
   return (
+    <>
+      <JsonLd data={generateArticleJsonLd({ title: interview.title, description: interview.lead_text || '', url: `/interviews/${interview.slug}`, image: interview.main_image_url, publishedAt: interview.published_at, modifiedAt: interview.updated_at })} />
+      <JsonLd data={generateBreadcrumbJsonLd([{ name: 'ホーム', url: '/' }, { name: 'インタビュー', url: '/interviews' }, { name: interview.title, url: `/interviews/${interview.slug}` }])} />
     <div className="py-8 sm:py-12">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* 戻るリンク */}
@@ -237,5 +247,6 @@ export default async function InterviewDetailPage({ params }: Props) {
         <MobileTableOfContents html={interview.body} />
       </div>
     </div>
+    </>
   )
 }

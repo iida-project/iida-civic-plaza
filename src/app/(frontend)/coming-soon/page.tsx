@@ -4,6 +4,7 @@ import { Construction, ArrowLeft } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'ページ準備中',
+  robots: { index: false, follow: true },
 }
 
 export default function ComingSoonPage() {
