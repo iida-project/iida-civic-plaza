@@ -4,12 +4,6 @@ import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Search } from 'lucide-react'
 
-const heroBadges = [
-  { text: 'COMMUNITY', color: 'bg-apple-red' },
-  { text: 'SENIOR WISDOM', color: 'bg-apple-orange' },
-  { text: 'IIDA CITY', color: 'bg-apple-green' },
-]
-
 export function HeroSection() {
   return (
     <section
@@ -25,26 +19,20 @@ export function HeroSection() {
           transition={{ duration: 0.6 }}
           className="text-center max-w-4xl mx-auto"
         >
-          {/* バッジ */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="flex flex-wrap justify-center gap-2 mb-8"
-          >
-            {heroBadges.map((badge) => (
-              <span
-                key={badge.text}
-                className={`${badge.color} text-white font-heading font-medium text-xs px-4 py-1 rounded-full`}
-              >
-                {badge.text}
-              </span>
-            ))}
-          </motion.div>
-
           {/* タイトル */}
-          <h1 className="font-heading font-extrabold text-[32px] sm:text-[44px] lg:text-[52px] text-foreground mb-4 leading-[1.3]">
-            みんなのムトスを応援
+          <h1 className="font-heading font-extrabold text-[32px] sm:text-[44px] lg:text-[52px] mb-4 leading-[1.3]">
+            <span style={{ color: '#F4A7B9', textShadow: '0 2px 8px rgba(244,167,185,0.4)' }}>ム</span>
+            <span style={{ color: '#A8D5A2', textShadow: '0 2px 8px rgba(168,213,162,0.4)' }}>ト</span>
+            <span style={{ color: '#90C8E0', textShadow: '0 2px 8px rgba(144,200,224,0.4)' }}>ス</span>
+            <span style={{ color: '#F9C784', textShadow: '0 2px 8px rgba(249,199,132,0.4)' }}>の</span>
+            <br />
+            <span style={{ color: '#90C8E0', textShadow: '0 2px 8px rgba(144,200,224,0.4)' }}>市</span>
+            <span style={{ color: '#F4A7B9', textShadow: '0 2px 8px rgba(244,167,185,0.4)' }}>民</span>
+            <span style={{ color: '#F9C784', textShadow: '0 2px 8px rgba(249,199,132,0.4)' }}>活</span>
+            <span style={{ color: '#A8D5A2', textShadow: '0 2px 8px rgba(168,213,162,0.4)' }}>動</span>
+            <span style={{ color: '#F4A7B9', textShadow: '0 2px 8px rgba(244,167,185,0.4)' }}>ひ</span>
+            <span style={{ color: '#90C8E0', textShadow: '0 2px 8px rgba(144,200,224,0.4)' }}>ろ</span>
+            <span style={{ color: '#F4A7B9', textShadow: '0 2px 8px rgba(244,167,185,0.4)' }}>ば</span>
           </h1>
 
           {/* サブタイトル */}

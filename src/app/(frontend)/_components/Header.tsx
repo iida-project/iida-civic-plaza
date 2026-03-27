@@ -275,7 +275,7 @@ export function Header() {
               />
               <div className="hidden sm:block">
                 <span className="font-heading font-bold text-lg text-foreground">
-                  飯田の市民活動ひろば
+                  ムトス飯田
                 </span>
               </div>
             </Link>
