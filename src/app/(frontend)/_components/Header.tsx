@@ -60,10 +60,12 @@ const navEntries: NavEntry[] = [
       { name: '他団体主催の講座情報', href: '/coming-soon', comingSoon: true },
     ],
   },
+  /* 一般社団法人ムトス飯田市民ファンド - サブメニュー配置先が決まったら復活
   {
     label: '一般社団法人ムトス飯田市民ファンド',
     href: '/coming-soon',
   },
+  */
   {
     label: 'ムトス飯田事業のあらまし',
     items: [
@@ -274,7 +276,7 @@ export function Header() {
                 priority
               />
               <div className="hidden sm:block">
-                <span className="font-heading font-bold text-lg text-foreground">
+                <span className="font-heading font-bold text-xl sm:text-2xl" style={{ color: '#2B6CB0' }}>
                   ムトス飯田
                 </span>
               </div>

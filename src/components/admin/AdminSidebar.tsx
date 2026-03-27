@@ -12,6 +12,7 @@ import {
   HelpCircle,
   Settings,
   ImageIcon,
+  ExternalLink,
 } from 'lucide-react'
 
 const navItems = [
@@ -36,6 +37,19 @@ export function AdminSidebar() {
           飯田の市民活動ひろば
         </Link>
         <p className="text-xs text-gray-400 mt-1">管理画面</p>
+      </div>
+
+      {/* サイトを表示 */}
+      <div className="px-4 pt-4">
+        <a
+          href="/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-2 px-3 py-2 rounded-md text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
+        >
+          <ExternalLink className="h-5 w-5" />
+          サイトを表示
+        </a>
       </div>
 
       {/* ナビゲーション */}

@@ -55,10 +55,12 @@ const footerNavGroups: FooterNavGroup[] = [
       { name: '他団体主催の講座情報', href: '/coming-soon' },
     ],
   },
+  /* 一般社団法人ムトス飯田市民ファンド - サブメニュー配置先が決まったら復活
   {
     label: '一般社団法人ムトス飯田市民ファンド',
     href: '/coming-soon',
   },
+  */
   {
     label: 'ムトス飯田事業のあらまし',
     items: [
@@ -91,7 +93,7 @@ export function Footer() {
                 height={40}
                 className="h-10 w-auto"
               />
-              <span className="font-heading font-bold text-lg">飯田の市民活動ひろば</span>
+              <span className="font-heading font-bold text-xl sm:text-2xl" style={{ color: '#2B6CB0' }}>ムトス飯田</span>
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed">
               飯田市内のNPO・市民活動を可視化し、

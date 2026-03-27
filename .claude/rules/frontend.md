@@ -176,6 +176,17 @@ import {
 - **NEWタグ**: 公開7日以内の記事に表示。ムトス4色グラデーション（`linear-gradient(90deg, #F4A7B9, #F9C784, #A8D5A2, #90C8E0)`）+ `animate-pulse-soft`
 - **一覧リンク**: リスト下部右寄せ「一覧を見る →」（現在は `/coming-soon`）
 
+## 紹介誌掲載タグ
+
+タグ名に「紹介誌」を含むタグがある団体は、詳細ページのサイドバー「団体情報」タイトル横にバッジ表示。
+管理画面でタグを付け外しするだけで制御可能。
+
+## Coming Soonページ
+
+`/preview` に配置（`(frontend)` グループ外、Header/Footerなし）。
+ミドルウェアの `COMING_SOON_MODE = true` で未認証ユーザーをリダイレクト。
+公開時は `COMING_SOON_MODE = false` に変更するだけ。
+
 ## 市民活動詳細ページのレイアウト
 
 現在は2:1グリッド（`lg:grid-cols-3` + `lg:col-span-2`）：

@@ -59,20 +59,29 @@ app/
 │   ├─ news/           # お知らせ /news, /news/[slug]
 │   ├─ faq/            # FAQ /faq
 │   └─ about/          # サイトについて /about
+├─ preview/            # Coming Soonページ（独立レイアウト、Header/Footerなし）
 ├─ (admin)/            # 管理画面
 │   └─ admin/          # /admin
 └─ api/                # API Routes
 ```
 
+### Coming Soonモード
+
+`src/middleware.ts` の `COMING_SOON_MODE` フラグで制御：
+- `true`: 未認証ユーザーを `/preview`（Coming Soonページ）にリダイレクト
+- `false`: 通常公開
+- 管理画面にログイン済み（`admin_session` Cookie）のユーザーは常にサイト閲覧可能
+
 ### ヘッダーナビゲーション（ドロップダウン形式）
 
-5グループ + 1単体リンクの構成：
+5グループの構成：
 - ムトス市民活動ひろば（準備中）
 - 市民活動団体紹介 → 活動団体紹介(/activities), 活動レポート(/interviews)
 - ムトス飯田事業（準備中）
 - ムトス飯田以外の助成金・講座情報（準備中）
-- 一般社団法人ムトス飯田市民ファンド（単体リンク、準備中）
 - ムトス飯田事業のあらまし（準備中）
+
+※「一般社団法人ムトス飯田市民ファンド」はサブメニュー配置先未定のためコメントアウト中
 
 未実装ページは `/coming-soon` にリダイレクト。
 
