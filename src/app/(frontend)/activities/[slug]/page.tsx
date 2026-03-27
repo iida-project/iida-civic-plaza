@@ -350,9 +350,16 @@ export default async function OrganizationDetailPage({ params }: Props) {
           {/* サイドバー（右側 1/3） */}
           <div className="space-y-6">
             {/* 団体情報 */}
-            {hasOrgInfo && (
-              <div className="bg-card rounded-2xl p-6 border border-border">
-                <h2 className="text-lg font-semibold mb-4">団体情報</h2>
+            {(hasOrgInfo || org.tags.some((t: TagItem) => t.name.includes('紹介誌'))) && (
+            <div className="bg-card rounded-2xl p-6 border border-border">
+                <div className="flex items-center gap-2 mb-4">
+                  <h2 className="text-lg font-semibold">団体情報</h2>
+                  {org.tags.filter((t: TagItem) => t.name.includes('紹介誌')).map((t: TagItem) => (
+                    <span key={t.id} className="px-2.5 py-0.5 text-xs font-heading font-bold text-apple-orange bg-apple-orange/10 rounded-full">
+                      {t.name}
+                    </span>
+                  ))}
+                </div>
                 <dl className="space-y-3">
                   {org.representative && (
                     <div className="flex items-start gap-3">
