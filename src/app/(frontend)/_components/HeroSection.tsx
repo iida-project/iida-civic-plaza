@@ -21,18 +21,18 @@ export function HeroSection() {
         >
           {/* タイトル */}
           <h1 className="font-heading font-extrabold text-[32px] sm:text-[44px] lg:text-[52px] mb-4 leading-[1.3]">
-            <span style={{ color: '#F4A7B9', textShadow: '0 2px 8px rgba(244,167,185,0.4)' }}>ム</span>
-            <span style={{ color: '#A8D5A2', textShadow: '0 2px 8px rgba(168,213,162,0.4)' }}>ト</span>
-            <span style={{ color: '#90C8E0', textShadow: '0 2px 8px rgba(144,200,224,0.4)' }}>ス</span>
-            <span style={{ color: '#F9C784', textShadow: '0 2px 8px rgba(249,199,132,0.4)' }}>の</span>
+            <span style={{ color: '#F4A7B9', textShadow: '1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 0 3px 10px rgba(244,167,185,0.4)' }}>ム</span>
+            <span style={{ color: '#A8D5A2', textShadow: '1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 0 3px 10px rgba(168,213,162,0.4)' }}>ト</span>
+            <span style={{ color: '#90C8E0', textShadow: '1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 0 3px 10px rgba(144,200,224,0.4)' }}>ス</span>
+            <span style={{ color: '#F9C784', textShadow: '1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 0 3px 10px rgba(249,199,132,0.4)' }}>の</span>
             <br />
-            <span style={{ color: '#90C8E0', textShadow: '0 2px 8px rgba(144,200,224,0.4)' }}>市</span>
-            <span style={{ color: '#F4A7B9', textShadow: '0 2px 8px rgba(244,167,185,0.4)' }}>民</span>
-            <span style={{ color: '#F9C784', textShadow: '0 2px 8px rgba(249,199,132,0.4)' }}>活</span>
-            <span style={{ color: '#A8D5A2', textShadow: '0 2px 8px rgba(168,213,162,0.4)' }}>動</span>
-            <span style={{ color: '#F4A7B9', textShadow: '0 2px 8px rgba(244,167,185,0.4)' }}>ひ</span>
-            <span style={{ color: '#90C8E0', textShadow: '0 2px 8px rgba(144,200,224,0.4)' }}>ろ</span>
-            <span style={{ color: '#F4A7B9', textShadow: '0 2px 8px rgba(244,167,185,0.4)' }}>ば</span>
+            <span style={{ color: '#90C8E0', textShadow: '1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 0 3px 10px rgba(144,200,224,0.4)' }}>市</span>
+            <span style={{ color: '#F4A7B9', textShadow: '1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 0 3px 10px rgba(244,167,185,0.4)' }}>民</span>
+            <span style={{ color: '#F9C784', textShadow: '1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 0 3px 10px rgba(249,199,132,0.4)' }}>活</span>
+            <span style={{ color: '#A8D5A2', textShadow: '1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 0 3px 10px rgba(168,213,162,0.4)' }}>動</span>
+            <span style={{ color: '#F4A7B9', textShadow: '1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 0 3px 10px rgba(244,167,185,0.4)' }}>ひ</span>
+            <span style={{ color: '#90C8E0', textShadow: '1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 0 3px 10px rgba(144,200,224,0.4)' }}>ろ</span>
+            <span style={{ color: '#F4A7B9', textShadow: '1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 0 3px 10px rgba(244,167,185,0.4)' }}>ば</span>
           </h1>
 
           {/* サブタイトル */}
