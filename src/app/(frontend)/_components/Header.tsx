@@ -34,7 +34,7 @@ const navEntries: NavEntry[] = [
   {
     label: 'ムトス市民活動ひろば',
     items: [
-      { name: 'ムトス市民活動ひろばとは', href: '/coming-soon', comingSoon: true },
+      { name: 'ムトス市民活動ひろばとは', href: '/about-hiroba' },
       { name: '相談窓口', href: '/coming-soon', comingSoon: true },
     ],
   },
@@ -48,16 +48,16 @@ const navEntries: NavEntry[] = [
   {
     label: 'ムトス飯田事業',
     items: [
-      { name: 'ムトス飯田助成事業', href: '/coming-soon', comingSoon: true },
-      { name: 'ムトス飯田賞', href: '/coming-soon', comingSoon: true },
-      { name: 'ムトス飯田学習交流会／各種講座', href: '/coming-soon', comingSoon: true },
+      { name: 'ムトス飯田助成事業', href: '/mutos-grants' },
+      { name: 'ムトス飯田賞', href: '/mutos-award' },
+      { name: 'ムトス飯田学習交流会／各種講座', href: '/mutos-exchange' },
     ],
   },
   {
     label: 'ムトス飯田以外の助成金・講座情報',
     items: [
-      { name: '他団体主催の助成金事業', href: '/coming-soon', comingSoon: true },
-      { name: '他団体主催の講座情報', href: '/coming-soon', comingSoon: true },
+      { name: '他団体主催の助成金事業', href: '/other-grants' },
+      { name: '他団体主催の講座情報', href: '/other-courses' },
     ],
   },
   /* 一般社団法人ムトス飯田市民ファンド - サブメニュー配置先が決まったら復活
@@ -69,10 +69,10 @@ const navEntries: NavEntry[] = [
   {
     label: 'ムトス飯田事業のあらまし',
     items: [
-      { name: '「ムトス」とは', href: '/coming-soon', comingSoon: true },
-      { name: 'ムトス飯田推進委員会／コーディネート専門委員', href: '/coming-soon', comingSoon: true },
-      { name: 'ムトス飯田の歩み', href: '/coming-soon', comingSoon: true },
-      { name: 'ムトス飯田ロゴマークについて', href: '/coming-soon', comingSoon: true },
+      { name: '「ムトス」とは', href: '/about-mutos' },
+      { name: 'ムトス飯田推進委員会／コーディネート専門委員', href: '/mutos-committee' },
+      { name: 'ムトス飯田の歩み', href: '/mutos-history' },
+      { name: 'ムトス飯田ロゴマークについて', href: '/mutos-logo' },
     ],
   },
 ]
