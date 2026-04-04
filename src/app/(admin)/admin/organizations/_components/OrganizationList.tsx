@@ -49,7 +49,7 @@ export function OrganizationList({ organizations, featuredCount }: OrganizationL
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
   const [deletingId, setDeletingId] = useState<string | null>(null)
-  const [currentFeaturedCount, setCurrentFeaturedCount] = useState(featuredCount)
+  const currentFeaturedCount = featuredCount
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   const handleDelete = async (id: string) => {
