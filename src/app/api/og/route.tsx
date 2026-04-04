@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og'
 import { NextRequest } from 'next/server'
 
-export const runtime = 'edge'
+export const dynamic = 'force-dynamic'
 
 const typeColors: Record<string, { from: string; to: string }> = {
   organization: { from: '#F4A7B9', to: '#F9C784' },
