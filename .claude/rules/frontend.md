@@ -117,6 +117,27 @@ import { FadeInOnScroll, HoverCard } from '@/lib/animations'
 </FadeInOnScroll>
 ```
 
+### トップページ系セクションは Server Component + FadeInOnScroll
+
+`LatestArticlesSection`, `PickupOrganizationsSection`, `FeaturedInterviewsSection`, `CTASection` は
+**Server Component のまま**、アニメ部分を `FadeInOnScroll` でラップする方針。
+セクション全体を `'use client'` にしない（静的 JSX まで hydrate されバンドル肥大化するため）。
+
+唯一 `HeroSection` だけは即時マウントの複雑な演出（`motion.div` の `initial+animate`）があるため `'use client'` 維持。
+
+## next/image 使用ルール
+
+- `fill` を使う場合は **必ず `sizes` 属性を指定**（未指定だと `100vw` で最大解像度配信）
+- レスポンシブグリッドなら `sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"`
+- 固定幅なら実寸: `sizes="192px"` など
+- LCP 対象（詳細ページのメイン画像）には `priority` を付ける
+
+```tsx
+<Image src={url} alt={...} fill
+  sizes="(max-width: 1024px) 100vw, 66vw"
+  className="object-cover" priority />
+```
+
 ## 共通コンポーネント（src/components/common）
 
 ```typescript

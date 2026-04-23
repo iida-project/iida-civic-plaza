@@ -129,6 +129,80 @@ export function Form() {
 }
 ```
 
+## generateStaticParams で SSG 化
+
+`[slug]` などの動的ルートはビルド時に全 slug を取得し、SSG 化する。動的レンダリング（ƒ）より静的生成（●）が高速でキャッシュ効率が高い。
+
+**適用済み**: `/activities/[slug]`, `/interviews/[slug]`, `/grants/[slug]`, `/news/[slug]`
+
+```typescript
+export async function generateStaticParams() {
+  const supabase = createPublicClient()
+  const { data } = await supabase
+    .from('organizations')
+    .select('slug')
+    .eq('is_published', true)
+
+  return (data ?? []).map(({ slug }) => ({ slug }))
+}
+```
+
+- `createPublicClient` (anon key + cookies未使用) はビルド時にも利用可
+- ビルド後に新規公開されたデータは ISR (`revalidate = 60`) でフォールバック生成
+
+## Server / Client Component 境界の最小化
+
+Framer Motion の `<motion.*>` が必要なセクション全体を `'use client'` にするのではなく、
+**アニメーション用の小さな Client ラッパー (`FadeInOnScroll` など) で必要な箇所だけ包む**。
+
+```typescript
+// 悪い例: セクション全体が 'use client' → 静的JSXまでhydrateされる
+'use client'
+export function Section({ items }) {
+  return (
+    <section>
+      <motion.div initial={...} animate={...}>
+        <h2>タイトル</h2>
+      </motion.div>
+      {items.map(i => <motion.article key={i.id}>...</motion.article>)}
+    </section>
+  )
+}
+
+// 良い例: Server Component のまま、アニメ部分のみ FadeInOnScroll
+import { FadeInOnScroll } from '@/lib/animations'
+
+export function Section({ items }) {
+  return (
+    <section>
+      <FadeInOnScroll>
+        <h2>タイトル</h2>
+      </FadeInOnScroll>
+      {items.map((i, idx) => (
+        <FadeInOnScroll key={i.id} delay={idx * 0.1}>
+          <article>...</article>
+        </FadeInOnScroll>
+      ))}
+    </section>
+  )
+}
+```
+
+**適用済み**: トップページの `LatestArticlesSection`, `PickupOrganizationsSection`, `FeaturedInterviewsSection`, `CTASection`（`HeroSection` のみ即時マウント演出のため `'use client'` 維持）。
+
+## next/image の `sizes` 必須
+
+`fill` を使う `<Image>` は **必ず `sizes` を指定**（指定しないとデフォルト `100vw` で最大解像度が配信される）。
+
+```typescript
+// グリッドレイアウトに応じたsizes指定
+<Image src={...} alt={...} fill
+  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw" />
+
+// 固定サイズなら実寸指定
+<Image src={...} alt={...} fill sizes="64px" />
+```
+
 ## 動的メタデータ（SEO）
 
 ```typescript
@@ -151,6 +225,12 @@ export async function generateMetadata(
 ```
 
 ## エラーハンドリング
+
+**配置済み境界:**
+- `src/app/(frontend)/error.tsx` - frontend グループ全体のエラー境界
+- `src/app/(frontend)/loading.tsx` - frontend グループ全体のローディング
+- `src/app/(frontend)/{activities,interviews,grants,news}/[slug]/not-found.tsx` - 各詳細404
+- `src/app/(frontend)/{activities,interviews,grants,news,faq}/loading.tsx` - 各ルートの skeleton
 
 ```typescript
 // error.tsx（エラー境界）
