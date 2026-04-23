@@ -33,7 +33,7 @@ export function CategoryBadge({
     <span
       className={cn(
         'inline-flex items-center gap-1 rounded-full font-medium',
-        'bg-primary/10 text-primary',
+        'bg-[#E05555]/10 text-[#E05555]',
         sizeClasses[size],
         className
       )}
@@ -130,8 +130,8 @@ const statusConfig: Record<
     Icon: Clock,
   },
   urgent: {
-    bg: 'bg-apple-red/10',
-    text: 'text-apple-red',
+    bg: 'bg-[#E05555]/10',
+    text: 'text-[#E05555]',
     Icon: AlertCircle,
   },
   info: {
@@ -271,7 +271,7 @@ export function PickupBadge({ className, size = 'sm' }: PickupBadgeProps) {
     <span
       className={cn(
         'inline-flex items-center rounded-full font-bold',
-        'bg-apple-red text-white',
+        'bg-[#E05555] text-white',
         sizeClasses[size],
         className
       )}

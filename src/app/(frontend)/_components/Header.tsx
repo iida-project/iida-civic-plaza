@@ -270,15 +270,20 @@ export function Header() {
               <Image
                 src="/images/logo.png"
                 alt="ロゴ"
-                width={32}
-                height={40}
-                className="h-10 w-auto"
+                width={256}
+                height={264}
+                className="h-14 w-auto"
                 priority
               />
               <div className="hidden sm:block">
-                <span className="font-heading font-bold text-xl sm:text-2xl" style={{ color: '#2B6CB0' }}>
-                  ムトス飯田
-                </span>
+                <Image
+                  src="/images/logo-text.png"
+                  alt="ムトス飯田"
+                  width={600}
+                  height={113}
+                  className="h-6 w-auto -mt-1"
+                  priority
+                />
               </div>
             </Link>
           </motion.div>

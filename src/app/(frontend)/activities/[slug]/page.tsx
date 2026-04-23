@@ -268,7 +268,7 @@ export default async function OrganizationDetailPage({ params }: Props) {
                     <Link
                       key={cat.id}
                       href={`/activities?category=${cat.slug}`}
-                      className="px-3 py-1 bg-primary/10 text-primary text-sm rounded-full hover:bg-primary/20 transition-colors"
+                      className="px-3 py-1 bg-[#E05555]/10 text-[#E05555] text-sm rounded-full hover:bg-[#E05555]/20 transition-colors"
                     >
                       {cat.name}
                     </Link>

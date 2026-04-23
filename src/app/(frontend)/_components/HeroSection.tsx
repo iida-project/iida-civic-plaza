@@ -19,20 +19,28 @@ export function HeroSection() {
           transition={{ duration: 0.6 }}
           className="text-center max-w-4xl mx-auto"
         >
-          {/* タイトル */}
-          <h1 className="font-heading font-extrabold text-[32px] sm:text-[44px] lg:text-[52px] mb-4 leading-[1.3]">
-            <span style={{ color: '#F4A7B9', textShadow: '1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 0 3px 10px rgba(244,167,185,0.4)' }}>ム</span>
-            <span style={{ color: '#A8D5A2', textShadow: '1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 0 3px 10px rgba(168,213,162,0.4)' }}>ト</span>
-            <span style={{ color: '#90C8E0', textShadow: '1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 0 3px 10px rgba(144,200,224,0.4)' }}>ス</span>
-            <span style={{ color: '#F9C784', textShadow: '1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 0 3px 10px rgba(249,199,132,0.4)' }}>の</span>
-            <br />
-            <span style={{ color: '#90C8E0', textShadow: '1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 0 3px 10px rgba(144,200,224,0.4)' }}>市</span>
-            <span style={{ color: '#F4A7B9', textShadow: '1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 0 3px 10px rgba(244,167,185,0.4)' }}>民</span>
-            <span style={{ color: '#F9C784', textShadow: '1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 0 3px 10px rgba(249,199,132,0.4)' }}>活</span>
-            <span style={{ color: '#A8D5A2', textShadow: '1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 0 3px 10px rgba(168,213,162,0.4)' }}>動</span>
-            <span style={{ color: '#F4A7B9', textShadow: '1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 0 3px 10px rgba(244,167,185,0.4)' }}>ひ</span>
-            <span style={{ color: '#90C8E0', textShadow: '1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 0 3px 10px rgba(144,200,224,0.4)' }}>ろ</span>
-            <span style={{ color: '#F4A7B9', textShadow: '1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 0 3px 10px rgba(244,167,185,0.4)' }}>ば</span>
+          {/* キャッチコピー（小） */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="flex flex-wrap justify-center items-center gap-x-5 gap-y-1 mb-4 font-heading font-bold text-base sm:text-lg"
+          >
+            <span style={{ color: '#0A4585' }}>してみる！</span>
+            <span style={{ color: '#0A4585' }}>せむとす！</span>
+            <span style={{ color: '#0A4585' }}>やってみよう！</span>
+          </motion.div>
+
+          {/* タイトル（大キャッチコピー） */}
+          <h1 className="font-heading font-extrabold text-[32px] sm:text-[44px] lg:text-[52px] mb-6 leading-[1.3]">
+            <span className="text-[0.7em]" style={{ color: '#0A4585' }}>あなたの</span>
+            <span style={{ color: '#E05555', textShadow: '1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 0 3px 10px rgba(224,85,85,0.4)' }}>ム</span>
+            <span style={{ color: '#6eb1e0', textShadow: '1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 0 3px 10px rgba(110,177,224,0.4)' }}>ト</span>
+            <span style={{ color: '#f7bd36', textShadow: '1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 0 3px 10px rgba(247,189,54,0.4)' }}>ス</span>
+            <span className="text-[0.7em]" style={{ color: '#78bf5a', textShadow: '1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 0 3px 10px rgba(120,191,90,0.4)' }}>を</span>
+            <span style={{ color: '#E05555', textShadow: '1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 0 3px 10px rgba(224,85,85,0.4)' }}>応</span>
+            <span style={{ color: '#78bf5a', textShadow: '1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 0 3px 10px rgba(120,191,90,0.4)' }}>援</span>
+            <span style={{ color: '#6eb1e0', textShadow: '1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 0 3px 10px rgba(110,177,224,0.4)' }}>！</span>
           </h1>
 
           {/* サブタイトル */}

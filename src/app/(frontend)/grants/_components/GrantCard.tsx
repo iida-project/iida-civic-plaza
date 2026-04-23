@@ -83,7 +83,7 @@ export function GrantCard({ grant }: Props) {
                 募集終了
               </span>
             ) : deadlineInfo.status === 'urgent' ? (
-              <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-apple-red text-white text-xs font-medium rounded-full">
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-[#E05555] text-white text-xs font-medium rounded-full">
                 <AlertTriangle className="h-3 w-3" />
                 {deadlineInfo.label}
               </span>

@@ -72,7 +72,7 @@ export function OrganizationCard({ organization, index = 0 }: Props) {
             {organization.categories.slice(0, 2).map((cat) => (
               <span
                 key={cat.slug}
-                className="px-2 py-0.5 bg-primary/10 text-primary text-xs font-heading font-medium rounded-full"
+                className="px-2 py-0.5 bg-[#E05555]/10 text-[#E05555] text-xs font-heading font-medium rounded-full"
               >
                 {cat.name}
               </span>

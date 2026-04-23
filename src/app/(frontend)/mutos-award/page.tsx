@@ -414,7 +414,7 @@ export default function MutosAwardPage() {
                         <td className="border border-border px-3 py-2">
                           {entry.organization}
                           {entry.special && (
-                            <span className="ml-2 text-xs text-apple-red font-semibold">
+                            <span className="ml-2 text-xs text-[#E05555] font-semibold">
                               《{entry.special}》
                             </span>
                           )}

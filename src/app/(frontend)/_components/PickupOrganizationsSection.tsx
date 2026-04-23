@@ -106,7 +106,7 @@ export function PickupOrganizationsSection({ organizations }: Props) {
                     {org.categories.slice(0, 2).map((cat, i) => (
                       <span
                         key={i}
-                        className="px-2 py-0.5 bg-primary/10 text-primary text-xs rounded-full"
+                        className="px-2 py-0.5 bg-[#E05555]/10 text-[#E05555] text-xs rounded-full"
                       >
                         {cat.name}
                       </span>

@@ -194,7 +194,7 @@ export default async function GrantDetailPage({ params }: Props) {
                     募集開始前
                   </span>
                 ) : appStatus.status === 'urgent' ? (
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-apple-red text-white text-sm font-medium rounded-full">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#E05555] text-white text-sm font-medium rounded-full">
                     <AlertTriangle className="h-4 w-4" />
                     {appStatus.label}
                   </span>
@@ -303,7 +303,7 @@ export default async function GrantDetailPage({ params }: Props) {
                       {grant.categories.map((cat: CategoryItem) => (
                         <span
                           key={cat.id}
-                          className="px-2.5 py-1 bg-primary/10 text-primary text-sm rounded-full"
+                          className="px-2.5 py-1 bg-[#E05555]/10 text-[#E05555] text-sm rounded-full"
                         >
                           {cat.name}
                         </span>

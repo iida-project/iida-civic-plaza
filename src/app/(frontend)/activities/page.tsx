@@ -139,7 +139,7 @@ export default async function ActivitiesPage({ searchParams }: Props) {
           {(selectedCategoryName || selectedAreaName) && (
             <div className="mt-4 flex flex-wrap gap-2">
               {selectedCategoryName && (
-                <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-heading font-medium">
+                <span className="px-3 py-1 bg-[#E05555]/10 text-[#E05555] rounded-full text-sm font-heading font-medium">
                   {selectedCategoryName}
                 </span>
               )}

@@ -85,15 +85,14 @@ export function Footer() {
         >
           {/* サイト情報 */}
           <div className="space-y-4">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center">
               <Image
-                src="/images/logo.png"
-                alt="ロゴ"
-                width={32}
-                height={40}
-                className="h-10 w-auto"
+                src="/images/logo-footer.png"
+                alt="ムトス飯田"
+                width={512}
+                height={650}
+                className="h-28 w-auto"
               />
-              <span className="font-heading font-bold text-xl sm:text-2xl" style={{ color: '#2B6CB0' }}>ムトス飯田</span>
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed">
               飯田市内のNPO・市民活動を可視化し、
