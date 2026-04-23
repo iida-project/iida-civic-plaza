@@ -27,15 +27,25 @@ paths:
 | Text Sub | グレー | `#666666` | `--muted-foreground` | `text-muted-foreground` |
 | Background | ホワイト | `#FFFFFF` | `--background` | `bg-background` |
 
+### バッジ用アクセント色
+
+| 用途 | HEX | 適用箇所 |
+|------|-----|---------|
+| バッジ赤 | `#E05555` | CategoryBadge, PickupBadge, StatusBadge(urgent), 受付中, 特別賞ラベル等 |
+
+バッジはパステルより彩度の高い赤 `#E05555` を使用（ヒーローの「ム」「応」と同色）。
+`bg-[#E05555]` / `text-[#E05555]` の arbitrary value で指定。
+
 ### 使用ガイドライン
 
-- **Primary（ピンク）**: CTAボタン、ナビアクティブ、メインアクション
+- **Primary（ピンク）**: CTAボタン、ナビアクティブ、メインアクション、汎用ホバー色
 - **Secondary（グリーン）**: サブタイトルアンダーライン、エリア系チップ
 - **Accent（オレンジ）**: セクションタイトル左カラーバー、助成金バッジ
 - **Info（ブルー）**: 「すべて見る」リンク、セカンダリボタン、お知らせバッジ
+- **バッジ赤**: カテゴリ・ステータス・ピックアップなどの視認性が必要なバッジ
 
 ```tsx
-<span className="bg-apple-red text-white">ピンクバッジ</span>
+<span className="bg-[#E05555] text-white">カテゴリバッジ</span>
 <span className="text-apple-blue border-b border-apple-blue">ブルーリンク</span>
 ```
 
@@ -201,6 +211,39 @@ import {
 ### レイアウト情報の保存場所
 過去のレイアウト変遷は `docs/layouts/` に保存：
 - `docs/layouts/activities-detail-2-1.md` - 元の2:1レイアウト
+
+## ロゴ画像
+
+`public/images/` に3種類のロゴを配置。すべて `next/image` で読み込み、元ファイルは事前に `sharp` で最適化済み（元サイズ数MB → 数十KB）。
+
+| ファイル | サイズ | 用途 | 配置 |
+|---------|--------|------|------|
+| `logo.png` | 512×528px (19KB) | シンボルロゴ（りんご型） | ヘッダー左（`h-14`）、過去フッター |
+| `logo-text.png` | 600×113px (4.6KB) | 「ムトス飯田」ワードマーク | ヘッダー右（`h-6 -mt-1`、`sm:block`で非モバイル表示） |
+| `logo-footer.png` | 512×650px (24KB) | 縦長ロゴ（フッター専用） | フッター（`h-28`） |
+
+- Next.js Image の `width` / `height` は実画像のアスペクト比と一致させる（ずれていると表示が歪む）
+- ロゴ画像を差し替える際は `sharp` で事前最適化：
+  ```bash
+  node -e "const s=require('sharp'); s('input.png').resize(600,null,{withoutEnlargement:true}).png({compressionLevel:9,quality:90}).toFile('output.png').then(i=>console.log(i))"
+  ```
+
+## ヒーローセクション
+
+ポスターのキャッチコピーを反映した構成：
+
+- **小キャッチ**: 「してみる！／せむとす！／やってみよう！」（`#0A4585`）
+- **大タイトル（h1）**: 「あなたの**ムトス**を応援！」
+  - あなたの/を: `#0A4585`（`text-[0.7em]` で小さく）
+  - ム: `#E05555`（赤）
+  - ト: `#6eb1e0`（ブルー）
+  - ス: `#f7bd36`（イエロー）
+  - 応: `#E05555`（赤、「ム」と同色）
+  - 援: `#78bf5a`（グリーン）
+  - ！: `#6eb1e0`（ブルー、「ト」と同色）
+- **サブタイトル**: 「つなげる、広がる、飯田市の市民活動」
+
+文字には白の縁取り（`textShadow` 1px白4方向）＋ 薄いドロップシャドウを適用。
 
 ## 画像アップロードの注意
 
