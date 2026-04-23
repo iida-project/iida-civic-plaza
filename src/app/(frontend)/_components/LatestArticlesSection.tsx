@@ -1,8 +1,6 @@
-'use client'
-
 import Link from 'next/link'
-import { motion } from 'framer-motion'
 import { Users, Mic, Wallet, Bell, UserPlus } from 'lucide-react'
+import { FadeInOnScroll } from '@/lib/animations'
 
 type Article = {
   id: string
@@ -68,16 +66,10 @@ export function LatestArticlesSection({ articles }: Props) {
   return (
     <section className="py-16 sm:py-24">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="flex items-center gap-3 mb-10"
-        >
+        <FadeInOnScroll className="flex items-center gap-3 mb-10">
           <span className="w-1.5 h-[1.2em] bg-apple-orange rounded-sm flex-shrink-0" />
           <h2 className="text-2xl sm:text-3xl font-heading font-bold">新着情報</h2>
-        </motion.div>
+        </FadeInOnScroll>
 
         <div className="bg-card rounded-xl shadow-[var(--shadow-card)] border border-border overflow-hidden divide-y divide-border">
           {articles.map((article, index) => {
@@ -87,13 +79,7 @@ export function LatestArticlesSection({ articles }: Props) {
             const dateStr = `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`
             const isNew = (Date.now() - date.getTime()) < 7 * 24 * 60 * 60 * 1000
             return (
-              <motion.article
-                key={`${article.type}-${article.id}`}
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.3, delay: index * 0.05 }}
-              >
+              <FadeInOnScroll key={`${article.type}-${article.id}`} delay={index * 0.05}>
                 <Link
                   href={getArticleHref(article)}
                   className="flex items-start sm:items-center gap-3 sm:gap-4 px-5 py-4 hover:bg-muted/50 transition-colors group"
@@ -125,7 +111,7 @@ export function LatestArticlesSection({ articles }: Props) {
                     </span>
                   )}
                 </Link>
-              </motion.article>
+              </FadeInOnScroll>
             )
           })}
         </div>

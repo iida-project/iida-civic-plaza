@@ -58,7 +58,7 @@ const getGrant = cache(async (slug: string) => {
   }
 })
 
-async function getOtherGrants(currentId: string) {
+const getOtherGrants = cache(async (currentSlug: string) => {
   const supabase = createPublicClient()
   const today = new Date().toISOString().split('T')[0]
 
@@ -66,16 +66,22 @@ async function getOtherGrants(currentId: string) {
     .from('grants')
     .select('id, slug, title, application_end_date')
     .eq('is_published', true)
-    .neq('id', currentId)
+    .neq('slug', currentSlug)
     .gte('application_end_date', today)
     .order('application_end_date', { ascending: true })
     .limit(5)
 
   return data || []
-}
+})
 
 export async function generateStaticParams() {
-  return []
+  const supabase = createPublicClient()
+  const { data } = await supabase
+    .from('grants')
+    .select('slug')
+    .eq('is_published', true)
+
+  return (data ?? []).map(({ slug }) => ({ slug }))
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -150,13 +156,16 @@ function getApplicationStatus(startDate: string | null, endDate: string) {
 
 export default async function GrantDetailPage({ params }: Props) {
   const { slug } = await params
-  const grant = await getGrant(slug)
+  const decodedSlug = decodeURIComponent(slug)
+  const [grant, otherGrants] = await Promise.all([
+    getGrant(slug),
+    getOtherGrants(decodedSlug),
+  ])
 
   if (!grant) {
     notFound()
   }
 
-  const otherGrants = await getOtherGrants(grant.id)
   const appStatus = getApplicationStatus(grant.application_start_date, grant.application_end_date)
 
   const grantDescription = grant.description || `${grant.provider_name}による助成金情報`

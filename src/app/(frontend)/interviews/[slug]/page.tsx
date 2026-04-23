@@ -55,7 +55,13 @@ async function getOtherInterviews(currentId: string) {
 }
 
 export async function generateStaticParams() {
-  return []
+  const supabase = createPublicClient()
+  const { data } = await supabase
+    .from('interviews')
+    .select('slug')
+    .eq('is_published', true)
+
+  return (data ?? []).map(({ slug }) => ({ slug }))
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -122,6 +128,7 @@ export default async function InterviewDetailPage({ params }: Props) {
                   src={interview.main_image_url}
                   alt={interview.title}
                   fill
+                  sizes="(max-width: 1024px) 100vw, 66vw"
                   className="object-cover"
                   priority
                 />
@@ -224,6 +231,7 @@ export default async function InterviewDetailPage({ params }: Props) {
                             src={other.main_image_url}
                             alt={other.title}
                             fill
+                            sizes="64px"
                             className="object-cover group-hover:scale-105 transition-transform duration-300"
                           />
                         ) : (

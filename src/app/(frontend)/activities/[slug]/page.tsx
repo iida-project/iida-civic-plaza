@@ -131,9 +131,13 @@ async function getOtherOrganizations(currentOrgId: string) {
 }
 
 export async function generateStaticParams() {
-  // ビルド時は空の配列を返し、動的に生成する
-  // (サーバーコンポーネントでcookiesを使うSupabaseクライアントはビルド時に使えないため)
-  return []
+  const supabase = createPublicClient()
+  const { data } = await supabase
+    .from('organizations')
+    .select('slug')
+    .eq('is_published', true)
+
+  return (data ?? []).map(({ slug }) => ({ slug }))
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -240,6 +244,7 @@ export default async function OrganizationDetailPage({ params }: Props) {
                   src={org.main_image_url}
                   alt={org.name}
                   fill
+                  sizes="(max-width: 1024px) 100vw, 66vw"
                   className="object-cover"
                   priority
                 />
@@ -528,6 +533,7 @@ export default async function OrganizationDetailPage({ params }: Props) {
                             src={otherOrg.main_image_url}
                             alt={otherOrg.name}
                             fill
+                            sizes="48px"
                             className="object-cover group-hover:scale-105 transition-transform duration-300"
                           />
                         ) : (

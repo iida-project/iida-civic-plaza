@@ -46,7 +46,13 @@ async function getOtherNews(currentId: string) {
 }
 
 export async function generateStaticParams() {
-  return []
+  const supabase = createPublicClient()
+  const { data } = await supabase
+    .from('news_posts')
+    .select('slug')
+    .eq('is_published', true)
+
+  return (data ?? []).map(({ slug }) => ({ slug }))
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

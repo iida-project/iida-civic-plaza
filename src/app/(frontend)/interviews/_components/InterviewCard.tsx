@@ -45,6 +45,7 @@ export function InterviewCard({ interview, featured = false }: Props) {
                 src={interview.main_image_url}
                 alt={interview.title}
                 fill
+                sizes="(max-width: 768px) 100vw, 40vw"
                 className="object-cover group-hover:scale-105 transition-transform duration-300"
               />
             ) : (
@@ -104,6 +105,7 @@ export function InterviewCard({ interview, featured = false }: Props) {
               src={interview.main_image_url}
               alt={interview.title}
               fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
               className="object-cover group-hover:scale-105 transition-transform duration-300"
             />
           ) : (
