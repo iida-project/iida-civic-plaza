@@ -1,6 +1,8 @@
 export { Header } from './Header'
 export { Footer } from './Footer'
 export { HeroSection } from './HeroSection'
+export { CloudVisibilityProvider } from './CloudVisibilityProvider'
+export { CloudToggle } from './CloudToggle'
 export { LatestArticlesSection } from './LatestArticlesSection'
 export { SearchSection } from './SearchSection'
 export { FeaturedInterviewsSection } from './FeaturedInterviewsSection'

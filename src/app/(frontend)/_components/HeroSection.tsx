@@ -4,6 +4,7 @@ import { useId } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Search } from 'lucide-react'
+import { useCloudVisibility } from './CloudVisibilityProvider'
 
 // ヒーロー左右に浮かぶ雲メニュー - リンク先は役所合意後に差し替え予定
 const CLOUD_MENUS = [
@@ -127,6 +128,8 @@ function CloudButton({
 }
 
 export function HeroSection() {
+  const { cloudsVisible } = useCloudVisibility()
+
   return (
     <section
       className="relative overflow-hidden py-20 sm:py-28 lg:py-32"
@@ -135,20 +138,22 @@ export function HeroSection() {
       }}
     >
       {/* XL+: ヒーロー左右に絶対配置の雲メニュー */}
-      <div className="pointer-events-none absolute inset-0 hidden xl:block">
-        <div className="pointer-events-auto absolute left-20 top-[18%]">
-          <CloudButton cloud={CLOUD_MENUS[0]} index={0} baseDelay={0.5} />
+      {cloudsVisible && (
+        <div className="pointer-events-none absolute inset-0 hidden xl:block">
+          <div className="pointer-events-auto absolute left-20 top-[18%]">
+            <CloudButton cloud={CLOUD_MENUS[0]} index={0} baseDelay={0.5} />
+          </div>
+          <div className="pointer-events-auto absolute right-20 top-[18%]">
+            <CloudButton cloud={CLOUD_MENUS[1]} index={1} baseDelay={0.5} />
+          </div>
+          <div className="pointer-events-auto absolute left-20 bottom-[18%]">
+            <CloudButton cloud={CLOUD_MENUS[2]} index={2} baseDelay={0.5} />
+          </div>
+          <div className="pointer-events-auto absolute right-20 bottom-[18%]">
+            <CloudButton cloud={CLOUD_MENUS[3]} index={3} baseDelay={0.5} />
+          </div>
         </div>
-        <div className="pointer-events-auto absolute right-20 top-[18%]">
-          <CloudButton cloud={CLOUD_MENUS[1]} index={1} baseDelay={0.5} />
-        </div>
-        <div className="pointer-events-auto absolute left-20 bottom-[18%]">
-          <CloudButton cloud={CLOUD_MENUS[2]} index={2} baseDelay={0.5} />
-        </div>
-        <div className="pointer-events-auto absolute right-20 bottom-[18%]">
-          <CloudButton cloud={CLOUD_MENUS[3]} index={3} baseDelay={0.5} />
-        </div>
-      </div>
+      )}
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
@@ -273,16 +278,18 @@ export function HeroSection() {
         </motion.div>
 
         {/* XL未満: ヒーロー下に2×2グリッドで雲メニュー */}
-        <div className="xl:hidden mt-12 grid grid-cols-2 gap-x-2 gap-y-4 max-w-md mx-auto justify-items-center">
-          {CLOUD_MENUS.map((cloud, idx) => (
-            <CloudButton
-              key={cloud.lines.join('')}
-              cloud={cloud}
-              index={idx}
-              baseDelay={0.5}
-            />
-          ))}
-        </div>
+        {cloudsVisible && (
+          <div className="xl:hidden mt-12 grid grid-cols-2 gap-x-2 gap-y-4 max-w-md mx-auto justify-items-center">
+            {CLOUD_MENUS.map((cloud, idx) => (
+              <CloudButton
+                key={cloud.lines.join('')}
+                cloud={cloud}
+                index={idx}
+                baseDelay={0.5}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </section>
   )

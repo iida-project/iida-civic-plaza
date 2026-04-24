@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { M_PLUS_Rounded_1c, Noto_Serif_JP } from 'next/font/google'
 import '../globals.css'
-import { Header, Footer } from './_components'
+import { Header, Footer, CloudVisibilityProvider, CloudToggle } from './_components'
 import { JsonLd } from '@/components/common'
 import { generateWebSiteJsonLd } from '@/lib/jsonld'
 import { createPublicClient } from '@/lib/supabase/public'
@@ -68,11 +68,14 @@ export default async function FrontendLayout({
     <html lang="ja">
       <body className={`${mPlusRounded.variable} ${notoSerifJP.variable} antialiased`}>
         <JsonLd data={generateWebSiteJsonLd()} />
-        <div className="min-h-screen flex flex-col">
-          <Header latestNews={latestNews} />
-          <main className="flex-1">{children}</main>
-          <Footer />
-        </div>
+        <CloudVisibilityProvider>
+          <div className="min-h-screen flex flex-col">
+            <Header latestNews={latestNews} />
+            <main className="flex-1">{children}</main>
+            <Footer />
+          </div>
+          <CloudToggle />
+        </CloudVisibilityProvider>
       </body>
     </html>
   )
