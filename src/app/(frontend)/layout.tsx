@@ -4,6 +4,21 @@ import '../globals.css'
 import { Header, Footer } from './_components'
 import { JsonLd } from '@/components/common'
 import { generateWebSiteJsonLd } from '@/lib/jsonld'
+import { createPublicClient } from '@/lib/supabase/public'
+
+export const revalidate = 60
+
+async function getLatestNews() {
+  const supabase = createPublicClient()
+  const { data } = await supabase
+    .from('news_posts')
+    .select('slug, title, published_at')
+    .eq('is_published', true)
+    .order('published_at', { ascending: false })
+    .limit(1)
+    .maybeSingle()
+  return data
+}
 
 const mPlusRounded = M_PLUS_Rounded_1c({
   weight: ['400', '500', '700', '800'],
@@ -43,17 +58,18 @@ export const metadata: Metadata = {
   },
 }
 
-export default function FrontendLayout({
+export default async function FrontendLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const latestNews = await getLatestNews()
   return (
     <html lang="ja">
       <body className={`${mPlusRounded.variable} ${notoSerifJP.variable} antialiased`}>
         <JsonLd data={generateWebSiteJsonLd()} />
         <div className="min-h-screen flex flex-col">
-          <Header />
+          <Header latestNews={latestNews} />
           <main className="flex-1">{children}</main>
           <Footer />
         </div>
