@@ -1,8 +1,130 @@
 'use client'
 
+import { useId } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Search } from 'lucide-react'
+
+// ヒーロー左右に浮かぶ雲メニュー - リンク先は役所合意後に差し替え予定
+const CLOUD_MENUS = [
+  { lines: ['活動、', 'のぞいてみる？'], color: '#E05555', rotate: -4, floatDelay: 0 },
+  { lines: ['仲間を、', 'さがそ！'],      color: '#F7BD36', rotate:  5, floatDelay: 0.4 },
+  { lines: ['団体、', 'はじめたい！'],    color: '#78BF5A', rotate:  3, floatDelay: 0.8 },
+  { lines: ['助成金、', 'ゲット！'],      color: '#6EB1E0', rotate: -5, floatDelay: 1.2 },
+] as const
+
+function CloudButton({
+  cloud,
+  index,
+  baseDelay,
+}: {
+  cloud: (typeof CLOUD_MENUS)[number]
+  index: number
+  baseDelay: number
+}) {
+  const label = cloud.lines.join('')
+  const rawId = useId()
+  const gradId = `cloud-grad-${rawId.replace(/:/g, '')}`
+  const highlightId = `cloud-hl-${rawId.replace(/:/g, '')}`
+  return (
+    <motion.a
+      href="#"
+      onClick={(e) => e.preventDefault()}
+      aria-label={`${label}（リンク準備中）`}
+      title="準備中です"
+      className="relative inline-block cursor-pointer select-none rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-apple-blue focus-visible:ring-offset-2"
+      initial={{ opacity: 0, scale: 0, rotate: cloud.rotate - 20 }}
+      animate={{
+        opacity: 1,
+        scale: 1,
+        rotate: cloud.rotate,
+        y: [0, -6, 0],
+      }}
+      transition={{
+        opacity: { duration: 0.4, delay: baseDelay + index * 0.12 },
+        scale: { type: 'spring', stiffness: 240, damping: 16, delay: baseDelay + index * 0.12 },
+        rotate: { type: 'spring', stiffness: 240, damping: 16, delay: baseDelay + index * 0.12 },
+        y: {
+          duration: 3.2,
+          repeat: Infinity,
+          ease: 'easeInOut',
+          delay: cloud.floatDelay + baseDelay + 0.8,
+        },
+      }}
+      whileHover={{
+        scale: 1.22,
+        rotate: 0,
+        y: -4,
+        transition: { type: 'spring', stiffness: 260, damping: 14 },
+      }}
+      whileTap={{ scale: 0.94 }}
+    >
+      <svg
+        viewBox="0 0 240 170"
+        className="w-[190px] sm:w-[220px] xl:w-[250px] h-auto"
+        style={{
+          filter:
+            'drop-shadow(0 3px 6px rgba(80,100,140,0.18)) drop-shadow(0 14px 26px rgba(80,100,140,0.14))',
+        }}
+        aria-hidden
+      >
+        <defs>
+          <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stopColor="#FFFFFF" />
+            <stop offset="0.55" stopColor="#FCFDFF" />
+            <stop offset="1" stopColor="#E3EBF6" />
+          </linearGradient>
+          <radialGradient id={highlightId} cx="0.32" cy="0.28" r="0.45">
+            <stop offset="0" stopColor="#FFFFFF" stopOpacity="0.9" />
+            <stop offset="1" stopColor="#FFFFFF" stopOpacity="0" />
+          </radialGradient>
+        </defs>
+        <path
+          d="M 45,55
+             C 45,22 85,20 100,45
+             C 108,18 145,18 160,45
+             C 180,30 215,42 208,68
+             C 232,72 232,102 208,108
+             C 218,138 175,145 160,122
+             C 150,148 100,150 95,120
+             C 82,145 42,140 48,112
+             C 18,112 15,80 42,72
+             C 22,60 25,48 45,55
+             Z"
+          fill={`url(#${gradId})`}
+        />
+        <path
+          d="M 45,55
+             C 45,22 85,20 100,45
+             C 108,18 145,18 160,45
+             C 180,30 215,42 208,68
+             C 232,72 232,102 208,108
+             C 218,138 175,145 160,122
+             C 150,148 100,150 95,120
+             C 82,145 42,140 48,112
+             C 18,112 15,80 42,72
+             C 22,60 25,48 45,55
+             Z"
+          fill={`url(#${highlightId})`}
+        />
+      </svg>
+      <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center px-5 text-center">
+        <span
+          className="font-heading font-bold text-[14px] sm:text-[15px] xl:text-[17px] leading-tight"
+          style={{ color: '#0A4585' }}
+        >
+          {cloud.lines[0]}
+        </span>
+        <span
+          className="font-heading font-bold text-[15px] sm:text-[16px] xl:text-[18px] leading-tight"
+          style={{ color: '#0A4585' }}
+        >
+          {cloud.lines[1]}
+        </span>
+      </div>
+    </motion.a>
+  )
+}
 
 export function HeroSection() {
   return (
@@ -12,6 +134,22 @@ export function HeroSection() {
         background: 'linear-gradient(135deg, rgba(224,85,85,0.25) 0%, rgba(247,189,54,0.2) 25%, rgba(120,191,90,0.2) 60%, rgba(110,177,224,0.25) 100%)',
       }}
     >
+      {/* XL+: ヒーロー左右に絶対配置の雲メニュー */}
+      <div className="pointer-events-none absolute inset-0 hidden xl:block">
+        <div className="pointer-events-auto absolute left-20 top-[18%]">
+          <CloudButton cloud={CLOUD_MENUS[0]} index={0} baseDelay={0.5} />
+        </div>
+        <div className="pointer-events-auto absolute right-20 top-[18%]">
+          <CloudButton cloud={CLOUD_MENUS[1]} index={1} baseDelay={0.5} />
+        </div>
+        <div className="pointer-events-auto absolute left-20 bottom-[18%]">
+          <CloudButton cloud={CLOUD_MENUS[2]} index={2} baseDelay={0.5} />
+        </div>
+        <div className="pointer-events-auto absolute right-20 bottom-[18%]">
+          <CloudButton cloud={CLOUD_MENUS[3]} index={3} baseDelay={0.5} />
+        </div>
+      </div>
+
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -133,6 +271,18 @@ export function HeroSection() {
             </Link>
           </motion.div>
         </motion.div>
+
+        {/* XL未満: ヒーロー下に2×2グリッドで雲メニュー */}
+        <div className="xl:hidden mt-12 grid grid-cols-2 gap-x-2 gap-y-4 max-w-md mx-auto justify-items-center">
+          {CLOUD_MENUS.map((cloud, idx) => (
+            <CloudButton
+              key={cloud.lines.join('')}
+              cloud={cloud}
+              index={idx}
+              baseDelay={0.5}
+            />
+          ))}
+        </div>
       </div>
     </section>
   )
