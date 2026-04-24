@@ -19,17 +19,46 @@ export function HeroSection() {
           transition={{ duration: 0.6 }}
           className="text-center max-w-4xl mx-auto"
         >
-          {/* キャッチコピー（小） */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="flex flex-wrap justify-center items-center gap-x-5 gap-y-1 mb-4 font-heading font-bold text-base sm:text-lg"
-          >
-            <span style={{ color: '#0A4585' }}>してみる！</span>
-            <span style={{ color: '#0A4585' }}>せむとす！</span>
-            <span style={{ color: '#0A4585' }}>やってみよう！</span>
-          </motion.div>
+          {/* キャッチコピー（小）- ポップなステッカー風、フワフワ漂う */}
+          <div className="flex flex-wrap justify-center items-end gap-3 sm:gap-6 mb-6">
+            {[
+              { text: 'してみる！', color: '#E05555', rotate: -5, translateY: 0, floatDelay: 0 },
+              { text: 'せむとす！', color: '#F7BD36', rotate: 4, translateY: -6, floatDelay: 0.6 },
+              { text: 'やってみよう！', color: '#78BF5A', rotate: -3, translateY: 2, floatDelay: 1.2 },
+            ].map((chip, i) => (
+              <motion.span
+                key={chip.text}
+                initial={{ opacity: 0, scale: 0, rotate: chip.rotate - 25 }}
+                animate={{
+                  opacity: 1,
+                  scale: 1,
+                  rotate: chip.rotate,
+                  y: [chip.translateY, chip.translateY - 6, chip.translateY],
+                }}
+                transition={{
+                  opacity: { duration: 0.35, delay: 0.1 + i * 0.12 },
+                  scale: { type: 'spring', stiffness: 280, damping: 14, delay: 0.1 + i * 0.12 },
+                  rotate: { type: 'spring', stiffness: 280, damping: 14, delay: 0.1 + i * 0.12 },
+                  y: {
+                    duration: 2.8,
+                    repeat: Infinity,
+                    ease: 'easeInOut',
+                    delay: chip.floatDelay + 1,
+                  },
+                }}
+                whileHover={{ scale: 1.12, rotate: 0, transition: { type: 'spring', stiffness: 300, damping: 15 } }}
+                className="inline-block px-4 py-1.5 sm:px-5 sm:py-2 rounded-full font-heading font-bold text-sm sm:text-base select-none cursor-default whitespace-nowrap"
+                style={{
+                  color: chip.color,
+                  backgroundColor: '#ffffff',
+                  border: `2.5px solid ${chip.color}`,
+                  boxShadow: `3px 3px 0 ${chip.color}, 0 6px 18px rgba(0,0,0,0.06)`,
+                }}
+              >
+                {chip.text}
+              </motion.span>
+            ))}
+          </div>
 
           {/* タイトル（大キャッチコピー） */}
           <h1 className="font-heading font-extrabold text-[32px] sm:text-[44px] lg:text-[52px] mb-6 leading-[1.3]">
