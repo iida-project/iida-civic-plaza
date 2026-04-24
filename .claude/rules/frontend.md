@@ -294,6 +294,98 @@ import {
 - フォント: `font-heading font-bold`（M PLUS Rounded 1c・まるっこフォント）
 - 色: `#0A4585`（大タイトルの「あなたの」「を」と同じダークブルー）
 
+### 雲型CTAメニュー（左右／2×2）
+
+ヒーロー左右の空きスペースに4つの雲をCTAとして配置。ヘッダーナビが分かりづらい問題に対し、行動を促す導線として追加。
+
+| 位置 | コピー | アクセント色 | 傾き | フロート遅延 |
+|-----|--------|-----------|------|------------|
+| 左上 ☁️ | 活動、のぞいてみる？ | `#E05555` | `-4°` | `0s` |
+| 右上 ☁️ | 仲間を、さがそ！ | `#F7BD36` | `+5°` | `0.4s` |
+| 左下 ☁️ | 団体、はじめたい！ | `#78BF5A` | `+3°` | `0.8s` |
+| 右下 ☁️ | 助成金、ゲット！ | `#6EB1E0` | `-5°` | `1.2s` |
+
+- **リンク**: 当面 `href="#"` + `preventDefault`（プレースホルダー、役所合意後に差し替え）。`aria-label="○○（リンク準備中）"` で状態明示
+- **シェイプ**: SVG の単一 `<path>` で上3つ + 右1 + 下3つ + 左1のバンプで全方位もふもふ（`viewBox="0 0 240 170"`、枠線なし）
+- **塗り**: 上から `#FFFFFF → #FCFDFF → #E3EBF6` の縦 linearGradient（`useId()` でID重複回避）+ 左上に radialGradient ハイライト
+- **影**: 二重 drop-shadow `(0 3px 6px rgba(80,100,140,0.18)) + (0 14px 26px rgba(80,100,140,0.14))` で浮遊感
+- **テキスト**: `font-heading font-bold`、色 `#0A4585`、2行構成（1行目はやや小さめ、2行目が訴求）
+- **サイズ**: `w-[190px] sm:w-[220px] xl:w-[250px]` の可変（SVG側は `h-auto`）
+- **配置**:
+  - xl+: `absolute left-20/right-20 top-[18%]/bottom-[18%]` でヒーロー四隅に固定
+  - xl未満: ヒーロー下に `grid grid-cols-2` の 2×2 グリッド
+- **アニメ**: 登場=spring（stiffness 240, damping 16）+ reverseIdx スタガー、常時=上下 6px ふわふわ（3.2s）、ホバー=`scale 1.22` + `rotate 0` + `y: -4`、クリック=`scale 0.94`
+- **表示制御**: `useCloudVisibility()` フックで on/off（下記「雲の表示トグル」参照）
+
+## ヘッダー（トグル式メニュー + お知らせティッカー）
+
+ファイル: `src/app/(frontend)/_components/Header.tsx`
+
+構成: `ロゴ（左） / お知らせティッカー（中央・md+） / メニューボタン（右）`。常時表示されるトップレベルナビは廃止し、**メニューボタン押下で展開**する方式。
+
+### メニューボタン
+
+- ピル型、白 `bg-white/90`、薄い枠線、軽い影
+- ラベル: `メニュー` ⇔ `閉じる`（`#0A4585`）
+- 右上に4色アクセントドット（開いているときは非表示）
+- ホバー: `scale: 1.05, y: -1`、タップ: `scale: 0.95`
+- 3本線アイコンは**持たない**（テキスト + ドットのみ）
+
+### 展開挙動（xl+）
+
+押下するとメニューボタンが消え、5グループが右端から **逆順スタガー** でスライドイン:
+
+```
+t=0:   [  空き  ]                  [×]
+t=0.16 [  空き  ]         [あらまし][×]
+t=0.32                  [助成金][あらまし][×]
+...
+完了:  [ひろば][団体][事業][助成金][あらまし][×]
+```
+
+- 各項目: `initial: { opacity: 0, x: 80 }` → `animate: { opacity: 1, x: 0 }`、spring（stiffness 160, damping 24）+ `delay: reverseIdx * 0.16s`
+- 退出: `x: 0 → 80` / opacity: 1 → 0、`delay: idx * 0.1s`、`duration: 0.35s`、`ease: 'easeIn'`（左から順に右へ退く）
+- ×ボタン: `scale: 0 → 1, rotate: -90° → 0` の spring、退出はナビ完了後（`delay: navEntries.length * 0.1`）
+- 各グループは**ホバーでサブメニューのドロップダウン展開**（従来の `DesktopDropdown`）
+
+### 展開挙動（xl未満）
+
+ヘッダー下に `position: absolute` のパネルが `y: -12 → 0` + fade でスライドダウン、アコーディオン式。各グループの左に4色カラーバー（開くと opacity 1、閉じると 0.6）。
+
+### 閉じる手段
+
+- メニュー項目クリック（遷移と同時にクローズ）
+- ×ボタン / メニューボタン再クリック
+- **ESC キー**
+
+### お知らせティッカー
+
+- 最新の公開済み `news_posts` 1件を表示: `[NEW バッジ（7日以内）] [お知らせ] [タイトル（truncate）] [→]`
+- NEW バッジは 4色横グラデ + `animate-pulse-soft`（2秒周期明滅）
+- 白半透明 pill `bg-white/70`、枠線、ホバーで不透明白 + 矢印スライド
+- `/news/[slug]` に Link
+- データ: `src/app/(frontend)/layout.tsx` の `getLatestNews()` が Server Component で取得、`Header` に props で渡す（`revalidate=60`）
+- 表示条件: `md` 以上 && `latestNews != null` && **メニュー閉じている時**
+- **開閉とのタイミング制御**: メニュー開く = 即座に DOM から消す（同フレームで navOpen 条件が効く）。メニュー閉じる = `setTimeout(900ms)` 経過後に再投入（`animate-in fade-in slide-in-from-top-1 duration-300`）。これにより水平メニューの exit（約800ms）との同居を回避
+
+## 雲の表示トグル（デバッグ用）
+
+デモ/説明用に、ヒーローの雲CTAメニューを on/off できる**目立たないフローティングボタン**を右下に配置。雲を隠すと「最初のヘッダーメニュー押下でナビ展開」の従来UIに近い見た目になり、役所等への説明時に新旧の対比ができる。
+
+ファイル:
+- `src/app/(frontend)/_components/CloudVisibilityProvider.tsx` — Context Provider + `useCloudVisibility()` フック + localStorage 永続化（キー `clouds-visible`）
+- `src/app/(frontend)/_components/CloudToggle.tsx` — 右下浮遊ボタン
+
+仕様:
+- **位置**: `fixed bottom-4 right-4 z-30`、40×40 円形
+- **透明度**: 通常 `opacity-40` / ホバー `opacity-100`（知っていれば見えるが、通常は景色に溶ける）
+- **アイコン**: `Cloud` / `CloudOff`（lucide-react、20px）で状態表示
+- **初期状態**: 雲表示（SSR フラッシュあり）、以降は localStorage を尊重
+- **影響範囲**: `HeroSection` の雲（xl+ 絶対配置 / xl未満 2×2 グリッド）両方を同時トグル
+- **保存**: localStorage `clouds-visible` = `'true' | 'false'`
+
+本番公開時は、このトグルボタンと Provider はそのまま残して良い（一般利用者には視認しづらく、かつ雲がデフォルト表示される前提）。完全撤去が必要になったら `CloudToggle` の `layout.tsx` での呼び出しと `HeroSection` 側の `useCloudVisibility()` 参照を外すだけ。
+
 ## 画像アップロードの注意
 
 ### 推奨画像サイズ
