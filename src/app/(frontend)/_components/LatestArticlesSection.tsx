@@ -90,7 +90,7 @@ export function LatestArticlesSection({ articles }: Props) {
                   {isNew && (
                     <span
                       className="inline-flex items-center px-2 py-0.5 text-[10px] font-bold text-white rounded-sm whitespace-nowrap flex-shrink-0 animate-pulse-soft"
-                      style={{ background: 'linear-gradient(90deg, #F4A7B9, #F9C784, #A8D5A2, #90C8E0)' }}
+                      style={{ background: 'linear-gradient(90deg, #E05555, #F7BD36, #78BF5A, #6EB1E0)' }}
                     >
                       NEW
                     </span>

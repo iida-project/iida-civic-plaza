@@ -132,11 +132,11 @@ function DesktopDropdown({ group }: { group: NavGroup }) {
             exit={{ opacity: 0, y: 8, scale: 0.96 }}
             transition={{ duration: 0.18, ease: 'easeOut' }}
             className="absolute top-full left-0 mt-1 min-w-[260px] backdrop-blur-lg rounded-xl shadow-xl border border-border/40 p-2 z-50"
-            style={{ background: 'linear-gradient(135deg, rgba(244,167,185,0.12), rgba(249,199,132,0.10), rgba(168,213,162,0.10), rgba(144,200,224,0.12)), rgba(255,255,255,0.88)' }}
+            style={{ background: 'linear-gradient(135deg, rgba(224,85,85,0.12), rgba(247,189,54,0.10), rgba(120,191,90,0.10), rgba(110,177,224,0.12)), rgba(255,255,255,0.88)' }}
           >
             {group.items.map((item, index) => {
               const isActive = pathname === item.href && !item.comingSoon
-              const hexColors = ['#F4A7B9', '#F9C784', '#A8D5A2', '#90C8E0']
+              const hexColors = ['#E05555', '#F7BD36', '#78BF5A', '#6EB1E0']
               const barHex = hexColors[index % 4]
               return (
                 <Link
@@ -211,7 +211,7 @@ function MobileAccordion({
             <div className="pl-4 pb-2 space-y-1">
               {group.items.map((item, index) => {
                 const isActive = pathname === item.href && !item.comingSoon
-                const hexColors = ['#F4A7B9', '#F9C784', '#A8D5A2', '#90C8E0']
+                const hexColors = ['#E05555', '#F7BD36', '#78BF5A', '#6EB1E0']
                 const barHex = hexColors[index % 4]
                 return (
                   <Link
@@ -335,7 +335,7 @@ export function Header() {
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3, ease: 'easeInOut' }}
             className="xl:hidden overflow-hidden border-t border-border/40 backdrop-blur-lg"
-            style={{ background: 'linear-gradient(135deg, rgba(244,167,185,0.12), rgba(249,199,132,0.10), rgba(168,213,162,0.10), rgba(144,200,224,0.12)), rgba(255,255,255,0.88)' }}
+            style={{ background: 'linear-gradient(135deg, rgba(224,85,85,0.12), rgba(247,189,54,0.10), rgba(120,191,90,0.10), rgba(110,177,224,0.12)), rgba(255,255,255,0.88)' }}
           >
             <nav className="container mx-auto px-4 py-4">
               <div className="flex flex-col gap-1">

@@ -12,7 +12,7 @@ export default function ComingSoonPreviewPage() {
     <div
       className="min-h-screen flex flex-col items-center justify-center px-4 relative overflow-hidden"
       style={{
-        background: 'linear-gradient(135deg, rgba(244,167,185,0.2) 0%, rgba(249,199,132,0.15) 25%, rgba(168,213,162,0.15) 60%, rgba(144,200,224,0.2) 100%)',
+        background: 'linear-gradient(135deg, rgba(224,85,85,0.2) 0%, rgba(247,189,54,0.15) 25%, rgba(120,191,90,0.15) 60%, rgba(110,177,224,0.2) 100%)',
       }}
     >
       {/* 背景の装飾円 */}
@@ -35,18 +35,18 @@ export default function ComingSoonPreviewPage() {
 
         {/* タイトル */}
         <h1 className="font-heading font-extrabold text-[36px] sm:text-[48px] lg:text-[56px] mb-6 leading-[1.3]">
-          <span style={{ color: '#F4A7B9', textShadow: '1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 0 3px 10px rgba(244,167,185,0.4)' }}>ム</span>
-          <span style={{ color: '#A8D5A2', textShadow: '1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 0 3px 10px rgba(168,213,162,0.4)' }}>ト</span>
-          <span style={{ color: '#90C8E0', textShadow: '1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 0 3px 10px rgba(144,200,224,0.4)' }}>ス</span>
-          <span style={{ color: '#F9C784', textShadow: '1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 0 3px 10px rgba(249,199,132,0.4)' }}>の</span>
+          <span style={{ color: '#E05555', textShadow: '1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 0 3px 10px rgba(224,85,85,0.4)' }}>ム</span>
+          <span style={{ color: '#78BF5A', textShadow: '1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 0 3px 10px rgba(120,191,90,0.4)' }}>ト</span>
+          <span style={{ color: '#6EB1E0', textShadow: '1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 0 3px 10px rgba(110,177,224,0.4)' }}>ス</span>
+          <span style={{ color: '#F7BD36', textShadow: '1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 0 3px 10px rgba(247,189,54,0.4)' }}>の</span>
           <br />
-          <span style={{ color: '#90C8E0', textShadow: '1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 0 3px 10px rgba(144,200,224,0.4)' }}>市</span>
-          <span style={{ color: '#F4A7B9', textShadow: '1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 0 3px 10px rgba(244,167,185,0.4)' }}>民</span>
-          <span style={{ color: '#F9C784', textShadow: '1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 0 3px 10px rgba(249,199,132,0.4)' }}>活</span>
-          <span style={{ color: '#A8D5A2', textShadow: '1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 0 3px 10px rgba(168,213,162,0.4)' }}>動</span>
-          <span style={{ color: '#F4A7B9', textShadow: '1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 0 3px 10px rgba(244,167,185,0.4)' }}>ひ</span>
-          <span style={{ color: '#90C8E0', textShadow: '1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 0 3px 10px rgba(144,200,224,0.4)' }}>ろ</span>
-          <span style={{ color: '#F4A7B9', textShadow: '1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 0 3px 10px rgba(244,167,185,0.4)' }}>ば</span>
+          <span style={{ color: '#6EB1E0', textShadow: '1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 0 3px 10px rgba(110,177,224,0.4)' }}>市</span>
+          <span style={{ color: '#E05555', textShadow: '1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 0 3px 10px rgba(224,85,85,0.4)' }}>民</span>
+          <span style={{ color: '#F7BD36', textShadow: '1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 0 3px 10px rgba(247,189,54,0.4)' }}>活</span>
+          <span style={{ color: '#78BF5A', textShadow: '1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 0 3px 10px rgba(120,191,90,0.4)' }}>動</span>
+          <span style={{ color: '#E05555', textShadow: '1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 0 3px 10px rgba(224,85,85,0.4)' }}>ひ</span>
+          <span style={{ color: '#6EB1E0', textShadow: '1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 0 3px 10px rgba(110,177,224,0.4)' }}>ろ</span>
+          <span style={{ color: '#E05555', textShadow: '1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 0 3px 10px rgba(224,85,85,0.4)' }}>ば</span>
         </h1>
 
         {/* サブタイトル */}
@@ -57,7 +57,7 @@ export default function ComingSoonPreviewPage() {
         {/* Coming Soon */}
         <div className="mb-10">
           <span className="inline-block px-8 py-3 rounded-full text-xl sm:text-2xl font-heading font-bold text-white animate-pulse-soft tracking-wider"
-            style={{ background: 'linear-gradient(90deg, #F4A7B9, #F9C784, #A8D5A2, #90C8E0)' }}
+            style={{ background: 'linear-gradient(90deg, #E05555, #F7BD36, #78BF5A, #6EB1E0)' }}
           >
             Coming Soon
           </span>

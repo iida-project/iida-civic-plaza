@@ -4,11 +4,11 @@ import { NextRequest } from 'next/server'
 export const dynamic = 'force-dynamic'
 
 const typeColors: Record<string, { from: string; to: string }> = {
-  organization: { from: '#F4A7B9', to: '#F9C784' },
-  interview: { from: '#A8D5A2', to: '#90C8E0' },
-  grant: { from: '#F9C784', to: '#F4A7B9' },
-  news: { from: '#90C8E0', to: '#A8D5A2' },
-  default: { from: '#F4A7B9', to: '#90C8E0' },
+  organization: { from: '#E05555', to: '#F7BD36' },
+  interview: { from: '#78BF5A', to: '#6EB1E0' },
+  grant: { from: '#F7BD36', to: '#E05555' },
+  news: { from: '#6EB1E0', to: '#78BF5A' },
+  default: { from: '#E05555', to: '#6EB1E0' },
 }
 
 export async function GET(request: NextRequest) {
@@ -46,7 +46,7 @@ export async function GET(request: NextRequest) {
             display: 'flex',
             width: '100%',
             height: '4px',
-            background: 'linear-gradient(90deg, #F4A7B9, #F9C784, #A8D5A2, #90C8E0)',
+            background: 'linear-gradient(90deg, #E05555, #F7BD36, #78BF5A, #6EB1E0)',
             position: 'absolute',
             top: 0,
             left: 0,
@@ -83,7 +83,7 @@ export async function GET(request: NextRequest) {
             display: 'flex',
             width: '100%',
             height: '4px',
-            background: 'linear-gradient(90deg, #F4A7B9, #F9C784, #A8D5A2, #90C8E0)',
+            background: 'linear-gradient(90deg, #E05555, #F7BD36, #78BF5A, #6EB1E0)',
             position: 'absolute',
             bottom: 0,
             left: 0,

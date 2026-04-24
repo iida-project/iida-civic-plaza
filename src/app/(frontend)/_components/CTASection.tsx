@@ -10,7 +10,7 @@ export function CTASection() {
           <div
             className="rounded-2xl p-8 sm:p-12 text-center"
             style={{
-              background: 'linear-gradient(135deg, rgba(244,167,185,0.25) 0%, rgba(249,199,132,0.2) 25%, rgba(168,213,162,0.2) 60%, rgba(144,200,224,0.25) 100%)',
+              background: 'linear-gradient(135deg, rgba(224,85,85,0.25) 0%, rgba(247,189,54,0.2) 25%, rgba(120,191,90,0.2) 60%, rgba(110,177,224,0.25) 100%)',
             }}
           >
             <h2 className="text-2xl sm:text-3xl font-heading font-extrabold text-foreground mb-4">

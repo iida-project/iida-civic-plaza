@@ -26,7 +26,7 @@ export function SearchSection({ categories, areas }: Props) {
     <section
       className="py-16 sm:py-24"
       style={{
-        background: 'linear-gradient(135deg, rgba(244,167,185,0.08) 0%, rgba(249,199,132,0.08) 33%, rgba(168,213,162,0.08) 66%, rgba(144,200,224,0.08) 100%)',
+        background: 'linear-gradient(135deg, rgba(224,85,85,0.08) 0%, rgba(247,189,54,0.08) 33%, rgba(120,191,90,0.08) 66%, rgba(110,177,224,0.08) 100%)',
       }}
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">

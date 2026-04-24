@@ -9,32 +9,39 @@ paths:
 
 ## デザイン方針
 
-- ロゴ4色（ピンク・オレンジ・グリーン・ブルー）を常に意識できるデザイン
-- 明るくポップ、パステル調カラー
+- ロゴ4色（レッド・オレンジ・グリーン・ブルー）を常に意識できるデザイン
+- くっきりした彩度高めのカラーで視認性を確保（色覚特性に配慮）
 - 角丸12px + 薄いドロップシャドウ
 - スマホ:PC = 5:5 を想定したレスポンシブ（ブレークポイント: 768px）
 - セクション間に4色波線区切り（WaveDivider）を配置
 
-## カラーパレット（りんご4色パステル）
+## カラーパレット（ムトス4色・くっきり系）
+
+色覚特性のある方にも視認しやすいよう、従来のパステル4色（#F4A7B9 / #F9C784 / #A8D5A2 / #90C8E0）から**彩度高めのくっきり4色**へ全面移行済み。
 
 | 用途 | 色名 | HEX | CSS変数 | Tailwind |
 |------|------|-----|---------|----------|
-| Primary | りんごピンク | `#F4A7B9` | `--apple-red` / `--primary` | `bg-apple-red` / `bg-primary` |
-| Secondary | りんごグリーン | `#A8D5A2` | `--apple-green` / `--secondary` | `bg-apple-green` / `bg-secondary` |
-| Accent | りんごオレンジ | `#F9C784` | `--apple-orange` / `--accent` | `bg-apple-orange` / `bg-accent` |
-| Info | りんごブルー | `#90C8E0` | `--apple-blue` | `bg-apple-blue` |
+| Primary | レッド | `#E05555` | `--apple-red` / `--primary` / `--ring` | `bg-apple-red` / `bg-primary` |
+| Secondary | グリーン | `#78BF5A` | `--apple-green` / `--secondary` | `bg-apple-green` / `bg-secondary` |
+| Accent | オレンジ | `#F7BD36` | `--apple-orange` / `--accent` | `bg-apple-orange` / `bg-accent` |
+| Info | ブルー | `#6EB1E0` | `--apple-blue` | `bg-apple-blue` |
 | Text Main | ダークグレー | `#333333` | `--foreground` | `text-foreground` |
 | Text Sub | グレー | `#666666` | `--muted-foreground` | `text-muted-foreground` |
 | Background | ホワイト | `#FFFFFF` | `--background` | `bg-background` |
 
-### バッジ用アクセント色
+> `globals.css` の HSL 定義（ライト / ダーク）:
+> - Primary(赤): `0 69% 61%` / `0 65% 55%`
+> - Secondary(緑): `102 44% 55%` / `102 40% 48%`
+> - Accent(橙): `42 92% 59%` / `42 80% 50%`
+> - Info(青): `205 65% 65%` / `205 55% 55%`
+>
+> 4色はヒーロー大タイトル「あなたの**ム**ト**ス**を**応援**！」の文字色とも一致（ム/応=赤, ト=青, ス=橙, 援=緑）。
 
-| 用途 | HEX | 適用箇所 |
-|------|-----|---------|
-| バッジ赤 | `#E05555` | CategoryBadge, PickupBadge, StatusBadge(urgent), 受付中, 特別賞ラベル等 |
+### バッジ・アクセント赤
 
-バッジはパステルより彩度の高い赤 `#E05555` を使用（ヒーローの「ム」「応」と同色）。
-`bg-[#E05555]` / `text-[#E05555]` の arbitrary value で指定。
+バッジ用の濃い赤は Primary と同色（`#E05555`）に統一済み。
+`bg-apple-red` / `text-apple-red` / `bg-primary` / `text-primary` で利用可能。
+従来の `bg-[#E05555]` arbitrary value でも同じ色が出る（互換）。
 
 ### 使用ガイドライン
 
@@ -204,7 +211,7 @@ import {
 
 リスト形式で表示。各行: 日付 → NEWタグ → カテゴリバッジ → タイトル → 募集中バッジ
 
-- **NEWタグ**: 公開7日以内の記事に表示。ムトス4色グラデーション（`linear-gradient(90deg, #F4A7B9, #F9C784, #A8D5A2, #90C8E0)`）+ `animate-pulse-soft`
+- **NEWタグ**: 公開7日以内の記事に表示。ムトス4色グラデーション（`linear-gradient(90deg, #E05555, #F7BD36, #78BF5A, #6EB1E0)`）+ `animate-pulse-soft`
 - **一覧リンク**: リスト下部右寄せ「一覧を見る →」（現在は `/coming-soon`）
 
 ## 紹介誌掲載タグ
