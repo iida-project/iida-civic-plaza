@@ -419,7 +419,7 @@ export function Header({ latestNews }: { latestNews?: LatestNews | null }) {
               {navOpen && (
                 <motion.div
                   key="horizontal-nav"
-                  className="hidden xl:flex items-center gap-1 overflow-hidden"
+                  className="hidden xl:flex items-center gap-1"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0, transition: { duration: 0.15 } }}
