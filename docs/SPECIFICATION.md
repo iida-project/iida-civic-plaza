@@ -90,7 +90,8 @@ src/
 │   │       └── media/           # メディアライブラリ
 │   └── api/
 │       ├── admin/login/         # POST: ログイン
-│       └── admin/logout/        # POST: ログアウト
+│       ├── admin/logout/        # POST: ログアウト
+│       └── keepalive/           # GET: Supabaseスリープ防止（Vercel Cron）
 ├── components/
 │   ├── admin/                   # 管理画面用コンポーネント
 │   │   ├── AdminLayout.tsx
@@ -319,6 +320,7 @@ src/
 |---------|------|------|
 | POST | `/api/admin/login` | パスワード検証、セッションCookie発行 |
 | POST | `/api/admin/logout` | セッションCookie削除 |
+| GET | `/api/keepalive` | Supabaseスリープ防止（Vercel Cron が1日1回呼び出し、DBへ軽量クエリ） |
 
 ### セッションCookie
 - **名前**: `admin_session`
@@ -726,6 +728,7 @@ images: {
 | `NEXT_PUBLIC_SITE_URL` | サイトURL |
 | `ADMIN_PASSWORD` | 管理画面パスワード |
 | `GEMINI_API_KEY` | Gemini API キー |
+| `CRON_SECRET` | Vercel Cron 認証トークン（keepalive） |
 
 ### Supabaseクライアント（4種類）
 
@@ -738,6 +741,7 @@ images: {
 
 ### Vercelデプロイ
 - **プラン**: Hobby
+- **スリープ防止**: Vercel Cron（`vercel.json`）が1日1回 `/api/keepalive` を呼び出し、Supabase へ軽量クエリを投げて DB を活動状態に保つ
 
 ---
 

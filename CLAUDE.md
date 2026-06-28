@@ -123,6 +123,7 @@ app/
 - `SUPABASE_SERVICE_ROLE_KEY`
 - `NEXT_PUBLIC_SITE_URL`
 - `GEMINI_API_KEY` - Google Gemini API（AI要約機能用）
+- `CRON_SECRET` - Vercel Cron 認証用トークン（Supabaseスリープ防止 keepalive）
 
 ## Supabase 設定
 
