@@ -90,8 +90,7 @@ src/
 │   │       └── media/           # メディアライブラリ
 │   └── api/
 │       ├── admin/login/         # POST: ログイン
-│       ├── admin/logout/        # POST: ログアウト
-│       └── keepalive/           # GET: スリープ防止
+│       └── admin/logout/        # POST: ログアウト
 ├── components/
 │   ├── admin/                   # 管理画面用コンポーネント
 │   │   ├── AdminLayout.tsx
@@ -320,7 +319,6 @@ src/
 |---------|------|------|
 | POST | `/api/admin/login` | パスワード検証、セッションCookie発行 |
 | POST | `/api/admin/logout` | セッションCookie削除 |
-| GET | `/api/keepalive?token=` | Vercelスリープ防止 |
 
 ### セッションCookie
 - **名前**: `admin_session`
@@ -728,7 +726,6 @@ images: {
 | `NEXT_PUBLIC_SITE_URL` | サイトURL |
 | `ADMIN_PASSWORD` | 管理画面パスワード |
 | `GEMINI_API_KEY` | Gemini API キー |
-| `KEEPALIVE_TOKEN` | Keepalive API 認証トークン |
 
 ### Supabaseクライアント（4種類）
 
@@ -741,7 +738,6 @@ images: {
 
 ### Vercelデプロイ
 - **プラン**: Hobby
-- **スリープ防止**: `/api/keepalive` エンドポイント（外部からの定期呼び出し）
 
 ---
 

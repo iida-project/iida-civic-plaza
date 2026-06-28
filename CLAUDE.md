@@ -123,7 +123,6 @@ app/
 - `SUPABASE_SERVICE_ROLE_KEY`
 - `NEXT_PUBLIC_SITE_URL`
 - `GEMINI_API_KEY` - Google Gemini API（AI要約機能用）
-- `KEEPALIVE_TOKEN` - Keepalive API認証用トークン
 
 ## Supabase 設定
 
