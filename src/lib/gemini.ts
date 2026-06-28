@@ -2,6 +2,9 @@ import { GoogleGenerativeAI } from '@google/generative-ai'
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '')
 
+// 要約生成に使用するGeminiモデル（変更時はここ1箇所のみ）
+const GEMINI_MODEL = 'gemini-3.1-flash-lite'
+
 // 要約レベルの設定
 const summaryConfig = {
   short: {
@@ -33,7 +36,7 @@ export async function generateSingleSummary(
   articleBody: string,
   level: SummaryLevel
 ): Promise<string> {
-  const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash-lite' })
+  const model = genAI.getGenerativeModel({ model: GEMINI_MODEL })
   const plainText = articleBody.replace(/<[^>]*>/g, '').trim()
   const config = summaryConfig[level]
 
@@ -76,8 +79,7 @@ export async function generateSummaries(articleBody: string): Promise<{
   medium: string
   long: string
 }> {
-  // gemini-2.5-flash-lite: 無料枠あり（RPM: 10, TPM: 250K, RPD: 20）
-  const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash-lite' })
+  const model = genAI.getGenerativeModel({ model: GEMINI_MODEL })
 
   // HTMLタグを除去してプレーンテキストに変換
   const plainText = articleBody.replace(/<[^>]*>/g, '').trim()
